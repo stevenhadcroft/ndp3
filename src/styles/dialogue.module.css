@@ -1,0 +1,187 @@
+.panel {
+  position: absolute;
+  /* background: #38658e; */
+  background: #295b88;
+  color: #fff;
+  font-weight: bold;
+  padding: 5px 20px 20px 20px;
+  border-radius: 30px;
+  min-width: 350px;
+  /* border:solid 3px #00000022; */
+  box-shadow: 10px 6px 6px 2px #00000044;
+  /* z-index: 999999; */
+  z-index: 9999;
+}
+
+.fullscreen {
+  top: 30px !important;
+  left: 30px !important;
+  width: calc(100% - 110px);
+  height: calc(100% - 85px);
+}
+
+.modal {
+  text-align: center;
+  left: calc(50% - 300px) !important;
+  top: calc(50% - 150px) !important;
+  width: 600px;
+  height: 300px;
+}
+
+.dialogue-header {
+  display: flex;
+  height: 80px;
+  padding: 0 5px 0 10px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+}
+
+.inactive {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.inner,
+.dialogue-inner {
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  overflow-y: scroll;
+  /* justify-content: center; */  
+}
+.dialogue-inner.no-scroll {
+  overflow-y: initial;
+}
+
+.align-center {
+  text-align: center;
+}
+
+.fullscreen .dialogue-inner {
+  height: calc(100% - 155px);
+  width: 100%;
+  background: #00000033;
+  padding: 14px;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+.dark-background {
+  font-weight: normal;
+  background: #00000033;
+  margin-bottom: 20px;
+  padding: 15px 25px;
+  border-radius: 15px;
+}
+
+/* add text */
+textarea {
+  display: inline-block;
+  width: calc(100% - 20px);
+  height: 80px;
+  margin: 10px 0;
+}
+
+
+.cell {
+  display: inline-block;
+  width: 135px;
+  height: 135px;
+  box-sizing: border-box;
+  margin: 5px;
+  border: solid 1px #ccc;
+  background: #fff;
+  box-shadow: 3px 3px 3px 1px #00000044;
+  border-radius: 15px;
+  transition: 0.1s;
+}
+
+.cell.transparent {
+  background: transparent;
+  border: solid 0px #ccc;
+  box-shadow: none;
+}
+
+.cell.selected {
+  border: solid 5px #ff9900;
+}
+
+.cell.tall {
+  width: 140px;
+  height: 170px;
+}
+
+.cell.wide {
+  width: 170px;
+  height: 140px;
+}
+
+.cell-title{
+  width:100%;
+  text-align: center;
+}
+
+.cell-label {
+  text-align: center;
+  font-weight: normal;
+  font-size:14px;
+  line-height: 16px;
+  width:135px;
+  margin-bottom: 5px;
+}
+
+.dialogue-inner .title {
+  max-width: 140px;
+  font-weight: normal;
+  margin-bottom: 10px;
+  color: #fff;
+  width: 100%;
+  text-align: center;
+};
+
+
+.panel .close-btn {
+  font-size: 20px;
+  position: absolute;
+  right: 5px;
+  top: -3px;
+  padding: 15px;
+}
+
+.panel h3 {
+  font-size: 1.1em;
+  margin-bottom: 15px;
+}
+
+textarea,
+input[type="text"],
+input[type="password"],
+select {
+  padding: 8px 10px;
+  font-size: 18px;
+  border-radius: 6px;
+  border: 0;
+}
+
+/* --------------------------
+dialogue - image/search
+-------------------------- */
+
+.search-setting,
+.search-setting button {
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 16px;
+}
+.search-setting .selected {
+  color: #ff9900;
+}
+
+.search-bar {
+  background: linear-gradient(#00000011, #00000044);
+  border-radius: 20px;
+  padding: 7px 20px;
+  font-weight: normal;
+}

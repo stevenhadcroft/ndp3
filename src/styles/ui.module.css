@@ -1,0 +1,24 @@
+.with-phonetic {
+    border-top-right-radius:0 !important;
+    border-bottom-right-radius:0 !important;
+    border-right: solid #fff 8px;
+}
+
+.icon {
+    width: 40px;
+    height: 40px;
+    margin: 0 5px;
+}
+.icon>img {
+    width: 40px;
+    height: 40px;
+}
+.icon.small>img {
+    width: 20px;
+    height: 20px;
+}
+
+.react-colorful {
+    width: 450px !important;
+    height: 300px !important;
+}

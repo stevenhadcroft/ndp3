@@ -1,0 +1,28 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="500px" height="500px" viewBox="0 0 500 500">
+<defs>
+<filter id="Filter_1" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+<feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0" result="result1"/>
+</filter>
+
+<g id="Layer0_0_FILL">
+<path fill="#050505" stroke="none" d="
+M 406.25 235.25
+Q 406.75 241.25 406.1 243.65 405.05 247.4 400.7 247.4 246.7 249 96.65 247.8 93.05 244.85 94.3 234.65 95.5 224.55 91.9 221.6 89.6 232.05 89.9 248.85 90.1 258.2 90.5 276.75 94.6 276.65 95.35 273.2 95.9 271.2 95.15 265.7 94.3 260.1 94.75 257.85 95.5 254 99.5 253.25 152.3 253.55 251.95 253.55 356.05 253.65 404.35 253.85 405.85 255.95 405.85 260.15 405.95 262.55 405.5 267.8 405.1 277.25 410.9 278.3 411.55 245.7 410.8 223.05 407 223.05 406.15 226.85 405.7 229.05 406.25 235.25 Z"/>
+</g>
+
+<path id="border_0_Layer0_0_1_STROKES" stroke="#000000" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" fill="none" d="
+M 499.45 0
+L 499.45 499.45 0 499.45 0 0 499.45 0 Z"/>
+</defs>
+
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use filter="url(#Filter_1)" xlink:href="#border_0_Layer0_0_1_STROKES"/>
+</g>
+</g>
+
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#Layer0_0_FILL"/>
+</g>
+</svg>

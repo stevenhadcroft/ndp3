@@ -5,8 +5,19 @@ import { HexColorPicker } from "react-colorful";
 import { SketchPicker, SwatchesPicker } from 'react-color';
 import styles from './styles/';
 import { Constants } from "./constants";
-import { setBrushColour, cancelMode, setMode, updateTextData } from './actions'
 import DraggablePanel from "./DraggablePanel";
+
+import { 
+    // cancelMode, 
+    // setMode, 
+    updateTextData
+} from './actions'
+
+import { 
+    cancelMode,
+	setMode, 
+    setBrushColour, 
+} from "./features/viewSlice";
 
 
 const DialogueAddColour = () => {

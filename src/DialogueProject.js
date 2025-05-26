@@ -4,9 +4,7 @@ import CSSModules from 'react-css-modules';
 import { Constants } from "./constants";
 import styles from './styles/';
 import DraggablePanel from "./DraggablePanel";
-import { setOrientation, showPhonetics } from "./actions";
 import Swal from 'sweetalert2';
-
 
 import {
     getProjectList,
@@ -20,17 +18,24 @@ import {
 // } from './services/projectFileManangerDB';
 
 import {
-    setImageData,
-    setTemplateData,
     setTextData,
     fileLoadUpdate,
-    cancelMode,
-    setBrushColour,
-    newProject,
     setDir,
-    addPhonetic,
     showLoader
 } from './actions'
+
+import { 
+    cancelMode, 
+    showPhonetics,
+    addPhonetic,
+    setOrientation
+} from "./features/viewSlice";
+
+import { 
+    resetCanvas,
+    setTemplateData,
+    setImageData,
+} from "./features/canvasSlice";
 
 import { cloneDeep, makeSVGgrabbable, makeSVGgrabbableReset } from "./utils";
 import html2canvas from "html2canvas";
@@ -193,13 +198,9 @@ function DialogueProject({ mode }) {
         let data = window.LOCAL ? file.data : file;
         console.log("data ", data);
         if (data) {
-            // dispatch(setTemplateData(data.templateData));
-            // dispatch(setImageData(data.imageData));
-            // dispatch(setTextData(data.textData));
             dispatch(setOrientation(data.orientation));
             dispatch(cancelMode());
-            dispatch(setBrushColour(null));
-            
+            // dispatch(setBrushColour(null));
             dispatch(setTemplateData([]));
             dispatch(setImageData([]));
             dispatch(setTextData([]));
@@ -238,7 +239,9 @@ function DialogueProject({ mode }) {
                 // makeSVGgrabbableReset();
                 
                 if (view.mode === Constants.MODE_SAVE_BEFORE_NEW) {
-                    dispatch(newProject());
+                    // dispatch(newProject());
+                    dispatch(cancelMode());
+                    dispatch(resetCanvas());
                 }
                 dispatch(cancelMode());
                 dispatch(showLoader(false));

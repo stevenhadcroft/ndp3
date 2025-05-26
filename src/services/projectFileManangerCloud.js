@@ -3,11 +3,11 @@ import { Constants } from "../constants";
 import axios from "axios";
 import Swal from 'sweetalert2'
 
-import {
-  setMenuOpen,
-  setMode,
-  showLoader
-} from "../actions";
+// import {
+//   setMenuOpen,
+//   setMode,
+//   showLoader
+// } from "../actions";
 
 // import {unlinkMachine} from '../services/localLicenseMananger';
 

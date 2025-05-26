@@ -3,18 +3,23 @@ import { useSelector, useDispatch } from 'react-redux'
 import CSSModules from 'react-css-modules';
 import styles from './styles/';
 import { Constants, eSearchLogic, eSearchFilter } from "./constants";
+
+import { 
+	cancelMode,
+	setSearch,
+	showPhonetics, 
+	addPhonetic,
+} from "./features/viewSlice";
+
 import { 
 	addImage, 
-	cancelMode, 
 	updateImageData, 
-	showPhonetics, 
-	setSearch,
-	addPhonetic
-} from "./actions";
+} from "./features/canvasSlice";
+
 import { loadImage } from "./loaders";
 import DraggablePanel from "./DraggablePanel";
-// import LazyLoad from 'react-lazyload';
 
+// import LazyLoad from 'react-lazyload';
 // const LazyLoad = ({children}) => {
 // 	<>{children}</>
 // }
@@ -148,7 +153,7 @@ const DialogueAddImage = () => {
 
 	// HANDLERS ---------------------------------------------------
 	const onLoadClicked = (ind) => {
-        const url = window.IMAGE_FILES[ind].url;
+		const url = window.IMAGE_FILES[ind].url;
         const filename = window.IMAGE_FILES[ind].filename;
         const images = canvas.images || [];
 		const zIndex = images.length>0 ? Math.max.apply(Math, images.map(function(o) { return o.zIndex; })) + 1 : 1; // get highest zindex + 1 
@@ -157,8 +162,9 @@ const DialogueAddImage = () => {
 		loadImage(url, images, (index, key, svg) => {
 			// add id to SVG so it can xreffed for stored colour later
 			svg = svg.replace('<svg ', `<svg filename="${filename}" `);
-			dispatch(updateImageData(index, key, svg));
+			dispatch(updateImageData({index, key, value:svg}));
 		});
+		dispatch(cancelMode());
 	};
 
 	//--------------------------------------------------------------

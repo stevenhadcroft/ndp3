@@ -6,12 +6,15 @@ import { Constants } from "./constants";
 
 import { 
     updateTextData, 
-    cancelMode, 
+    setGeneric
+} from "./actions";
+
+import { 
     setMode, 
+    cancelMode,
     showPhonetics,
     addPhonetic,
-    setGeneric
- } from "./actions";
+} from "./features/viewSlice";
 
 import DraggablePanel from "./DraggablePanel";
 

@@ -2,7 +2,13 @@ import { Fragment } from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import CSSModules from 'react-css-modules';
 import styles from './styles/';
-import { cancelMode, setUserName } from "./actions";
+
+// import { cancelMode, setUserName } from "./actions";
+
+import { 
+    cancelMode, 
+} from "./features/viewSlice";
+
 import DraggablePanel from "./DraggablePanel";
 // import {deactivateLicence} from './services/dynamodb';
 

@@ -5,38 +5,38 @@ export const fileLoadUpdate = data => ({
 	data,
 });
 
-export const setSelectedIndex = index => ({
-	type: types.SET_SELECTED_INDEX,
-	index,
-});
+// export const setSelectedIndex = index => ({
+// 	type: types.SET_SELECTED_INDEX,
+// 	index,
+// });
 
-export const setDragIndex = index => ({
-	type: types.SET_DRAG_INDEX,
-	index,
-});
+// export const setDragIndex = index => ({
+// 	type: types.SET_DRAG_INDEX,
+// 	index,
+// });
 
-export const setImageData = images => ({
-	type: types.SET_IMAGE_DATA,
-	images,
-});
+// export const setImageData = images => ({
+// 	type: types.SET_IMAGE_DATA,
+// 	images,
+// });
 
-export const updateImageData = (index, key, value) => {
-	// console.log('>>>>> updateImageData >>>>>>>>>>>> index ', index);
-	// console.log('key ', key);
-	// console.log('value ', value);
-	return ({
-		type: types.UPDATE_IMAGE_DATA,
-		index,
-		key,
-		value,
-	});
-}
+// export const updateImageData = (index, key, value) => {
+// 	// console.log('>>>>> updateImageData >>>>>>>>>>>> index ', index);
+// 	// console.log('key ', key);
+// 	// console.log('value ', value);
+// 	return ({
+// 		type: types.UPDATE_IMAGE_DATA,
+// 		index,
+// 		key,
+// 		value,
+// 	});
+// }
 
-export const updateTemplateData = (key, value) => ({
-	type: types.UPDATE_TEMPLATE_DATA,
-    key,
-    value,
-});
+// export const updateTemplateData = (key, value) => ({
+// 	type: types.UPDATE_TEMPLATE_DATA,
+//     key,
+//     value,
+// });
 
 export const setTextData = texts => ({
 	type: types.SET_TEXT_DATA,
@@ -50,15 +50,15 @@ export const updateTextData = (key, value) => ({
     value,
 });
 
-export const setTemplateData = templateData => ({
-	type: types.SET_TEMPLATE_DATA,
-	templateData,
-});
+// export const setTemplateData = templateData => ({
+// 	type: types.SET_TEMPLATE_DATA,
+// 	templateData,
+// });
 
-export const addImage = newImage => ({
-	type: types.ADD_IMAGE,
-	newImage,
-});
+// export const addImage = newImage => ({
+// 	type: types.ADD_IMAGE,
+// 	newImage,
+// });
 export const setGeneric = (payload) => ({
 	type: types.SET_GENERIC,
 	payload,
@@ -84,69 +84,69 @@ export const duplicateText = () => ({
 	type: types.DUPLICATE_TEXT,
 });
 
-export const setMode = mode => ({
-	type: types.SET_MODE,
-	mode,
-});
+// export const setMode = mode => ({
+// 	type: types.SET_MODE,
+// 	mode,
+// });
 
-export const setOrientation = orientation => ({
-	type: types.SET_ORIENTATION,
-	orientation,
-});
+// export const setOrientation = orientation => ({
+// 	type: types.SET_ORIENTATION,
+// 	orientation,
+// });
 
 export const setTemplateLock = value => ({
 	type: types.SET_TEMPLATE_LOCK,
 	value,
 });
 
-export const cancelMode = () => ({
-	type: types.SET_MODE,
-	mode:null,
-});
+// export const cancelMode = () => ({
+// 	type: types.SET_MODE,
+// 	mode:null,
+// });
 
-export const setCanvasScale = canvasScale => ({
-	type: types.SET_CANVAS_SCALE,
-	canvasScale,
-});
+// export const setCanvasScale = canvasScale => ({
+// 	type: types.SET_CANVAS_SCALE,
+// 	canvasScale,
+// });
 
-export const setBrushColour = brushColour => ({
-	type: types.SET_BRUSH_COLOUR,
-	brushColour,
-});
+// export const setBrushColour = brushColour => ({
+// 	type: types.SET_BRUSH_COLOUR,
+// 	brushColour,
+// });
 		
-export const newProject = () => ({
-	type: types.NEW_PROJECT
-});
+// export const newProject = () => ({
+// 	type: types.NEW_PROJECT
+// });
 
-export const setMenuOpen = (value) => ({
-	type: types.MENU_OPEN,
-	value
-});
+// export const setMenuOpen = (value) => ({
+// 	type: types.MENU_OPEN,
+// 	value
+// });
 
 // export const applyImageFilter = (category) => ({
 // 	type: types.APPLY_IMAGE_FILTER,
 // 	category
 // });
 
-export const applyTemplateFilter = (category) => ({
-	type: types.APPLY_TEMPLATE_FILTER,
-	category
-});
+// export const applyTemplateFilter = (category) => ({
+// 	type: types.APPLY_TEMPLATE_FILTER,
+// 	category
+// });
 
-export const showPhonetics = (value) => ({
-	type: types.SHOW_PHONETICS,
-	value,
-});
+// export const showPhonetics = (value) => ({
+// 	type: types.SHOW_PHONETICS,
+// 	value,
+// });
 
 export const showLoader = (value) => ({
 	type: types.SHOW_LOADER,
 	value,
 });
 
-export const addPhonetic = (value) => ({
-	type: types.ADD_PHONETIC,
-	value,
-});
+// export const addPhonetic = (value) => ({
+// 	type: types.ADD_PHONETIC,
+// 	value,
+// });
 
 export const setUserName = value => ({
 	type: types.SET_USER_NAME,

@@ -2,8 +2,17 @@ import { useDispatch } from 'react-redux'
 import { Constants } from "./constants";
 import CSSModules from 'react-css-modules';
 import styles from './styles/';
-import { cancelMode, newProject, setMode, setOrientation } from './actions'
 import DraggablePanel from "./DraggablePanel";
+
+// import { 
+//     // cancelMode, 
+//     // setMode 
+// } from './actions'
+
+import { 
+    cancelMode, 
+	setMode, 
+} from "./features/viewSlice";
 
 
 const DialogueConfirmNew = () => {

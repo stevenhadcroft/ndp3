@@ -6,11 +6,9 @@ import CSSModules from 'react-css-modules';
 import buttonStyles from './styles/buttons.module.css';
 import menuStyles from './styles/menu-left.module.css';
 import uiStyles from './styles/ui.module.css';
+
 import { 
-	setMenuOpen,
 	addText, 
-	setMode, 
-	cancelMode,
 	undo,
 	setSelectedIndex,
 	duplicateImage, 
@@ -19,6 +17,13 @@ import {
 	deleteText, 
 	fullScreen
 } from "./actions";
+
+import { 
+	setMenuOpen,
+	setMode, 
+	cancelMode,
+} from "./features/viewSlice";
+
 import { print } from "./utils";
 
 const styleModules = {...buttonStyles, ...menuStyles, ...uiStyles};
@@ -50,8 +55,8 @@ const MenuLeft = (props) => {
 	};
 
 	const onNewProject = () => {
-		console.log('window.undoHistory ', window.undoHistory);
-		console.log('window.undoHistory.length ', window.undoHistory.length);
+		// console.log('window.undoHistory ', window.undoHistory);
+		// console.log('window.undoHistory.length ', window.undoHistory.length);
 		if (!window.undoHistory) window.undoHistory = [];
 		if (window.undoHistory.length < 2){ // ignore original template
 			dispatch(setMode(Constants.MODE_SET_ORIENTATION));
@@ -148,6 +153,7 @@ const MenuLeft = (props) => {
 			</>
 		)
 	};
+
 	Buttons = CSSModules(Buttons, styleModules, {allowMultiple:true});
 
 	return (

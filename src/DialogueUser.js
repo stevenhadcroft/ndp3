@@ -1,16 +1,24 @@
-import { Fragment, useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import CSSModules from 'react-css-modules';
 import styles from './styles/';
 import { Constants } from "./constants";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+
 import { 
-    setImageData, 
     setTextData, 
-    setTemplateData,
     setUserName,
-    setMode
 } from './actions'
+
+import { 
+    setTemplateData,
+    setImageData, 
+} from "./features/canvasSlice";
+
+import { 
+	setMode, 
+} from "./features/viewSlice";
+
 import DraggablePanel from "./DraggablePanel";
 import { getUser, createUser } from "./services/userMananger";
 import {linkMachine, unlinkMachine} from './services/localLicenseMananger';
@@ -50,7 +58,7 @@ const DialogueUser = () => {
 
         // const data = { email: "steven@stevenhadcroft.com", password: "pass1234" }
         const email = inputRefSignInEmail.current.value;
-        const password = inputRefSignInPassword.current.value;
+        const password = "temp disabled"; // inputRefSignInPassword.current.value;
         
         if (!email || !password){
             Swal.fire({
@@ -185,9 +193,9 @@ const DialogueUser = () => {
     //--------------------------------------------------------------
 
     const Buttons = (
-        <Fragment>
+        <>
             <button styleName="primary narrow blue" onClick={() => { }}>Done</button>
-        </Fragment>
+        </>
     )
 
     const Container = ({ children }) =>

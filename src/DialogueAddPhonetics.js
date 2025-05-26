@@ -3,8 +3,13 @@ import { useDispatch } from 'react-redux'
 import CSSModules from 'react-css-modules';
 import styles from './styles/';
 import { Constants } from "./constants";
-import { showPhonetics, addPhonetic } from './actions'
 import DraggablePanel from "./DraggablePanel";
+
+import { 
+    showPhonetics,
+    addPhonetic
+} from "./features/viewSlice";
+
 
 const DialogueAddPhonetics = () => {
 

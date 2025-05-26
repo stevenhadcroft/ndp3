@@ -4,12 +4,20 @@ import CSSModules from 'react-css-modules';
 import buttonStyles from './styles/buttons.module.css';
 import menuStyles from './styles/menu.module.css';
 import uiStyles from './styles/ui.module.css';
+
+import { 
+    // setMenuOpen,
+    addText, 
+    // setMode, 
+    // cancelMode
+} from "./actions";
+
 import { 
     setMenuOpen,
-    addText, 
     setMode, 
     cancelMode
-} from "./actions";
+} from "./features/viewSlice";
+
 import { print } from "./utils";
 import { Fragment } from "react";
 

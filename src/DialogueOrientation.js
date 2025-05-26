@@ -2,11 +2,23 @@ import { useDispatch } from 'react-redux'
 import { Constants } from "./constants";
 import CSSModules from 'react-css-modules';
 import styles from './styles/';
+
+// import { 
+//     // newProject, 
+//     setMode, 
+//     setMenuOpen
+// } from './actions'
+
 import { 
-    newProject, 
-    setMode, 
-    setMenuOpen
-} from './actions'
+	cancelMode,
+    setMenuOpen,
+} from "./features/viewSlice";
+
+import { 
+	resetCanvas,
+} from "./features/canvasSlice";
+
+
 import DraggablePanel from "./DraggablePanel";
 
 
@@ -23,7 +35,9 @@ const DialogueOrientation = () => {
         // } else {
         //     dispatch(newProject());
         // }
-        dispatch(newProject());
+        // dispatch(newProject());
+        dispatch(cancelMode());
+        dispatch(resetCanvas());
         dispatch(setMenuOpen(false));
       };
     

@@ -7,31 +7,40 @@ import TransformWidget from "./TransformWidget";
 import { Constants } from "./constants";
 import { eDirection } from "./constants";
 import { BrushSVG } from "./SVG";
-import { 
-	setMode, 
-	updateImageData, 
-	updateTemplateData, 
+
+import {
 	updateTextData, 
-	setSelectedIndex, 
-	setDragIndex,
 	storeHistroy,
 	setTemplateLock,
-
-	addImage,
 	addText,
-	setTemplateData,
 	fileLoadUpdate
 } from "./actions";
 
-import { loadImage, loadTemplate } from "./loaders";
+import { 
+	setTemplateData,
+	updateTemplateData, 
+	addImage,
+	updateImageData, 
+	setSelectedIndex, 
+	setDragIndex,
+} from "./features/canvasSlice";
+
+import { 
+	setMode, 
+} from "./features/viewSlice";
+
+import { 
+	loadImage, 
+	loadTemplate
+} from "./loaders";
 
 
 let clickOffset = {};
 
 const Canvas = () => {
+	const dispatch = useDispatch();
 	const view = useSelector(state => state.view);
 	const canvas = useSelector(state => state.canvas);
-	const dispatch = useDispatch();
 
 	const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 	const [panx, setPanx] = useState(0);
@@ -64,7 +73,7 @@ const Canvas = () => {
 
 				const callback1 = (index, key, svg) => {
 					svg = svg.replace('<svg ', `<svg filename="${filename}" `);
-					dispatch(updateImageData(index, key, svg));		
+					dispatch(updateImageData({index, key, value:svg}));		
 				}
 
 				// update whole svg data - so when we clone the imgage the svg contained the colours 
@@ -72,7 +81,7 @@ const Canvas = () => {
 					const el = document.getElementById("image-"+index);
 					if (el){
 						const svgmarkup = el.innerHTML;
-						dispatch(updateImageData(index, 'svg', svgmarkup));
+						dispatch(updateImageData({index, key:'svg', value:svgmarkup}));
 					}
 				}
 
@@ -92,13 +101,12 @@ const Canvas = () => {
 			
 			} else if (canvas.fileLoadUpdate.data.templateData){
 				let item = canvas.fileLoadUpdate.data.templateData;
-				// console.log('item ', item);
 				const url = item.url;
 				const newTemplate = { ...item, type:"image", url};
 				dispatch(setTemplateData(newTemplate));
 				loadTemplate(url, item || {}, 
 					str => {
-						dispatch(updateTemplateData("svg", str))
+						dispatch(updateTemplateData({key:"svg", value:str}))
 					}
 				);
 			}
@@ -108,8 +116,8 @@ const Canvas = () => {
 
 	const updateData = (index, key, value) => {
 		switch (mode) {
-			case Constants.MODE_EDIT_IMAGE: dispatch(updateImageData(index, key, value)); break;
-			case Constants.MODE_COLOUR_IMAGE: dispatch(updateImageData(index, key, value)); break;
+			case Constants.MODE_EDIT_IMAGE: dispatch(updateImageData({index, key, value})); break;
+			case Constants.MODE_COLOUR_IMAGE: dispatch(updateImageData({index, key, value})); break;
 			case Constants.MODE_EDIT_TEXT: dispatch(updateTextData(key, value)); break;
 			default: break;
 		}
@@ -135,7 +143,7 @@ const Canvas = () => {
 	}
 
 	const onImageClick = (evt, index, nextMode) => {
-		console.log('onImageClick')
+		// console.log('onImageClick');
 		onDown(evt.clientX, evt.clientY, index, nextMode);
 	}
 
@@ -185,15 +193,15 @@ const Canvas = () => {
 						// if (nextMode === Constants.MODE_EDIT_IMAGE || nextMode === Constants.MODE_EDIT_TEMPLATE) {
 						if (view.mode === Constants.MODE_COLOUR_IMAGE) {
 							if (isTemplate){ // isNaN(index)
-								dispatch(updateTemplateData(fillIdStoreId, brushColour));
+								dispatch(updateTemplateData({key:fillIdStoreId, value:brushColour}))
 	
 							} else {
-								dispatch(updateImageData(index, fillIdStoreId, brushColour));
+								dispatch(updateImageData({index, key:fillIdStoreId, value:brushColour}));
 								// update whole svg data - so when we clone the imgage the svg contained the colours 
 								const el = document.getElementById("image-"+index);
 								if (el){
 									const svgmarkup = el.innerHTML;
-									dispatch(updateImageData(index, 'svg', svgmarkup));
+									dispatch(updateImageData({index, key:'svg', value:svgmarkup}));
 								}
 							}
 						} 
@@ -288,6 +296,7 @@ const Canvas = () => {
 		window.mousex = x;
 		window.mousey = y;
 		if (dragIndex !== -1) {
+			console.log(x, y, clickOffset.x, clickOffset.y, canvasRect.left, canvasInnerRect.left);
 			updateData(dragIndex, "x", (moveX - clickOffset.x + (canvasRect.left - canvasInnerRect.left)) / canvasScale / zoom); 
 			updateData(dragIndex, "y", (moveY - clickOffset.y + (canvasRect.top - canvasInnerRect.top)) / canvasScale / zoom ); 
 		}

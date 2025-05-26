@@ -3,9 +3,20 @@ import { useSelector, useDispatch } from 'react-redux'
 import CSSModules from 'react-css-modules';
 import styles from './styles/';
 import { Constants } from "./constants";
-import { updateTemplateData, setTemplateData, cancelMode, applyTemplateFilter } from './actions'
+
+import { 
+    setTemplateData, 
+    updateTemplateData, 
+} from "./features/canvasSlice";
+
+import { 
+    cancelMode,
+    applyTemplateFilter
+} from "./features/viewSlice";
+
 import { loadTemplate } from "./loaders";
 import DraggablePanel from "./DraggablePanel";
+
 // import LazyLoad from 'react-lazyload';
 
 // const LazyLoad = ({children}) => {
@@ -25,9 +36,10 @@ const DialogueChooseTemplate = () => {
         const url = window.WORKSHEET_FILES[index].url;
 		const newTemplate = { type:"image", size: 300, url};
 		dispatch(setTemplateData(newTemplate));
+		dispatch(cancelMode());
         loadTemplate(url, view.templateData || {}, 
             str => {
-                dispatch(updateTemplateData("svg", str))
+                dispatch(updateTemplateData({key:"svg", value:str}))
             }
         );
 	};

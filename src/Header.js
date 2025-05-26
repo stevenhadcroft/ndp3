@@ -5,15 +5,14 @@ import buttonStyles from "./styles/buttons.module.css";
 import menuStyles from "./styles/menu-left.module.css";
 import uiStyles from "./styles/ui.module.css";
 import {
-  setMenuOpen,
-  setOrientation,
-  setMode,
-  newProject,
   showLoader,
 } from "./actions";
 
-import { print } from "./utils";
-import { Fragment } from "react";
+import { 
+  setMenuOpen,
+	setMode, 
+} from "./features/viewSlice";
+
 import {unlinkMachine} from './services/localLicenseMananger';
 
 const styleModules = { ...buttonStyles, ...menuStyles, ...uiStyles };

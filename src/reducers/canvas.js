@@ -25,15 +25,15 @@ const canvas = (state, action) => {
 				selectedIndex: action.index,
 			};
 
-		case types.ADD_IMAGE:
-			newState =  {
-				...state,
-				images: images.concat([action.newImage]),
-				selectedIndex:images.length,
-			};
-			window.undoHistory.push(cloneState(newState));
-			console.log('history ADD_IMAGE ', window.undoHistory);
-			return newState;
+		// case types.ADD_IMAGE:
+		// 	newState =  {
+		// 		...state,
+		// 		images: images.concat([action.newImage]),
+		// 		selectedIndex:images.length,
+		// 	};
+		// 	window.undoHistory.push(cloneState(newState));
+		// 	console.log('history ADD_IMAGE ', window.undoHistory);
+		// 	return newState;
 
 		case types.ADD_TEXT:
 			const text = action.text || {
@@ -130,25 +130,25 @@ const canvas = (state, action) => {
 			};
 			return newState;
 
-		case types.SET_IMAGE_DATA:
-			newState = {
-				...state,
-				images: action.images,
-			};
-			// history.push(cloneState(newState));
-			// console.log('history SET_IMAGE_DATA ', history);
-			return newState;
+		// case types.SET_IMAGE_DATA:
+		// 	newState = {
+		// 		...state,
+		// 		images: action.images,
+		// 	};
+		// 	// history.push(cloneState(newState));
+		// 	// console.log('history SET_IMAGE_DATA ', history);
+		// 	return newState;
 
-		case types.UPDATE_IMAGE_DATA:
-			// console.log("action ", action);
-			if (images[action.index]) {
-				images[action.index][action.key] = action.value;
-			}
-			newState = {
-				...state,
-				images,
-			};
-			return newState;
+		// case types.UPDATE_IMAGE_DATA:
+		// 	// console.log("action ", action);
+		// 	if (images[action.index]) {
+		// 		images[action.index][action.key] = action.value;
+		// 	}
+		// 	newState = {
+		// 		...state,
+		// 		images,
+		// 	};
+		// 	return newState;
 
 		case types.SET_TEXT_DATA:
 			newState = {
@@ -169,21 +169,21 @@ const canvas = (state, action) => {
 			// history.push(newState);
 			return newState;
 
-		case types.SET_TEMPLATE_DATA:
-			newState = {
-				...state,
-				template: action.templateData,
-			};
-			window.undoHistory.push(cloneState(newState));
-			return newState;
+		// case types.SET_TEMPLATE_DATA:
+		// 	newState = {
+		// 		...state,
+		// 		template: action.templateData,
+		// 	};
+		// 	window.undoHistory.push(cloneState(newState));
+		// 	return newState;
 			
-		case types.UPDATE_TEMPLATE_DATA:
-			state.template[action.key] = action.value;
-			newState = {
-				...state,
-			};
-			window.undoHistory.push(cloneState(newState));
-		return newState;
+		// case types.UPDATE_TEMPLATE_DATA:
+		// 	state.template[action.key] = action.value;
+		// 	newState = {
+		// 		...state,
+		// 	};
+		// 	window.undoHistory.push(cloneState(newState));
+		// return newState;
 
 		case types.STORE_HISTORY:
 			// console.log('history ', history);
@@ -216,14 +216,14 @@ const canvas = (state, action) => {
 			// console.log('newState ', newState);
 			return { ...newState };
 
-		case types.NEW_PROJECT:
-			window.undoHistory = [];
-			return {
-				orientation : window.orientation,
-				images: [],
-				texts: [],
-				template: null,
-			};
+		// case types.NEW_PROJECT:
+		// 	window.undoHistory = [];
+		// 	return {
+		// 		orientation : window.orientation,
+		// 		images: [],
+		// 		texts: [],
+		// 		template: null,
+		// 	};
 
 		case types.SET_ORIENTATION:
 			return { ...state, orientation: action.orientation };

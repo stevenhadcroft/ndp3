@@ -5,29 +5,47 @@ import './styles/reset.css';
 import "./styles/App.css";
 import './styles/scroller.css';
 // import reportWebVitals from './reportWebVitals';
-import { eSearchLogic, eSearchFilter } from "./constants";
+// import { eSearchLogic, eSearchFilter } from "./constants";
 
 import { Provider } from 'react-redux'
-import { createStore } from 'redux'
-import reducer from './reducers'
-import { Constants } from "./constants";
+// import { createStore } from 'redux'
+// import reducer from './reducers'
+// import { Constants } from "./constants";
+// import { configureStore } from '@reduxjs/toolkit';
 
-const initialState = { 
-  view : {
-    // mode:Constants.MODE_USER_OPTIONS,
-    searchFilter:eSearchFilter.PICTURE,
-    searchLogic:eSearchLogic.BEGINS,
-    searchTerm:'',
-    showMenuPopup: false,
-  } 
-};
+// import { combineReducers } from "redux";
+// import viewReducer from './features/viewSlice';
+// import canvasReducer from './features/canvasSlice';
+import { store } from './store';
 
-const store = createStore(
-  reducer,
-  initialState,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() 
-)
+
+// const initialState = { 
+//   view : {
+//     // mode:Constants.MODE_USER_OPTIONS,
+//     searchFilter:eSearchFilter.PICTURE,
+//     searchLogic:eSearchLogic.BEGINS,
+//     searchTerm:'',
+//     showMenuPopup: false,
+//   } 
+// };
+
+// const store = createStore(
+//   reducer,
+//   initialState,
+//   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() 
+// )
+
+// const store = configureStore({
+//   reducer: {
+//     view: viewReducer,       // RTK slice
+//     canvas: canvasReducer          // Classic Redux reducer
+//   }
+//     // reducer:{...reducer},
+// //   initialState,
+// });
+
 window.store = store;
+
 
 
 ReactDOM.render(

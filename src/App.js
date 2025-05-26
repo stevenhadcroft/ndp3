@@ -2,16 +2,21 @@ import { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
-	setTemplateData,
-	setCanvasScale,
-	updateTemplateData,
 	deleteImage,
 	deleteText,
-	setMode,
-	updateImageData,
 	updateTextData
 } from './actions'
 
+import { 
+	setTemplateData,
+	updateTemplateData,
+	updateImageData,
+} from "./features/canvasSlice";
+
+import { 
+	setMode, 
+	setCanvasScale,
+} from "./features/viewSlice";
 
 import { Constants } from "./constants";
 import Canvas from "./Canvas";
@@ -38,12 +43,11 @@ import { loadTemplate } from "./loaders";
 
 const App = () => {
 
+	const dispatch = useDispatch();
 	const view = useSelector(state => state.view);
 	const canvas = useSelector(state => state.canvas);
-	const dispatch = useDispatch();
 	const mode = view.mode;
 	
-
 	const nudge = dir => {
 		const selectedIndex = canvas.selectedIndex || 0;
 		let elsToMove = [];
@@ -81,8 +85,8 @@ const App = () => {
 					const size = canvas.images[selectedIndex].size;
 					const x = left + size/2;
 					const y = top + size/2;
-					dispatch(updateImageData(selectedIndex, "x", x))
-					dispatch(updateImageData(selectedIndex, "y", y))
+					dispatch(updateImageData({index:selectedIndex, key:"x", value:x}))
+					dispatch(updateImageData({index:selectedIndex, key:"y", value:y}))
 					
 				} else if (item.type === "text" && !view.textfieldFocussed){ // dont wanna move if text is selected
 					// el.style.left =`${left}px`;
@@ -100,8 +104,6 @@ const App = () => {
 
 	// handle what happens on key press
 	const handleKeyPress = (evt) => {
-		// console.log(`Key pressed: ${evt.key}`);
-		// console.log(evt.keyCode);
 		if (evt.keyCode === 8) {
 			if (window.mode === Constants.MODE_EDIT_IMAGE) {
 				dispatch(deleteImage());
@@ -190,7 +192,7 @@ const App = () => {
 		const newTemplate = { type: "image", size: 300, url };
 		dispatch(setTemplateData(newTemplate));
 		loadTemplate(url, view.templateData || {},
-			str => dispatch(updateTemplateData("svg", str))
+			str => dispatch(updateTemplateData({key:"svg", value:str}))
 		);
 		return ()=>{};
 	}
@@ -198,10 +200,6 @@ const App = () => {
 	const resizeCanvas = () => {
 		let scale = ((window.innerHeight-60)/1024); // - 0.03 - 0.04;
 		dispatch(setCanvasScale(scale));
-		// do we need to hide menu
-		// let canvasWidth = document.querySelector("#canvas").getBoundingClientRect().width;
-		// let edgeSpacing = (window.innerWidth - canvasWidth) / 2; 
-		// setMenuCanvasOverlap(edgeSpacing<300);
 	};
 
 	return (

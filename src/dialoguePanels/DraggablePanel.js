@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import CSSModules from 'react-css-modules';
-import styles from './styles/';
-import { Constants } from "./constants";
+import styles from '../styles';
+import { Constants } from "../constants";
 
 // https://www.w3schools.com/howto/howto_js_draggable.asp
 

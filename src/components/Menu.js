@@ -1,4 +1,4 @@
-import { Constants } from "./constants";
+import { eMode } from "../constants";
 import { useSelector, useDispatch } from 'react-redux';
 import CSSModules from 'react-css-modules';
 import buttonStyles from './styles/buttons.module.css';
@@ -6,19 +6,16 @@ import menuStyles from './styles/menu.module.css';
 import uiStyles from './styles/ui.module.css';
 
 import { 
-    // setMenuOpen,
-    addText, 
-    // setMode, 
-    // cancelMode
-} from "./actions";
-
-import { 
     setMenuOpen,
     setMode, 
     cancelMode
-} from "./features/viewSlice";
+} from "../features/viewSlice";
 
-import { print } from "./utils";
+import { 
+    addText, 
+} from "../features/canvasSlice";
+
+import { print } from "../utils";
 import { Fragment } from "react";
 
 const styleModules = { ...buttonStyles, ...menuStyles, ...uiStyles };
@@ -38,11 +35,11 @@ const Menu = ({ menuCanvasOverlap }) => {
 
     const handleAddText = () => {
         dispatch(addText());
-        dispatch(setMode(Constants.MODE_EDIT_TEXT));
+        dispatch(setMode(eMode.EDIT_TEXT));
     };
 
     const handleNewProject = () => {
-        dispatch(setMode(Constants.MODE_NEW_PROJECT));
+        dispatch(setMode(eMode.NEW_PROJECT));
     };
 
     const handleMenuOpen = () => {
@@ -56,12 +53,12 @@ const Menu = ({ menuCanvasOverlap }) => {
     const Buttons = () => (
         <div styleName="menu-container">
             <button styleName="primary blue" onClick={handleNewProject}>New project</button>
-            <button styleName="primary blue" onClick={() => handleSetMode(Constants.MODE_OPEN_PROJECT)}>Open project</button>
-            <button styleName="primary green" onClick={() => handleSetMode(Constants.MODE_CHOOSE_TEMPLATE)}>Choose template</button>
-            <button styleName="primary green" onClick={() => handleSetMode(Constants.MODE_ADD_IMAGE)}>Add images</button>
-            <button styleName="primary green" onClick={() => handleSetMode(Constants.MODE_COLOUR_IMAGE)}>Add colour</button>
+            <button styleName="primary blue" onClick={() => handleSetMode(eMode.OPEN_PROJECT)}>Open project</button>
+            <button styleName="primary green" onClick={() => handleSetMode(eMode.CHOOSE_TEMPLATE)}>Choose template</button>
+            <button styleName="primary green" onClick={() => handleSetMode(eMode.ADD_IMAGE)}>Add images</button>
+            <button styleName="primary green" onClick={() => handleSetMode(eMode.COLOUR_IMAGE)}>Add colour</button>
             <button styleName="primary green" onClick={handleAddText}>Add text</button>
-            <button styleName="primary orange" onClick={() => handleSetMode(Constants.MODE_SAVE_PROJECT)}>Save project</button>
+            <button styleName="primary orange" onClick={() => handleSetMode(eMode.SAVE_PROJECT)}>Save project</button>
             <button styleName="primary orange" onClick={handlePrint}>Print project</button>
         </div>
     );

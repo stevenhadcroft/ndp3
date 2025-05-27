@@ -3,22 +3,19 @@ import { useSelector, useDispatch } from 'react-redux';
 import CSSModules from 'react-css-modules';
 import { HexColorPicker } from "react-colorful";
 import { SketchPicker, SwatchesPicker } from 'react-color';
-import styles from './styles/';
-import { Constants } from "./constants";
+import styles from '../styles';
+import { eMode } from "../constants";
 import DraggablePanel from "./DraggablePanel";
-
-import { 
-    // cancelMode, 
-    // setMode, 
-    updateTextData
-} from './actions'
 
 import { 
     cancelMode,
 	setMode, 
     setBrushColour, 
-} from "./features/viewSlice";
+} from "../features/viewSlice";
 
+import { 
+    updateTextData
+} from "../features/canvasSlice";
 
 const DialogueAddColour = () => {
 
@@ -28,8 +25,8 @@ const DialogueAddColour = () => {
     
     // HANDLERS ---------------------------------------------------
     const setColour = (col) => {
-        if (view.mode === Constants.MODE_COLOUR_TEXT){
-            dispatch(updateTextData('colour', col));
+        if (view.mode === eMode.COLOUR_TEXT){
+            dispatch(updateTextData({key:'colour', value:col}));
         } else {
             let brushTip = document.getElementById('brush-tip');
             if (brushTip) brushTip.style.fill = col;
@@ -39,9 +36,9 @@ const DialogueAddColour = () => {
 
     const onClose = () => {
         dispatch(setBrushColour(null));
-        if (view.mode === Constants.MODE_COLOUR_TEXT){
+        if (view.mode === eMode.COLOUR_TEXT){
             // go back to edit text mode - where we came from
-            dispatch(setMode(Constants.MODE_EDIT_TEXT));
+            dispatch(setMode(eMode.EDIT_TEXT));
         } else {
             dispatch(cancelMode());
         }

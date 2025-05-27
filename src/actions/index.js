@@ -1,9 +1,9 @@
 import * as types from "../constants/ActionTypes";
 
-export const fileLoadUpdate = data => ({
-	type: types.SET_FILE_LOAD_UPDATE,
-	data,
-});
+// export const fileLoadUpdate = data => ({
+// 	type: types.SET_FILE_LOAD_UPDATE,
+// 	data,
+// });
 
 // export const setSelectedIndex = index => ({
 // 	type: types.SET_SELECTED_INDEX,
@@ -38,17 +38,17 @@ export const fileLoadUpdate = data => ({
 //     value,
 // });
 
-export const setTextData = texts => ({
-	type: types.SET_TEXT_DATA,
-	texts,
-});
+// export const setTextData = texts => ({
+// 	type: types.SET_TEXT_DATA,
+// 	texts,
+// });
 
 
-export const updateTextData = (key, value) => ({
-	type: types.UPDATE_TEXT_DATA,
-    key,
-    value,
-});
+// export const updateTextData = (key, value) => ({
+// 	type: types.UPDATE_TEXT_DATA,
+//     key,
+//     value,
+// });
 
 // export const setTemplateData = templateData => ({
 // 	type: types.SET_TEMPLATE_DATA,
@@ -64,17 +64,17 @@ export const setGeneric = (payload) => ({
 	payload,
 });
 
-export const deleteImage = () => ({
-	type: types.DELETE_IMAGE,
-});
-export const deleteText = () => ({
-	type: types.DELETE_TEXT,
-});
+// export const deleteImage = () => ({
+// 	type: types.DELETE_IMAGE,
+// });
+// export const deleteText = () => ({
+// 	type: types.DELETE_TEXT,
+// });
 
-export const addText = text => ({
-	type: types.ADD_TEXT,
-	text,
-});
+// export const addText = text => ({
+// 	type: types.ADD_TEXT,
+// 	text,
+// });
 
 export const duplicateImage = () => ({
 	type: types.DUPLICATE_IMAGE,

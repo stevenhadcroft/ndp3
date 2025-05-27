@@ -19,11 +19,11 @@ const canvas = (state, action) => {
 	let newState;
 
 	switch (action.type) {
-		case types.SET_SELECTED_INDEX:
-			return {
-				...state,
-				selectedIndex: action.index,
-			};
+		// case types.SET_SELECTED_INDEX:
+		// 	return {
+		// 		...state,
+		// 		selectedIndex: action.index,
+		// 	};
 
 		// case types.ADD_IMAGE:
 		// 	newState =  {
@@ -35,49 +35,49 @@ const canvas = (state, action) => {
 		// 	console.log('history ADD_IMAGE ', window.undoHistory);
 		// 	return newState;
 
-		case types.ADD_TEXT:
-			const text = action.text || {
-				type: "text",
-				fontFamily:Constants.FONTLIST[0],
-				fontSize: 30,
-				justify: "center",
-				x: 250,
-				y: 250,
-				angle: 0,
-				size: 450,
-				text: "Enter text",
-				zIndex: 99999,
-			};
-			newState =  {
-				...state,
-				texts: texts.concat([text]),
-				selectedIndex:texts.length,
-			};
-			window.undoHistory.push(cloneState(newState));
-			return newState;
+		// case types.ADD_TEXT:
+		// 	const text = action.text || {
+		// 		type: "text",
+		// 		fontFamily:Constants.FONTLIST[0],
+		// 		fontSize: 30,
+		// 		justify: "center",
+		// 		x: 250,
+		// 		y: 250,
+		// 		angle: 0,
+		// 		size: 450,
+		// 		text: "Enter text",
+		// 		zIndex: 99999,
+		// 	};
+		// 	newState =  {
+		// 		...state,
+		// 		texts: texts.concat([text]),
+		// 		selectedIndex:texts.length,
+		// 	};
+		// 	window.undoHistory.push(cloneState(newState));
+		// 	return newState;
 
-		case types.DELETE_IMAGE:
+		// case types.DELETE_IMAGE:
 			
-			images.splice(state.selectedIndex, 1);
-			newState = {
-				...state,
-				images,
-				// brushColour: null,
-				selectedIndex:null,
-			};
-			window.undoHistory.push(cloneState(newState));
-			return newState;
+		// 	images.splice(state.selectedIndex, 1);
+		// 	newState = {
+		// 		...state,
+		// 		images,
+		// 		// brushColour: null,
+		// 		selectedIndex:null,
+		// 	};
+		// 	window.undoHistory.push(cloneState(newState));
+		// 	return newState;
 		
-		case types.DELETE_TEXT:
-			texts.splice(state.selectedIndex, 1);
-			newState = {
-				...state,
-				texts,
-				// brushColour: null,
-				selectedIndex:null,
-			};
-			window.undoHistory.push(cloneState(newState));
-			return newState;
+		// case types.DELETE_TEXT:
+		// 	texts.splice(state.selectedIndex, 1);
+		// 	newState = {
+		// 		...state,
+		// 		texts,
+		// 		// brushColour: null,
+		// 		selectedIndex:null,
+		// 	};
+		// 	window.undoHistory.push(cloneState(newState));
+		// 	return newState;
 	
 		case types.DUPLICATE_TEXT:
 			if (!texts[state.selectedIndex]) return { ...state };
@@ -123,12 +123,12 @@ const canvas = (state, action) => {
 			window.undoHistory.push(cloneState(newState));
 			return newState;
 
-		case types.SET_FILE_LOAD_UPDATE:
-			newState = {
-				...state,
-				fileLoadUpdate: action.data,
-			};
-			return newState;
+		// case types.SET_FILE_LOAD_UPDATE:
+		// 	newState = {
+		// 		...state,
+		// 		fileLoadUpdate: action.data,
+		// 	};
+		// 	return newState;
 
 		// case types.SET_IMAGE_DATA:
 		// 	newState = {
@@ -150,24 +150,24 @@ const canvas = (state, action) => {
 		// 	};
 		// 	return newState;
 
-		case types.SET_TEXT_DATA:
-			newState = {
-				...state,
-				texts: action.texts,
-			};
-			window.undoHistory.push(cloneState(newState));
-			return newState;
+		// case types.SET_TEXT_DATA:
+		// 	newState = {
+		// 		...state,
+		// 		texts: action.texts,
+		// 	};
+		// 	window.undoHistory.push(cloneState(newState));
+		// 	return newState;
 
-		case types.UPDATE_TEXT_DATA:
-			if (texts[state.selectedIndex]) {
-				texts[state.selectedIndex][action.key] = action.value;
-			}
-			newState = {
-				...state,
-				texts,
-			};
-			// history.push(newState);
-			return newState;
+		// case types.UPDATE_TEXT_DATA:
+		// 	if (texts[state.selectedIndex]) {
+		// 		texts[state.selectedIndex][action.key] = action.value;
+		// 	}
+		// 	newState = {
+		// 		...state,
+		// 		texts,
+		// 	};
+		// 	// history.push(newState);
+		// 	return newState;
 
 		// case types.SET_TEMPLATE_DATA:
 		// 	newState = {

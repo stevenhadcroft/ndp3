@@ -1,28 +1,28 @@
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import CSSModules from 'react-css-modules';
-import styles from './styles/';
-import { Constants } from "./constants";
+import styles from '../styles';
+import { eMode } from "../constants";
 import Swal from 'sweetalert2';
 
 import { 
-    setTextData, 
     setUserName,
-} from './actions'
+} from '../actions'
 
 import { 
     setTemplateData,
     setImageData, 
-} from "./features/canvasSlice";
+    setTextData, 
+} from "../features/canvasSlice";
 
 import { 
-	setMode, 
-} from "./features/viewSlice";
+    setMode, 
+} from "../features/viewSlice";
 
 import DraggablePanel from "./DraggablePanel";
-import { getUser, createUser } from "./services/userMananger";
-import {linkMachine, unlinkMachine} from './services/localLicenseMananger';
-import {validateKey} from './utils';
+import { getUser, createUser } from "../services/userMananger";
+import {linkMachine, unlinkMachine} from '../services/localLicenseMananger';
+import {validateKey} from '../utils';
 
 
 const DialogueUser = () => {
@@ -44,17 +44,6 @@ const DialogueUser = () => {
 
     // HANDLERS ---------------------------------------------------
     const onSignIn = async () => {
-
-        //clear out old data
-        // dispatch(setImageData([]));
-        // dispatch(setTextData([]));
-        // dispatch(setTemplateData([]));
-        // dispatch(setUserName("a2")); 
-        // dispatch(setMode(Constants.MODE_USER_ACTIVE))
-        // linkMachine();
-        // return false;
-
-
 
         // const data = { email: "steven@stevenhadcroft.com", password: "pass1234" }
         const email = inputRefSignInEmail.current.value;
@@ -81,11 +70,11 @@ const DialogueUser = () => {
             dispatch(setTemplateData([]));
             dispatch(setUserName(email)); 
 
-            dispatch(setMode(Constants.MODE_USER_ACTIVE))
+            dispatch(setMode(eMode.USER_ACTIVE))
             linkMachine();
             
         } else if (response.complete === 1 && response.approval !== "approved") {
-            dispatch(setMode(Constants.MODE_USER_OPTIONS))
+            dispatch(setMode(eMode.USER_OPTIONS))
             Swal.fire({
                 title: 'Account pending',
                 text: 'Your account is pending approval',
@@ -157,7 +146,7 @@ const DialogueUser = () => {
             .then((response) => {
                 console.log('response ', response);
                 if (response.complete === 1){
-                    // setShow(Constants.MODE_USER_SIGN_IN);
+                    // setShow(eMode.USER_SIGN_IN);
                     Swal.fire({
                         title: 'Success!',
                         text: 'Your account has been created.',
@@ -165,7 +154,7 @@ const DialogueUser = () => {
                         footer: 'Please sign in to continue.',
                         confirmButtonText: 'Sign In'
                     })
-                    dispatch(setMode(Constants.MODE_USER_SIGN_IN))
+                    dispatch(setMode(eMode.USER_SIGN_IN))
                 } else {
                     // alert("user not found")
                     Swal.fire({
@@ -180,9 +169,9 @@ const DialogueUser = () => {
 
     // const onClose = () => {
     //     dispatch(setBrushColour(null));
-    //     if (view.mode === Constants.MODE_COLOUR_TEXT) {
+    //     if (view.mode === eMode.COLOUR_TEXT) {
     //         // go back to edit text mode - where we came from
-    //         dispatch(setMode(Constants.MODE_EDIT_TEXT));
+    //         dispatch(setMode(eMode.EDIT_TEXT));
     //     } else {
     //         dispatch(cancelMode());
     //     }
@@ -211,11 +200,11 @@ const DialogueUser = () => {
         <DraggablePanel central={true} id='sign-in' title="Options">   {/* buttons={Buttons} */}
             <div style={{ textAlign: 'center'}}>
                 <div style={{ height: "20px" }} />
-                <button styleName="primary narrow green" onClick={() => { dispatch(setMode(Constants.MODE_USER_SIGN_IN)) }}>Sign In</button>
+                <button styleName="primary narrow green" onClick={() => { dispatch(setMode(eMode.USER_SIGN_IN)) }}>Sign In</button>
                 <div style={{ height: "20px" }} />
-                <button styleName="primary narrow green" onClick={() => { dispatch(setMode(Constants.MODE_USER_REGISTER)) }}>Register</button>
+                <button styleName="primary narrow green" onClick={() => { dispatch(setMode(eMode.USER_REGISTER)) }}>Register</button>
                 <div style={{ height: "50px" }} />
-                <button styleName="secondary narrow" onClick={()=>dispatch(setMode(Constants.MODE_USER_OPTIONS))}>Forgotten License Key</button>
+                <button styleName="secondary narrow" onClick={()=>dispatch(setMode(eMode.USER_OPTIONS))}>Forgotten License Key</button>
             </div>
         </DraggablePanel>
 
@@ -237,12 +226,12 @@ const DialogueUser = () => {
                 <div style={{ height: "50px" }} />
 
                 <div style={center}>
-                    <button styleName="primary narrow red" onClick={()=>dispatch(setMode(Constants.MODE_USER_OPTIONS))}>Cancel</button>
+                    <button styleName="primary narrow red" onClick={()=>dispatch(setMode(eMode.USER_OPTIONS))}>Cancel</button>
                     <button styleName="primary narrow green" onClick={onSignIn}>Submit</button>
                 </div>
 
                 <div style={center}>
-                    <button styleName="secondary narrow red" onClick={()=>dispatch(setMode(Constants.MODE_USER_OPTIONS))}>Forgotten License Key</button>
+                    <button styleName="secondary narrow red" onClick={()=>dispatch(setMode(eMode.USER_OPTIONS))}>Forgotten License Key</button>
                 </div>
                 
 
@@ -295,7 +284,7 @@ const DialogueUser = () => {
                 <div style={{ height: "50px" }} />
 
                 <div style={center}>
-                    <button styleName="primary narrow red" onClick={()=>dispatch(setMode(Constants.MODE_USER_OPTIONS))}>Cancel</button>
+                    <button styleName="primary narrow red" onClick={()=>dispatch(setMode(eMode.USER_OPTIONS))}>Cancel</button>
                     <button styleName="primary narrow green" onClick={onRegister}>Submit</button>
                 </div>
                 
@@ -305,21 +294,21 @@ const DialogueUser = () => {
 
     return (
         <>
-            {view.mode === Constants.MODE_USER_PENDING &&
+            {view.mode === eMode.USER_PENDING &&
                 <Container>
                 </Container>
             }
-            {view.mode === Constants.MODE_USER_OPTIONS &&
+            {view.mode === eMode.USER_OPTIONS &&
                 <Container>
                     <Options />
                 </Container>
             }
-            {view.mode === Constants.MODE_USER_REGISTER &&
+            {view.mode === eMode.USER_REGISTER &&
                 <Container>
                     <Register />
                 </Container>
             }
-            {view.mode === Constants.MODE_USER_SIGN_IN &&
+            {view.mode === eMode.USER_SIGN_IN &&
                 <Container>
                     <SignIn />
                 </Container>

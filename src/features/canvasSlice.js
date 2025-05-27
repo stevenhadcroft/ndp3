@@ -1,14 +1,18 @@
 // src/features/canvas/canvasSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 import { cloneDeep } from "../utils";
+import { DEFAULT_TEXT } from "../constants";
 
 const cloneState = (state) => {
 	let s = cloneDeep(state);
-	// if (!s.images) s.images = [];
 	s.images = s.images ? cloneDeep(s.images) : [];
 	if (!s.texts) s.texts = [];
 	return s;
 };
+
+const pushHistory = (state) => {
+  if (window.undoHistory) window.undoHistory.push(cloneState(state));
+}
 
 const canvasSlice = createSlice({
   name: 'canvas',
@@ -27,58 +31,98 @@ const canvasSlice = createSlice({
       state.template = null;
     },
 
-    setTemplateData: (state, action) => {
-      state.template = action.payload;
-      // window.undoHistory.push(cloneState(state));
-    },
-
-    updateTemplateData: (state, action) => {
-      // console.log('action ', action);
-      // state.template = action.payload;
-      state.template[action.payload.key] = action.payload.value;
-      // window.undoHistory.push(cloneState(state));
-    },
-
-    addImage: (state, action) => {
-      state.images = state.images.concat([action.payload]);
-      state.selectedIndex = state.images.length; // Set the selected index to the newly added image
-      // window.undoHistory.push(cloneState(state));
-    },
-
-    setImageData: (state, action) => { 
-      // console.log('action ', action);
-      state.images = action.payload.images;
-      // window.undoHistory.push(cloneState(state));
-    },
-
-    updateImageData: (state, action) => {
-      // console.log('action ', action);
-      if (state.images[action.payload.index]) {
-        state.images[action.payload.index][action.payload.key] = action.payload.value;
-      }
-      // window.undoHistory.push(cloneState(state));
-    },
-
     setSelectedIndex: (state, action) => {
       state.selectedIndex = action.payload;
     },
 
-    setDragIndex: (state, action) => {
-      state.dragIndex = action.payload;
-    }
-
-  }
+    setTemplateData: (state, action) => {
+      state.template = action.payload;
+      pushHistory(state)
+    },
+    
+    updateTemplateData: (state, action) => {
+      state.template[action.payload.key] = action.payload.value;
+      pushHistory(state)
+    },
+    
+    addImage: (state, action) => {
+      state.selectedIndex = state.images.length; // Set the selected index to the newly added image
+      state.images = state.images.concat([action.payload]);
+      pushHistory(state)
+    },
+    
+    setImageData: (state, action) => { 
+      // console.log('action ', action);
+      state.images = action.payload.images;
+      pushHistory(state);
+    },
+    
+    updateImageData: (state, action) => {
+      if (state.images[action.payload.index]) {
+        state.images[action.payload.index][action.payload.key] = action.payload.value;
+        pushHistory(state);
+      }
+    },
+    
+    deleteImage: (state, action) => {
+      if (state.images.length > 0) {
+        state.images.splice(state.selectedIndex, 1);
+        state.selectedIndex = null;
+        pushHistory(state);
+      }
+    },
+    
+    addText: (state, action) => {
+      const text = action.payload || DEFAULT_TEXT;
+      state.selectedIndex = state.texts.length;
+      state.texts = state.texts.concat([text]);
+      pushHistory(state);
+    },
+    
+    deleteText: (state, action) => {
+      if (state.texts.length > 0) {
+        state.selectedIndex = null; // Adjust selected index
+        state.texts.splice(state.selectedIndex, 1);
+        pushHistory(state);
+      }
+    },
+    
+    setTextData: (state, action) => {
+      state.texts = action.payload;
+      pushHistory(state);
+    },
+    
+    updateTextData: (state, action) => {
+      if (state.texts[state.selectedIndex]) {
+        state.texts[state.selectedIndex][action.payload.key] = action.payload.value;
+        pushHistory(state);
+      }
+    },
+    
+    fileLoadUpdate: (state, action) => {
+      const { imageData, textData, templateData } = action.payload;
+      state.images = imageData || [];
+      state.texts = textData || [];
+      state.template = templateData || null;
+      window.undoHistory = [state];
+    },
+  },
 });
 
 export const {
   resetCanvas,
+  setSelectedIndex,
   setTemplateData,
   updateTemplateData,
   addImage,
   setImageData,
   updateImageData,
-  setSelectedIndex,
-  setDragIndex
+  deleteImage,
+  addText,
+  deleteText,
+  setTextData,
+  updateTextData,
+  fileLoadUpdate
 } = canvasSlice.actions;
 
 export default canvasSlice.reducer;

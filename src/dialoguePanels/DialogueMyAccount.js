@@ -1,13 +1,12 @@
-import { Fragment } from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import CSSModules from 'react-css-modules';
-import styles from './styles/';
+import styles from '../styles';
 
 // import { cancelMode, setUserName } from "./actions";
 
 import { 
     cancelMode, 
-} from "./features/viewSlice";
+} from "../features/viewSlice";
 
 import DraggablePanel from "./DraggablePanel";
 // import {deactivateLicence} from './services/dynamodb';
@@ -31,9 +30,9 @@ const DialogueMyAccount = () => {
 	// Buttons
 	//--------------------------------------------------------------
     const Buttons = (
-        <Fragment>
+        <>
             <button styleName="primary narrow blue" onClick={()=>dispatch(cancelMode())}>Done</button>
-        </Fragment>
+        </>
     )
 
     //--------------------------------------------------------------

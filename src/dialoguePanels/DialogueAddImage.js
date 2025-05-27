@@ -1,22 +1,27 @@
-import { Fragment, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import CSSModules from 'react-css-modules';
-import styles from './styles/';
-import { Constants, eSearchLogic, eSearchFilter } from "./constants";
+import styles from '../styles';
+
+import { 
+	Constants, 
+	eSearchLogic, 
+	eSearchFilter
+} from "../constants";
 
 import { 
 	cancelMode,
 	setSearch,
 	showPhonetics, 
 	addPhonetic,
-} from "./features/viewSlice";
+} from "../features/viewSlice";
 
 import { 
 	addImage, 
 	updateImageData, 
-} from "./features/canvasSlice";
+} from "../features/canvasSlice";
 
-import { loadImage } from "./loaders";
+import { loadImage } from "../loaders";
 import DraggablePanel from "./DraggablePanel";
 
 // import LazyLoad from 'react-lazyload';
@@ -171,10 +176,10 @@ const DialogueAddImage = () => {
 	// Buttons Component
 	//--------------------------------------------------------------
 	const Buttons = (
-        <Fragment>
+        <>
             <button styleName="primary narrow blue" onClick={()=>dispatch(cancelMode())}>Back to main</button>
             <button styleName="primary narrow green" onClick={()=>onLoadClicked(localSelectedIndex)}>Use selected</button>
-        </Fragment>
+        </>
     )
 
 	//--------------------------------------------------------------

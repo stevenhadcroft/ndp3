@@ -2,37 +2,37 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import CSSModules from 'react-css-modules';
-import styles from './styles/';
+import styles from '../styles';
 import TransformWidget from "./TransformWidget";
-import { Constants } from "./constants";
-import { eDirection } from "./constants";
-import { BrushSVG } from "./SVG";
+import { eMode } from "../constants";
+import { eDirection } from "../constants";
+import { BrushSVG } from "./BrushSVG";
 
 import {
-	updateTextData, 
 	storeHistroy,
 	setTemplateLock,
-	addText,
-	fileLoadUpdate
-} from "./actions";
+} from "../actions";
 
 import { 
+	setSelectedIndex, 
 	setTemplateData,
 	updateTemplateData, 
 	addImage,
 	updateImageData, 
-	setSelectedIndex, 
-	setDragIndex,
-} from "./features/canvasSlice";
+	addText,
+	updateTextData, 
+	fileLoadUpdate
+} from "../features/canvasSlice";
 
 import { 
 	setMode, 
-} from "./features/viewSlice";
+	setDragIndex,
+} from "../features/viewSlice";
 
 import { 
 	loadImage, 
 	loadTemplate
-} from "./loaders";
+} from "../loaders";
 
 
 let clickOffset = {};
@@ -88,7 +88,7 @@ const Canvas = () => {
 				loadImage(url, images, callback1, newImage, callback2);
 				
 				// trigger next item
-				dispatch(fileLoadUpdate({data:canvas.fileLoadUpdate.data}));
+				dispatch(fileLoadUpdate(canvas.fileLoadUpdate.data));
 			
 			} else if (canvas.fileLoadUpdate.data.textData && canvas.fileLoadUpdate.data.textData.length>0){
 				let item = canvas.fileLoadUpdate.data.textData.pop();
@@ -97,7 +97,7 @@ const Canvas = () => {
 				let newText = {...item, type: "text", zIndex};
 				dispatch(addText(newText));	
 				// trigger next item
-				dispatch(fileLoadUpdate({data:canvas.fileLoadUpdate.data}));
+				dispatch(fileLoadUpdate(canvas.fileLoadUpdate.data));
 			
 			} else if (canvas.fileLoadUpdate.data.templateData){
 				let item = canvas.fileLoadUpdate.data.templateData;
@@ -116,9 +116,9 @@ const Canvas = () => {
 
 	const updateData = (index, key, value) => {
 		switch (mode) {
-			case Constants.MODE_EDIT_IMAGE: dispatch(updateImageData({index, key, value})); break;
-			case Constants.MODE_COLOUR_IMAGE: dispatch(updateImageData({index, key, value})); break;
-			case Constants.MODE_EDIT_TEXT: dispatch(updateTextData(key, value)); break;
+			case eMode.EDIT_IMAGE: dispatch(updateImageData({index, key, value})); break;
+			case eMode.COLOUR_IMAGE: dispatch(updateImageData({index, key, value})); break;
+			case eMode.EDIT_TEXT: dispatch(updateTextData({key, value})); break;
 			default: break;
 		}
 	};
@@ -143,15 +143,12 @@ const Canvas = () => {
 	}
 
 	const onImageClick = (evt, index, nextMode) => {
-		// console.log('onImageClick');
 		onDown(evt.clientX, evt.clientY, index, nextMode);
 	}
 
 	const onDown = (downX, downY, index, nextMode) => {
-		console.log('onDown')
-		if (mode !== Constants.MODE_COLOUR_IMAGE) {
+		if (mode !== eMode.COLOUR_IMAGE) {
 			dispatch(setMode(nextMode));
-			// dispatch(setSelectedIndex(index));
 		}
 
 		const el = document.elementsFromPoint(downX, downY);
@@ -190,8 +187,8 @@ const Canvas = () => {
 						// superficially colour dom
 						path.setAttribute("fill", brushColour);
 						// store colour	for saving	
-						// if (nextMode === Constants.MODE_EDIT_IMAGE || nextMode === Constants.MODE_EDIT_TEMPLATE) {
-						if (view.mode === Constants.MODE_COLOUR_IMAGE) {
+						// if (nextMode === eMode.EDIT_IMAGE || nextMode === eMode.EDIT_TEMPLATE) {
+						if (view.mode === eMode.COLOUR_IMAGE) {
 							if (isTemplate){ // isNaN(index)
 								dispatch(updateTemplateData({key:fillIdStoreId, value:brushColour}))
 	
@@ -245,8 +242,8 @@ const Canvas = () => {
 	}
 
 	const onTextDown = (downX, downY, index) => {
-		if (mode !== Constants.MODE_COLOUR_IMAGE) {
-			dispatch(setMode(Constants.MODE_EDIT_TEXT));
+		if (mode !== eMode.COLOUR_IMAGE) {
+			dispatch(setMode(eMode.EDIT_TEXT));
 		}
 		dispatch(setDragIndex(index));
 		dispatch(setSelectedIndex(index));
@@ -265,13 +262,13 @@ const Canvas = () => {
 
 	const onUp = e => { 
 		dispatch(setDragIndex(-1));
-		if (mode === Constants.MODE_COLOUR_IMAGE) {
+		if (mode === eMode.COLOUR_IMAGE) {
 			dispatch(storeHistroy());
 		}
-		if (mode === Constants.MODE_EDIT_IMAGE) {
+		if (mode === eMode.EDIT_IMAGE) {
 			dispatch(storeHistroy());
 		}
-		// if (Constants.MODE_EDIT_IMAGE)
+		// if (eMode.EDIT_IMAGE)
 	};
 
 	//---------------------
@@ -296,9 +293,10 @@ const Canvas = () => {
 		window.mousex = x;
 		window.mousey = y;
 		if (dragIndex !== -1) {
-			console.log(x, y, clickOffset.x, clickOffset.y, canvasRect.left, canvasInnerRect.left);
-			updateData(dragIndex, "x", (moveX - clickOffset.x + (canvasRect.left - canvasInnerRect.left)) / canvasScale / zoom); 
-			updateData(dragIndex, "y", (moveY - clickOffset.y + (canvasRect.top - canvasInnerRect.top)) / canvasScale / zoom ); 
+			const x = (moveX - clickOffset.x + (canvasRect.left - canvasInnerRect.left)) / canvasScale / zoom;
+			const y = (moveY - clickOffset.y + (canvasRect.top - canvasInnerRect.top)) / canvasScale / zoom;
+			updateData(dragIndex, "x", x); 
+			updateData(dragIndex, "y", y); 
 		}
 	};
 
@@ -336,7 +334,7 @@ const Canvas = () => {
 			left: `${item.x - item.size / 2}px`,
 			top: `${item.y - item.size / 2}px`,
 			transform: `rotate(${item.angle}deg)`,
-			border: selectedIndex === index && mode === Constants.MODE_EDIT_IMAGE && !brushColour ? "solid 3px #0099CC" : "solid 3px #0099CC00",
+			border: selectedIndex === index && mode === eMode.EDIT_IMAGE && !brushColour ? "solid 3px #0099CC" : "solid 3px #0099CC00",
 			width: `${item.size}px`,
 			height: `${item.size}px`,
 		}
@@ -348,7 +346,7 @@ const Canvas = () => {
 			left: `${item.x - item.size / 2}px`,
 			top: `${item.y - item.size / 3 / 2}px`,
 			transform: `rotate(${item.angle}deg)`,
-			border: selectedIndex === index && mode === Constants.MODE_EDIT_TEXT && !brushColour ? "solid 3px #0099CC" : "solid 3px #0099CC00",
+			border: selectedIndex === index && mode === eMode.EDIT_TEXT && !brushColour ? "solid 3px #0099CC" : "solid 3px #0099CC00",
 			width: `${item.size}px`,
 			height: `${item.size / 4}px`,
 			
@@ -391,8 +389,8 @@ const Canvas = () => {
 								background:"#fff", 
 								transform:  "translate(150px, -120px) rotate(90deg)"
 							} : null}
-							onMouseDown={evt => onImageClick(evt, 0, Constants.MODE_EDIT_TEMPLATE)}
-							onTouchStart={evt => onImageTouch(evt, 0, Constants.MODE_EDIT_TEMPLATE)}
+							onMouseDown={evt => onImageClick(evt, 0, eMode.EDIT_TEMPLATE)}
+							onTouchStart={evt => onImageTouch(evt, 0, eMode.EDIT_TEMPLATE)}
 							dangerouslySetInnerHTML={{ __html: template.svg }}
 						/>
 					}
@@ -402,8 +400,8 @@ const Canvas = () => {
 							const id = `image-${index}`;
 							return (
 								<div key={id} id={id}
-									onMouseDown={evt => onImageClick(evt, index, Constants.MODE_EDIT_IMAGE)}
-									onTouchStart={evt => onImageTouch(evt, index, Constants.MODE_EDIT_IMAGE)}
+									onMouseDown={evt => onImageClick(evt, index, eMode.EDIT_IMAGE)}
+									onTouchStart={evt => onImageTouch(evt, index, eMode.EDIT_IMAGE)}
 									style={{ ...calcImageStyle(item, index) }}
 									dangerouslySetInnerHTML={{ __html: item.svg }}
 								/>
@@ -422,7 +420,7 @@ const Canvas = () => {
 						})}
 					</div>
 
-					{brushColour && mode === Constants.MODE_COLOUR_IMAGE &&
+					{brushColour && mode === eMode.COLOUR_IMAGE &&
 						<div style={{position:"absolute", left: `${mousePos.x}px`, top: `${mousePos.y-150/zoom}px`, pointerEvents:"none"}}>
 							<BrushSVG id="brush-tip" width={150/zoom} height={150/zoom}/>
 						</div>
@@ -433,14 +431,14 @@ const Canvas = () => {
 				{/* ---- transform widget ---- */}
 				<div style={{transform:`scale(${zoom}) translate(${panx}px, ${pany}px)`}}>
 					<div>
-						{(!brushColour && (textData[selectedIndex] || images[selectedIndex]) && (mode === Constants.MODE_EDIT_IMAGE || mode === Constants.MODE_EDIT_TEXT)) &&
+						{(!brushColour && (textData[selectedIndex] || images[selectedIndex]) && (mode === eMode.EDIT_IMAGE || mode === eMode.EDIT_TEXT)) &&
 							<TransformWidget
-								item={mode === Constants.MODE_EDIT_TEXT ? textData[selectedIndex] : images[selectedIndex]}
+								item={mode === eMode.EDIT_TEXT ? textData[selectedIndex] : images[selectedIndex]}
 								mousePosX={mousePos.x}
 								mousePosY={mousePos.y}
 								setAngle={setAngle} // TODO doesn't need to come back to App.js
 								setSize={setSize} // TODO doesn't need to come back to App.js
-								type={mode === Constants.MODE_EDIT_TEXT ? "text" : null}
+								type={mode === eMode.EDIT_TEXT ? "text" : null}
 							/>
 						}
 					</div>
@@ -449,7 +447,7 @@ const Canvas = () => {
 
 			{/* controls */}
 			{!view.fullScreen &&
-			<div styleName={view.mode === Constants.MODE_SAVE_PROJECT ? "saving" : null}>
+			<div styleName={view.mode === eMode.SAVE_PROJECT ? "saving" : null}>
 				{/* <div onClick={onUnlock} style={{marginLeft:"-100px"}} styleName="canvas-icon template-lock"><img src={`./imgs/gui/icon-lock-${view.templateLock ? "open" : "closed"}.svg`} alt=""/></div> */}
 				{/* <div onMouseDown={onUnlock} style={{marginLeft:"-100px"}} styleName="canvas-icon template-lock"><img src={`./imgs/gui/icon-lock-${view.templateLock ? "open" : "closed"}.svg`} alt=""/></div> */}
 				<div onMouseDown={evt => onPan(eDirection.UP)} styleName="canvas-icon pan up"/>

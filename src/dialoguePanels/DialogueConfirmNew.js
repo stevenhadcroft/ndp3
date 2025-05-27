@@ -1,18 +1,13 @@
 import { useDispatch } from 'react-redux'
-import { Constants } from "./constants";
+import { eMode } from "../constants";
 import CSSModules from 'react-css-modules';
-import styles from './styles/';
+import styles from '../styles';
 import DraggablePanel from "./DraggablePanel";
-
-// import { 
-//     // cancelMode, 
-//     // setMode 
-// } from './actions'
 
 import { 
     cancelMode, 
 	setMode, 
-} from "./features/viewSlice";
+} from "../features/viewSlice";
 
 
 const DialogueConfirmNew = () => {
@@ -26,12 +21,12 @@ const DialogueConfirmNew = () => {
     }
 
     const onSave = () => {
-        dispatch(setMode(Constants.MODE_SAVE_BEFORE_NEW));
+        dispatch(setMode(eMode.SAVE_BEFORE_NEW));
     }
     
     const onDontSave = () => {
         // dispatch(newProject());
-        dispatch(setMode(Constants.MODE_SET_ORIENTATION));
+        dispatch(setMode(eMode.SET_ORIENTATION));
     }
     
     //--------------------------------------------------------------

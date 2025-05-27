@@ -1,14 +1,14 @@
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import { useDispatch } from 'react-redux'
 import CSSModules from 'react-css-modules';
-import styles from './styles/';
-import { Constants } from "./constants";
+import styles from '../styles';
+import { Constants } from "../constants";
 import DraggablePanel from "./DraggablePanel";
 
 import { 
     showPhonetics,
     addPhonetic
-} from "./features/viewSlice";
+} from "../features/viewSlice";
 
 
 const DialogueAddPhonetics = () => {
@@ -33,9 +33,9 @@ const DialogueAddPhonetics = () => {
 	// Buttons
 	//--------------------------------------------------------------
 	const Buttons = (
-        <Fragment>
+        <>
             <button styleName="primary narrow blue" onClick={onClose}>Done</button>
-        </Fragment>
+        </>
     )
 
 	//--------------------------------------------------------------

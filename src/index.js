@@ -21,7 +21,7 @@ import { store } from './store';
 
 // const initialState = { 
 //   view : {
-//     // mode:Constants.MODE_USER_OPTIONS,
+//     // mode:eMode.USER_OPTIONS,
 //     searchFilter:eSearchFilter.PICTURE,
 //     searchLogic:eSearchLogic.BEGINS,
 //     searchTerm:'',

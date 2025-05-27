@@ -25,6 +25,11 @@ const viewSlice = createSlice({
     cancelMode: (state, action) => {
       state.mode = null;
       state.showMenuPopup = false;
+      state.dragIndex = false;
+      state.brushColour = false;
+    },
+    setDragIndex: (state, action) => {
+      state.dragIndex = action.payload;
     },
     setMenuOpen: (state, action) => {
       state.showMenuPopup = action.payload;
@@ -51,7 +56,12 @@ const viewSlice = createSlice({
       const category = action.payload;
       state.templateFilters = { [category]: true };
     },
-    
+    showLoader: (state, action) => {
+      state.showLoader = action.payload;
+    },
+    // fullScreen: (state, action) => {
+    //   state.fullScreen = action.payload;
+    // },
     setSearch: (state, action) => {
       // console.log('action.value ', action.value);
       if (action.payload.filter) state.searchFilter = action.payload.filter;
@@ -102,10 +112,12 @@ const viewSlice = createSlice({
     },
   }
 });
+      
 
 export const {
   setMode,
   cancelMode,
+  setDragIndex,
   setMenuOpen,
   showPhonetics,
   addPhonetic,
@@ -114,6 +126,8 @@ export const {
   setOrientation,
   applyTemplateFilter,
   setSearch,
+  showLoader,
+  // fullScreen,
 } = viewSlice.actions;
 
 export default viewSlice.reducer;

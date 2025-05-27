@@ -1,19 +1,17 @@
-import { Constants } from "./constants";
+import { eMode } from "../constants";
 import { useSelector, useDispatch } from "react-redux";
 import CSSModules from "react-css-modules";
-import buttonStyles from "./styles/buttons.module.css";
-import menuStyles from "./styles/menu-left.module.css";
-import uiStyles from "./styles/ui.module.css";
-import {
-  showLoader,
-} from "./actions";
+import buttonStyles from "../styles/buttons.module.css";
+import menuStyles from "../styles/menu-left.module.css";
+import uiStyles from "../styles/ui.module.css";
 
 import { 
+  showLoader,
   setMenuOpen,
 	setMode, 
-} from "./features/viewSlice";
+} from "../features/viewSlice";
 
-import {unlinkMachine} from './services/localLicenseMananger';
+import {unlinkMachine} from '../services/localLicenseMananger';
 
 const styleModules = { ...buttonStyles, ...menuStyles, ...uiStyles };
 
@@ -27,7 +25,7 @@ const Header = (props) => {
   // const onNewProject = (orientation) => {
   //   window.orientation = orientation; // TODO IMPROVE
   //   if (window.undoHistory && window.undoHistory.length > 0) {
-  //     dispatch(setMode(Constants.MODE_NEW_PROJECT));
+  //     dispatch(setMode(eMode.NEW_PROJECT));
   //   } else {
   //     dispatch(newProject());
   //   }
@@ -44,7 +42,7 @@ const Header = (props) => {
     dispatch(showLoader(false));
     dispatch(setMenuOpen(false));
     unlinkMachine();
-    dispatch(setMode(Constants.MODE_USER_OPTIONS));
+    dispatch(setMode(eMode.USER_OPTIONS));
   };
   
   const onMenuOpen = () => {
@@ -60,7 +58,7 @@ const Header = (props) => {
 
         {/* <button styleName="menu-row"
                 // style={{border:"none", marginTop:"100px"}}
-                // onClick={() => onSetMode(Constants.MODE_SAVE_PROJECT)}
+                // onClick={() => onSetMode(eMode.SAVE_PROJECT)}
                 >
                 Add new image packs
               </button> */}

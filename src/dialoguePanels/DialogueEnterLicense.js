@@ -1,9 +1,7 @@
-// import { useSelector, useDispatch } from 'react-redux'
 import { useRef } from "react";
 import CSSModules from 'react-css-modules';
-import styles from './styles/';
+import styles from '../styles';
 import DraggablePanel from "./DraggablePanel";
-// import {activateLicence} from "./services/dynamodb";
 
 const DialogueEnterLicense = () => {
     

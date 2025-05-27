@@ -1,20 +1,20 @@
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import CSSModules from 'react-css-modules';
-import styles from './styles/';
-import { Constants } from "./constants";
+import styles from '../styles';
+import { Constants } from "../constants";
 
 import { 
     setTemplateData, 
     updateTemplateData, 
-} from "./features/canvasSlice";
+} from "../features/canvasSlice";
 
 import { 
     cancelMode,
     applyTemplateFilter
-} from "./features/viewSlice";
+} from "../features/viewSlice";
 
-import { loadTemplate } from "./loaders";
+import { loadTemplate } from "../loaders";
 import DraggablePanel from "./DraggablePanel";
 
 // import LazyLoad from 'react-lazyload';
@@ -66,7 +66,7 @@ const DialogueChooseTemplate = () => {
 	// Image List
 	//--------------------------------------------------------------
 	let ImageList = () => (
-        <Fragment>
+        <>
             {window.WORKSHEET_FILES.map((item, index) => {
                 //filter
                 let show = true;                    
@@ -94,7 +94,7 @@ const DialogueChooseTemplate = () => {
                     return null;
                 }
             })}
-        </Fragment>
+        </>
     )
     ImageList = CSSModules(ImageList, styles, {allowMultiple:true});
 
@@ -103,10 +103,10 @@ const DialogueChooseTemplate = () => {
 	// Buttons Component
 	//--------------------------------------------------------------
     const Buttons = (
-        <Fragment>
+        <>
             <button styleName="primary narrow blue" onClick={()=>dispatch(cancelMode())}>Back to main</button>
             <button styleName="primary narrow green" onClick={()=>onChooseTemplate(selectedIndex)}>Use selected</button>
-        </Fragment>
+        </>
     )
 
     //--------------------------------------------------------------

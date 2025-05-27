@@ -1,16 +1,9 @@
 import { useDispatch } from 'react-redux'
-import { Constants } from "../constants";
+import { Constants, eMode } from "../constants";
 import axios from "axios";
 import Swal from 'sweetalert2'
 
-// import {
-//   setMenuOpen,
-//   setMode,
-//   showLoader
-// } from "../actions";
-
 // import {unlinkMachine} from '../services/localLicenseMananger';
-
 
 window.LOCAL = 0;
 
@@ -26,7 +19,7 @@ window.REFRESH_CREDS();
 //   dispatch(showLoader(false));
 //   dispatch(setMenuOpen(false));
 //   unlinkMachine();
-//   dispatch(setMode(Constants.MODE_USER_OPTIONS));
+//   dispatch(setMode(eMode.USER_OPTIONS));
 // };
 
 // function useCancel() {

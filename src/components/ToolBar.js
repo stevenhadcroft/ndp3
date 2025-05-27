@@ -1,30 +1,32 @@
 
 import { Fragment, useState} from "react";
-import { Constants } from "./constants";
+import { eMode } from "../constants";
 import { useSelector, useDispatch } from 'react-redux';
 import CSSModules from 'react-css-modules';
-import buttonStyles from './styles/buttons.module.css';
-import menuStyles from './styles/menu-left.module.css';
-import uiStyles from './styles/ui.module.css';
+import buttonStyles from '../styles/buttons.module.css';
+import menuStyles from '../styles/menu-left.module.css';
+import uiStyles from '../styles/ui.module.css';
 
 import { 
-	addText, 
 	undo,
-	setSelectedIndex,
 	duplicateImage, 
 	duplicateText,
-	deleteImage, 
-	deleteText, 
-	fullScreen
-} from "./actions";
+} from "../actions";
 
 import { 
 	setMenuOpen,
 	setMode, 
 	cancelMode,
-} from "./features/viewSlice";
+	// fullScreen,
+} from "../features/viewSlice";
 
-import { print } from "./utils";
+import { 
+	deleteImage,
+	addText, 
+	deleteText, 
+} from "../features/canvasSlice";
+
+import { print } from "../utils";
 
 const styleModules = {...buttonStyles, ...menuStyles, ...uiStyles};
 
@@ -51,7 +53,7 @@ const MenuLeft = (props) => {
 
 	const onAddText = () => {
 		dispatch(addText());
-		dispatch(setMode(Constants.MODE_EDIT_TEXT));
+		dispatch(setMode(eMode.EDIT_TEXT));
 	};
 
 	const onNewProject = () => {
@@ -59,9 +61,9 @@ const MenuLeft = (props) => {
 		// console.log('window.undoHistory.length ', window.undoHistory.length);
 		if (!window.undoHistory) window.undoHistory = [];
 		if (window.undoHistory.length < 2){ // ignore original template
-			dispatch(setMode(Constants.MODE_SET_ORIENTATION));
+			dispatch(setMode(eMode.SET_ORIENTATION));
 		} else {
-			dispatch(setMode(Constants.MODE_CONFIRM_NEW));
+			dispatch(setMode(eMode.CONFIRM_NEW));
 		}
 	};
 
@@ -75,30 +77,28 @@ const MenuLeft = (props) => {
 	};
 	
 	const onDuplicate = () => {
-		if (mode === Constants.MODE_EDIT_IMAGE){
+		if (mode === eMode.EDIT_IMAGE){
 			dispatch(duplicateImage());
-		} else if (mode === Constants.MODE_EDIT_TEXT){
+		} else if (mode === eMode.EDIT_TEXT){
 			dispatch(duplicateText());
 		}
 	};
 
 	const onDelete = () => {
-		if (mode === Constants.MODE_EDIT_IMAGE){
+		if (mode === eMode.EDIT_IMAGE){
 			dispatch(deleteImage());
-		} else if (mode === Constants.MODE_EDIT_TEXT){
+		} else if (mode === eMode.EDIT_TEXT){
 			dispatch(deleteText());
 		}
 	};
-
 	const onFullScreen = () => {
-		// if (!document.fullscreenElement) {
+		// dispatch(fullScreen(true));
 		document.documentElement.requestFullscreen();
-		dispatch(fullScreen(true));
-		document.addEventListener('fullscreenchange', ()=>{
-			if (!document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement){
-				dispatch(fullScreen(false));
-			}
-		}, false);
+		// document.addEventListener('fullscreenchange', ()=>{
+		// 	if (!document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement){
+		// 		dispatch(fullScreen(false));
+		// 	}
+		// }, false);
 	};
 
 	let Button = ({label, img, onClick}) => {
@@ -132,20 +132,20 @@ const MenuLeft = (props) => {
 	let Buttons = () => {
 		return (
 			<>
-				{!view.fullScreen &&
+				{!document.fullscreenElement &&
 				<div styleName="menu-container">
 					<div style={{height:"16px"}}/>
 					<Button label="New Project" img="new" onClick={onNewProject} />
-					<Button label="Open Project" img="open" onClick={()=>onSetMode(Constants.MODE_OPEN_PROJECT)} />
+					<Button label="Open Project" img="open" onClick={()=>onSetMode(eMode.OPEN_PROJECT)} />
 					<div style={{height:"16px"}}/>
-					<Button label="Add Template" img="add-template" onClick={()=>onSetMode(Constants.MODE_CHOOSE_TEMPLATE)} />
-					<Button label="Add Image" img="add-image" onClick={()=>onSetMode(Constants.MODE_ADD_IMAGE)} />
-					<Button label="Add Colour" img="add-colour" onClick={()=>onSetMode(Constants.MODE_COLOUR_IMAGE)} />
+					<Button label="Add Template" img="add-template" onClick={()=>onSetMode(eMode.CHOOSE_TEMPLATE)} />
+					<Button label="Add Image" img="add-image" onClick={()=>onSetMode(eMode.ADD_IMAGE)} />
+					<Button label="Add Colour" img="add-colour" onClick={()=>onSetMode(eMode.COLOUR_IMAGE)} />
 					<Button label="Add Text" img="add-text" onClick={onAddText} />
 					<Button label="Duplicate" img="duplicate" onClick={onDuplicate} />
 					<Button label="Delete" img="delete" onClick={onDelete} />
 					<div style={{height:"16px"}}/>
-					<Button label="Save Project" img="save" onClick={()=>onSetMode(Constants.MODE_SAVE_PROJECT)} />
+					<Button label="Save Project" img="save" onClick={()=>onSetMode(eMode.SAVE_PROJECT)} />
 					<Button label="Print Project" img="print" onClick={onPrint} />
 					<Button label="Full Screen" img="full-screen" onClick={onFullScreen} />
 				</div>

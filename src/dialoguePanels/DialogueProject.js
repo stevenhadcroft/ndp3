@@ -1,8 +1,8 @@
-import { Fragment, useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import CSSModules from 'react-css-modules';
-import { Constants } from "./constants";
-import styles from './styles/';
+import { eMode } from "../constants";
+import styles from '../styles';
 import DraggablePanel from "./DraggablePanel";
 import Swal from 'sweetalert2';
 
@@ -14,30 +14,30 @@ import {
     createDir,
     deleteDir,
     getDirs,
-} from './services/projectFileManangerCloud';
+} from '../services/projectFileManangerCloud';
 // } from './services/projectFileManangerDB';
 
 import {
-    setTextData,
-    fileLoadUpdate,
     setDir,
-    showLoader
-} from './actions'
+} from '../actions'
 
 import { 
+    showLoader,
     cancelMode, 
     showPhonetics,
     addPhonetic,
     setOrientation
-} from "./features/viewSlice";
+} from "../features/viewSlice";
 
 import { 
     resetCanvas,
     setTemplateData,
     setImageData,
-} from "./features/canvasSlice";
+    setTextData,
+    fileLoadUpdate,
+} from "../features/canvasSlice";
 
-import { cloneDeep, makeSVGgrabbable, makeSVGgrabbableReset } from "./utils";
+import { cloneDeep, makeSVGgrabbable, makeSVGgrabbableReset } from "../utils";
 import html2canvas from "html2canvas";
 
 
@@ -134,12 +134,10 @@ function DialogueProject({ mode }) {
         if (selectedId !== -1) {
             deleteProject(file).then(() => {
                 refreshList();
-                // dispatch(showLoader(false));
             });
         } else if (selectedDirectoryId !== -1) {
             deleteDir(file).then(() => {
                 refreshList();
-                // dispatch(showLoader(false));
             });
         }
         setFile(null);
@@ -200,11 +198,10 @@ function DialogueProject({ mode }) {
         if (data) {
             dispatch(setOrientation(data.orientation));
             dispatch(cancelMode());
-            // dispatch(setBrushColour(null));
-            dispatch(setTemplateData([]));
-            dispatch(setImageData([]));
-            dispatch(setTextData([]));
-            dispatch(fileLoadUpdate({data}));
+            // dispatch(setTemplateData([]));
+            // dispatch(setImageData(data.imageData || []));
+            // dispatch(setTextData([]));
+            dispatch(fileLoadUpdate(data));
             
         } else {
             alert('ERROR : no file data')
@@ -238,7 +235,7 @@ function DialogueProject({ mode }) {
                 
                 // makeSVGgrabbableReset();
                 
-                if (view.mode === Constants.MODE_SAVE_BEFORE_NEW) {
+                if (view.mode === eMode.SAVE_BEFORE_NEW) {
                     // dispatch(newProject());
                     dispatch(cancelMode());
                     dispatch(resetCanvas());
@@ -263,11 +260,11 @@ function DialogueProject({ mode }) {
     // Buttons
     //--------------------------------------------------------------
     const Buttons = (
-        <Fragment>
+        <>
             <button styleName="primary narrow red" onClick={() => setConfirmDelete(true)}>Delete</button>
             <button styleName="primary narrow blue" onClick={onCancelClick}>Cancel</button>
             <button styleName="primary narrow green" onClick={onCTAClick}>{mode}</button>
-        </Fragment>
+        </>
     )
 
     //--------------------------------------------------------------
@@ -288,17 +285,17 @@ function DialogueProject({ mode }) {
                 }
 
                 {view.currentDir &&
-                    <Fragment>
+                    <>
                         <span style={{marginLeft:"30px"}}><span style={{fontWeight:"400"}}>Current folder</span> : {view.currentDir}</span>
                         <button style={{marginLeft:"30px"}} styleName="tertiary" onClick={onLeaveFolder} >Leave folder
                             <img width="30px" style={{ marginLeft: "15px", marginBottom: "-13px" }} src={'./imgs/directory.png'} />
                         </button>
-                    </Fragment>
+                    </>
                 }
             </div>
 
             {confirmDelete &&
-                <Fragment>
+                <>
                     <div styleName="dialogue-inner align-center" style={{ display: "block" }}>
                         <br /><br /><br /><br />
                         <div style={{ margin: "20px 0" }}>{`Are you sure you want to delete this ${selectedDirectoryId !== -1 ? "folder and all of its contents?" : "this project?"}`}</div>
@@ -308,11 +305,11 @@ function DialogueProject({ mode }) {
                             <button styleName="primary narrow red" onClick={onDeleteClick}>Delete</button>
                         </div>
                     </div>
-                </Fragment>
+                </>
             }
 
             {confirmName &&
-                <Fragment>
+                <>
                     <div styleName="dialogue-inner align-center" style={{ display: "block" }}>
                         <br /><br /><br /><br />
                         <span style={{ margin: "20px 0" }}>Please enter folder name?</span>
@@ -324,7 +321,7 @@ function DialogueProject({ mode }) {
                             <button styleName="primary narrow green" onClick={onCreateDirClick}>Submit</button>
                         </div>
                     </div>
-                </Fragment>
+                </>
             }
 
             {!(confirmDelete || confirmName) &&

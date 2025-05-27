@@ -1,15 +1,13 @@
-import { Constants } from "../constants";
-import { eSearchLogic } from "../constants";
 import * as types from "../constants/ActionTypes";
 
 const view = (state, action) => {
   switch (action.type) {
-    case types.ADD_IMAGE:
-      return {
-        ...state,
-        mode: Constants.MODE_EDIT_IMAGE,
-        brushColour: null,
-      };
+    // case types.ADD_IMAGE:
+    //   return {
+    //     ...state,
+    //     mode: eMode.EDIT_IMAGE,
+    //     brushColour: null,
+    //   };
 
     case types.ADD_TEXT:
       return {
@@ -18,11 +16,11 @@ const view = (state, action) => {
         brushColour: null,
       };
 
-    case types.SET_TEMPLATE_DATA:
-      return {
-        ...state,
-        mode: null,
-      };
+    // case types.SET_TEMPLATE_DATA:
+    //   return {
+    //     ...state,
+    //     mode: null,
+    //   };
 
     case types.SET_GENERIC:
       console.log('SET_GENERIC action ', action.payload)
@@ -123,14 +121,14 @@ const view = (state, action) => {
 
     //   return newState;
 
-    case types.DELETE_IMAGE:
-    case types.DELETE_TEXT:
-      return {
-        ...state,
-        mode: null,
-        dragIndex:null,
-        brushColour: null,
-      };
+    // case types.DELETE_IMAGE:
+    // case types.DELETE_TEXT:
+    //   return {
+    //     ...state,
+    //     mode: null,
+    //     dragIndex:null,
+    //     brushColour: null,
+    //   };
 
     // case types.NEW_PROJECT:
     //   return {

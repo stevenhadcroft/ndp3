@@ -76,13 +76,13 @@ export const setGeneric = (payload) => ({
 // 	text,
 // });
 
-export const duplicateImage = () => ({
-	type: types.DUPLICATE_IMAGE,
-});
+// export const duplicateImage = () => ({
+// 	type: types.DUPLICATE_IMAGE,
+// });
 
-export const duplicateText = () => ({
-	type: types.DUPLICATE_TEXT,
-});
+// export const duplicateText = () => ({
+// 	type: types.DUPLICATE_TEXT,
+// });
 
 // export const setMode = mode => ({
 // 	type: types.SET_MODE,
@@ -138,25 +138,25 @@ export const setTemplateLock = value => ({
 // 	value,
 // });
 
-export const showLoader = (value) => ({
-	type: types.SHOW_LOADER,
-	value,
-});
+// export const showLoader = (value) => ({
+// 	type: types.SHOW_LOADER,
+// 	value,
+// });
 
 // export const addPhonetic = (value) => ({
 // 	type: types.ADD_PHONETIC,
 // 	value,
 // });
 
-export const setUserName = value => ({
-	type: types.SET_USER_NAME,
-	value,
-});
+// export const setUserName = value => ({
+// 	type: types.SET_USER_NAME,
+// 	value,
+// });
 
-export const setSearch = value => ({
-	type: types.SET_SEARCH,
-	value,
-});
+// export const setSearch = value => ({
+// 	type: types.SET_SEARCH,
+// 	value,
+// });
 
 export const undo = value => ({
 	type: types.UNDO,
@@ -167,13 +167,13 @@ export const storeHistroy = value => ({
 	type: types.STORE_HISTORY
 });
 
-export const setDir = value => ({
-	type: types.SET_CURRENT_DIR,
-	value
-});
+// export const setDir = value => ({
+// 	type: types.SET_CURRENT_DIR,
+// 	value
+// });
 
 
-export const fullScreen = value => ({
-	type: types.FULL_SCREEN,
-	value
-});
+// export const fullScreen = value => ({
+// 	type: types.FULL_SCREEN,
+// 	value
+// });

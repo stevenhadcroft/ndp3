@@ -17,12 +17,9 @@ import {
 } from '../services/projectFileManangerCloud';
 // } from './services/projectFileManangerDB';
 
-import {
-    setDir,
-} from '../actions'
-
 import { 
     showLoader,
+    setDir,
     cancelMode, 
     showPhonetics,
     addPhonetic,

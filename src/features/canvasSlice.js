@@ -72,6 +72,21 @@ const canvasSlice = createSlice({
       }
     },
     
+    duplicateImage: (state, action) => {
+      if (!state.images[state.selectedIndex]) return;
+			let dupedimage      = cloneDeep(state.images[state.selectedIndex]);
+			let newId 		      = state.images.length;
+			let find 		        = "makeUnique_" + state.selectedIndex;
+			let replacement     = "makeUnique_" + newId;
+			var regex 		      = new RegExp(find, "g");
+			dupedimage.svg 	    = String(dupedimage.svg).replace(regex, replacement);
+			dupedimage.x        = state.images[state.selectedIndex].x + 50;
+			dupedimage.y        = state.images[state.selectedIndex].y + 50;
+			state.images[newId] = dupedimage;
+      state.selectedIndex = newId;
+			pushHistory(state);
+    },
+
     addText: (state, action) => {
       const text = action.payload || DEFAULT_TEXT;
       state.selectedIndex = state.texts.length;
@@ -99,6 +114,15 @@ const canvasSlice = createSlice({
       }
     },
     
+    duplicateText: (state, action) => {
+      if (!state.texts[state.selectedIndex]) return;
+			let dupedtext = cloneDeep(state.texts[state.selectedIndex]);
+			dupedtext.x = state.texts[state.selectedIndex].x + 50;
+			dupedtext.y = state.texts[state.selectedIndex].y + 50;
+			state.texts = state.texts.concat([dupedtext]);
+			pushHistory(state);
+    },
+
     fileLoadUpdate: (state, action) => {
       const { imageData, textData, templateData } = action.payload;
       state.images = imageData || [];
@@ -109,6 +133,21 @@ const canvasSlice = createSlice({
   },
 });
 
+// case types.STORE_HISTORY:
+//       window.undoHistory.push(cloneState(state));
+//       if (window.undoHistory.length > 0) {
+//       }
+//       return state;
+
+//     case types.UNDO:
+//       console.log("UNDO PRE POP history ", window.undoHistory);
+//         window.undoHistory.pop();
+//       return { ...newState };
+
+//     case types.SET_ORIENTATION:
+//       return { ...state, orientation: action.orientation };
+
+
 export const {
   resetCanvas,
   setSelectedIndex,
@@ -118,8 +157,10 @@ export const {
   setImageData,
   updateImageData,
   deleteImage,
+  duplicateImage,
   addText,
   deleteText,
+  duplicateText,
   setTextData,
   updateTextData,
   fileLoadUpdate

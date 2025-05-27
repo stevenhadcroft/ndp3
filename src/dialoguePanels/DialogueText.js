@@ -4,9 +4,9 @@ import CSSModules from 'react-css-modules';
 import styles from '../styles';
 import { eMode, FONTLIST } from "../constants";
 
-import { 
-    setGeneric
-} from "../actions";
+// import { 
+//     setGeneric
+// } from "../actions";
 
 import { 
     setMode, 
@@ -28,9 +28,9 @@ const DialogueText = () => {
     const view = useSelector(state => state.view);
     const canvas = useSelector(state => state.canvas);
     
-    useEffect(()=>{
-        dispatch(setGeneric({key:"textfieldFocussed", value:false})); // reset allow key nudge
-    }, [])
+    // useEffect(()=>{
+    //     dispatch(setGeneric({key:"textfieldFocussed", value:false})); // reset allow key nudge
+    // }, [])
 
     // if phonetic changes then add
     useEffect(()=>{
@@ -58,11 +58,11 @@ const DialogueText = () => {
         if (str === 'Enter text'){
             dispatch(updateTextData({key:'text', value:''}))
         }
-		dispatch(setGeneric({key:"textfieldFocussed", value:true}))
+		// dispatch(setGeneric({key:"textfieldFocussed", value:true}))
     }; 
     
     const onBlur = evt => {
-    	dispatch(setGeneric({key:"textfieldFocussed", value:false}))
+    	// dispatch(setGeneric({key:"textfieldFocussed", value:false}))
     };
 
     const onChange = evt => {

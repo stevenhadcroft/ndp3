@@ -9,21 +9,20 @@ import uiStyles from '../styles/ui.module.css';
 
 import { 
 	undo,
-	duplicateImage, 
-	duplicateText,
 } from "../actions";
 
 import { 
 	setMenuOpen,
 	setMode, 
 	cancelMode,
-	// fullScreen,
 } from "../features/viewSlice";
 
 import { 
 	deleteImage,
 	addText, 
+	duplicateImage, 
 	deleteText, 
+	duplicateText,
 } from "../features/canvasSlice";
 
 import { print } from "../utils";

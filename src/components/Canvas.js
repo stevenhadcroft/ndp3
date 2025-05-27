@@ -10,7 +10,7 @@ import { BrushSVG } from "./BrushSVG";
 
 import {
 	storeHistroy,
-	setTemplateLock,
+	// setTemplateLock,
 } from "../actions";
 
 import { 
@@ -48,7 +48,7 @@ const Canvas = () => {
 	const [zoom, setZoom] = useState(1);
 
 	const orientation	= canvas.orientation || "portrait";
-	let canvasScale 	= view.canvasScale * (orientation === "portrait" ? 1 : 1.36);
+	const canvasScale 	= view.canvasScale * (orientation === "portrait" ? 1 : 1.36);
 	const canvasLeft 	= window.innerWidth/2 - canvasScale*750/2 - (orientation === "portrait" ? -25 : 50);
 	const mode 			= view.mode;
 	const dragIndex 	= view.dragIndex;
@@ -187,7 +187,6 @@ const Canvas = () => {
 						// superficially colour dom
 						path.setAttribute("fill", brushColour);
 						// store colour	for saving	
-						// if (nextMode === eMode.EDIT_IMAGE || nextMode === eMode.EDIT_TEMPLATE) {
 						if (view.mode === eMode.COLOUR_IMAGE) {
 							if (isTemplate){ // isNaN(index)
 								dispatch(updateTemplateData({key:fillIdStoreId, value:brushColour}))
@@ -268,7 +267,6 @@ const Canvas = () => {
 		if (mode === eMode.EDIT_IMAGE) {
 			dispatch(storeHistroy());
 		}
-		// if (eMode.EDIT_IMAGE)
 	};
 
 	//---------------------
@@ -308,9 +306,9 @@ const Canvas = () => {
 		updateData(selectedIndex, "size", size);
 	};
 
-	const onUnlock = () => {
-		dispatch(setTemplateLock(!view.templateLock));
-	};
+	// const onUnlock = () => {
+	// 	dispatch(setTemplateLock(!view.templateLock));
+	// };
 
 	const onPan = dir => {
 		const STEP = 30;
@@ -361,8 +359,7 @@ const Canvas = () => {
 	
 
 	return (
-		// TODO - move canvas out of Images
-
+		
 		<div 	styleName="page" 
 				onTouchMove={onTouchMove} 
 				onMouseMove={onMouseMove} 

@@ -59,6 +59,10 @@ const viewSlice = createSlice({
     showLoader: (state, action) => {
       state.showLoader = action.payload;
     },
+    setDir: (state, action) => {
+      state.currentDir = action.payload;
+    },
+        
     // fullScreen: (state, action) => {
     //   state.fullScreen = action.payload;
     // },
@@ -113,6 +117,18 @@ const viewSlice = createSlice({
   }
 });
       
+// case types.SET_GENERIC:
+//   console.log('SET_GENERIC action ', action.payload)
+//   let newGenericState = { ...state};
+//   newGenericState[action.payload.key] = action.payload.value;
+//   return newGenericState;
+
+// case types.SET_USER_NAME:
+//       return { ...state, userName: action.value };
+
+// case types.SET_TEMPLATE_LOCK:
+// 			return { ...state, templateLock: action.value };
+
 
 export const {
   setMode,
@@ -127,6 +143,7 @@ export const {
   applyTemplateFilter,
   setSearch,
   showLoader,
+  setDir,
   // fullScreen,
 } = viewSlice.actions;
 

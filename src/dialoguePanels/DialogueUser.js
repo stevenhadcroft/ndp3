@@ -5,9 +5,9 @@ import styles from '../styles';
 import { eMode } from "../constants";
 import Swal from 'sweetalert2';
 
-import { 
-    setUserName,
-} from '../actions'
+// import { 
+//     setUserName,
+// } from '../actions'
 
 import { 
     setTemplateData,
@@ -68,7 +68,7 @@ const DialogueUser = () => {
             dispatch(setImageData([]));
             dispatch(setTextData([]));
             dispatch(setTemplateData([]));
-            dispatch(setUserName(email)); 
+            // dispatch(setUserName(email)); 
 
             dispatch(setMode(eMode.USER_ACTIVE))
             linkMachine();

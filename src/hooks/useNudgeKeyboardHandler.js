@@ -11,7 +11,8 @@ const useNudgeKeyboardHandler = () => {
   const nudge = useNudge();
 
   // Handle key press events
-  const handleKeyPress = useCallback((evt) => {
+  const handleKeyPress = (evt) => {
+  // const handleKeyPress = useCallback((evt) => {
     if (evt.keyCode === 8) {
       if (view.mode === eMode.EDIT_IMAGE) {
         dispatch(deleteImage());
@@ -30,7 +31,8 @@ const useNudgeKeyboardHandler = () => {
     } else if (evt.keyCode === 40) {
       nudge("down");
     }
-  }, [nudge, dispatch]);
+  // }, [nudge, dispatch]);
+  }
   
   // Set up and clean up event listeners
   useEffect(() => {

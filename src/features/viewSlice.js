@@ -18,16 +18,6 @@ const viewSlice = createSlice({
   },
 
   reducers: {
-    setMode: (state, action) => {
-      state.mode = action.payload;
-      state.showMenuPopup = false;
-    },
-    cancelMode: (state, action) => {
-      state.mode = null;
-      state.showMenuPopup = false;
-      state.dragIndex = false;
-      state.brushColour = false;
-    },
     setDragIndex: (state, action) => {
       state.dragIndex = action.payload;
     },
@@ -52,20 +42,28 @@ const viewSlice = createSlice({
     setOrientation: (state, action) => {
       state.orientation = action.payload;
     },
-    applyTemplateFilter: (state, action) => {
-      const category = action.payload;
-      state.templateFilters = { [category]: true };
-    },
     showLoader: (state, action) => {
       state.showLoader = action.payload;
     },
     setDir: (state, action) => {
       state.currentDir = action.payload;
     },
-        
-    // fullScreen: (state, action) => {
-    //   state.fullScreen = action.payload;
-    // },
+
+    applyTemplateFilter: (state, action) => {
+      const category = action.payload;
+      state.templateFilters = { [category]: true };
+    },
+    setMode: (state, action) => {
+      state.mode = action.payload;
+      state.showMenuPopup = false;
+    },
+    cancelMode: (state, action) => {
+      state.mode = null;
+      state.showMenuPopup = false;
+      state.dragIndex = false;
+      state.brushColour = false;
+    },
+
     setSearch: (state, action) => {
       // console.log('action.value ', action.value);
       if (action.payload.filter) state.searchFilter = action.payload.filter;
@@ -117,15 +115,18 @@ const viewSlice = createSlice({
   }
 });
       
+
+// ------------------------------------------
+// legacy code
+// ------------------------------------------
+
 // case types.SET_GENERIC:
 //   console.log('SET_GENERIC action ', action.payload)
 //   let newGenericState = { ...state};
 //   newGenericState[action.payload.key] = action.payload.value;
 //   return newGenericState;
-
 // case types.SET_USER_NAME:
 //       return { ...state, userName: action.value };
-
 // case types.SET_TEMPLATE_LOCK:
 // 			return { ...state, templateLock: action.value };
 

@@ -191,12 +191,12 @@ function DialogueProject({ mode }) {
     //------------------------------------------------------------------------
     const openProject = (file) => {
         let data = window.LOCAL ? file.data : file;
-        console.log("data ", data);
+        // console.log("data ", data);
         if (data) {
             dispatch(setOrientation(data.orientation));
             dispatch(cancelMode());
             // dispatch(setTemplateData([]));
-            // dispatch(setImageData(data.imageData || []));
+            // dispatch(setImageData([]));
             // dispatch(setTextData([]));
             dispatch(fileLoadUpdate(data));
             

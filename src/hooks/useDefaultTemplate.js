@@ -11,10 +11,12 @@ import { loadTemplate } from '../loaders';
 // Load template so that printing works ok, and also when we click away from an image it deselects			
 
 const useDefaultTemplate = () => {
+  
   const dispatch = useDispatch();
   const view = useSelector(state => state.view);
   
   const loadDefaultTemplate = useCallback(() => {
+    // console.log('loadDefaultTemplate')
     const url = window.WORKSHEET_FILES[0].url;
     const newTemplate = { type: "image", size: 300, url };
     

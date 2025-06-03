@@ -1,25 +1,30 @@
-export const loadImage = (url, imageData, callback, newImage, callback2) => {
-	// console.log('imageData ', imageData);
-	const index = imageData.length;
+export const loadImage = (url, index, callback1, newImage, callback2) => {
+	// const index = imageData.length;
 	load(url).then(evt => {
 		evt.setAttribute("id", "svg" + index);
 		evt.setAttribute("width", "100%");
 		evt.setAttribute("height", "100%");
 		evt.setAttribute("viewBox", "0 0 500 500");
+		
+		console.log('loadImage LOADED imageData ', newImage);
 
 		// DO COLOURS
 		setTimeout(()=>{
 			for (let key in newImage){
 				const colour = newImage[key];
 				if (key.substr(0, 4) === "fill"){
-					const id = `makeUnique_${index}^${key}`;
-					const fill = document.getElementById(id);
-					const path = fill.querySelector("path");
-					path.setAttribute("fill", colour);
+					try {
+						const id = `makeUnique_${index}^${key}`;
+						const fill = document.getElementById(id);
+						const path = fill.querySelector("path");
+						path.setAttribute("fill", colour);
+					} catch (e) {
+						console.error(`Error setting fill for ${key} on image ${index}:`, e);
+					}
 				}
 			}
 			
-			if (callback2) callback2(index);
+			if (callback2) callback2();
 
 			// const el = document.getElementById("image-"+index);
 			// if (el){
@@ -34,7 +39,7 @@ export const loadImage = (url, imageData, callback, newImage, callback2) => {
 		var str = new XMLSerializer().serializeToString(evt);
 		str = str.replace(/id="/g, 'id="makeUnique_' + index + "^");
 		str = str.replace(/xlink:href="#/g, 'xlink:href="#makeUnique_' + index + "^");
-		callback(index, "svg", str);
+		callback1("svg", str);
 	});
 };
 
@@ -61,7 +66,7 @@ export const loadTemplate = (url, imageData, callback) => {
 		setTimeout(()=>{
 			for (let key in imageData){
 				const colour = imageData[key];
-				console.log('colour ', colour);
+				// console.log('colour ', colour);
 				if (key.substr(0, 4) === "fill"){
 					const id = `makeUnique_template_0^${key}`;
 					const fill = document.getElementById(id);

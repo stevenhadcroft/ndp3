@@ -8,7 +8,8 @@ const useNudge = () => {
   const view = useSelector(state => state.view);
   const canvas = useSelector(state => state.canvas);
   
-  const nudge = useCallback((dir) => {
+  // const nudge = useCallback((dir) => {
+  const nudge = (dir) => {
     const selectedIndex = canvas.selectedIndex || 0;
     const mode = view.mode;
     let elsToMove = [];
@@ -60,7 +61,8 @@ const useNudge = () => {
         }
       }
     });
-  }, [canvas, view, dispatch]);
+  // }, [canvas, view, dispatch]);
+  };
 
   return nudge;
 };

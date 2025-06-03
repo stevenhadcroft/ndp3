@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import CSSModules from 'react-css-modules';
 import styles from '../styles';
@@ -7,6 +7,7 @@ import TransformWidget from "./TransformWidget";
 import { eMode } from "../constants";
 import { eDirection } from "../constants";
 import { BrushSVG } from "./BrushSVG";
+import useCanvasFileLoader from "../hooks/useCanvasFileLoader"; // Import the new hook
 
 import {
 	storeHistroy,
@@ -15,13 +16,9 @@ import {
 
 import { 
 	setSelectedIndex, 
-	setTemplateData,
 	updateTemplateData, 
-	addImage,
 	updateImageData, 
-	addText,
 	updateTextData, 
-	fileLoadUpdate
 } from "../features/canvasSlice";
 
 import { 
@@ -29,24 +26,18 @@ import {
 	setDragIndex,
 } from "../features/viewSlice";
 
-import { 
-	loadImage, 
-	loadTemplate
-} from "../loaders";
-
-
 let clickOffset = {};
 
 const Canvas = () => {
 	const dispatch = useDispatch();
 	const view = useSelector(state => state.view);
 	const canvas = useSelector(state => state.canvas);
-
+	
 	const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 	const [panx, setPanx] = useState(0);
 	const [pany, setPany] = useState(0);
 	const [zoom, setZoom] = useState(1);
-
+	
 	const orientation	= canvas.orientation || "portrait";
 	const canvasScale 	= view.canvasScale * (orientation === "portrait" ? 1 : 1.36);
 	const canvasLeft 	= window.innerWidth/2 - canvasScale*750/2 - (orientation === "portrait" ? -25 : 50);
@@ -57,63 +48,10 @@ const Canvas = () => {
 	const images 		= canvas.images || [];
 	const textData 		= canvas.texts || [];
 	const template 		= canvas.template;
-	
 	const canvasTop 	= view.fullScreen ? "15px" : null;
+
+	useCanvasFileLoader();
 	
-	useEffect(()=>{
-		if (canvas.fileLoadUpdate && canvas.fileLoadUpdate.data){			
-			if (canvas.fileLoadUpdate.data.imageData && canvas.fileLoadUpdate.data.imageData.length>0){
-				let item = canvas.fileLoadUpdate.data.imageData.pop();
-				const url = item.url;
-				const filename = item.filename;
-				const images = canvas.images || [];
-				const zIndex = images.length>0 ? Math.max.apply(Math, images.map(function(o) { return o.zIndex; })) + 1 : 1; // get highest zindex + 1 
-				const newImage = { ...item, type:"image", zIndex, url};
-				dispatch(addImage(newImage));
-
-				const callback1 = (index, key, svg) => {
-					svg = svg.replace('<svg ', `<svg filename="${filename}" `);
-					dispatch(updateImageData({index, key, value:svg}));		
-				}
-
-				// update whole svg data - so when we clone the imgage the svg contained the colours 
-				const callback2 = (index) => {
-					const el = document.getElementById("image-"+index);
-					if (el){
-						const svgmarkup = el.innerHTML;
-						dispatch(updateImageData({index, key:'svg', value:svgmarkup}));
-					}
-				}
-
-				loadImage(url, images, callback1, newImage, callback2);
-				
-				// trigger next item
-				dispatch(fileLoadUpdate(canvas.fileLoadUpdate.data));
-			
-			} else if (canvas.fileLoadUpdate.data.textData && canvas.fileLoadUpdate.data.textData.length>0){
-				let item = canvas.fileLoadUpdate.data.textData.pop();
-				const texts = canvas.texts || [];
-				const zIndex = texts.length>0 ? Math.max.apply(Math, texts.map(function(o) { return o.zIndex; })) + 1 : 1; // get highest zindex + 1 
-				let newText = {...item, type: "text", zIndex};
-				dispatch(addText(newText));	
-				// trigger next item
-				dispatch(fileLoadUpdate(canvas.fileLoadUpdate.data));
-			
-			} else if (canvas.fileLoadUpdate.data.templateData){
-				let item = canvas.fileLoadUpdate.data.templateData;
-				const url = item.url;
-				const newTemplate = { ...item, type:"image", url};
-				dispatch(setTemplateData(newTemplate));
-				loadTemplate(url, item || {}, 
-					str => {
-						dispatch(updateTemplateData({key:"svg", value:str}))
-					}
-				);
-			}
-		}
-	}, [canvas.fileLoadUpdate])
-	
-
 	const updateData = (index, key, value) => {
 		switch (mode) {
 			case eMode.EDIT_IMAGE: dispatch(updateImageData({index, key, value})); break;

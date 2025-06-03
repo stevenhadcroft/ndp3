@@ -163,8 +163,10 @@ const DialogueAddImage = () => {
         const images = canvas.images || [];
 		const zIndex = images.length>0 ? Math.max.apply(Math, images.map(function(o) { return o.zIndex; })) + 1 : 1; // get highest zindex + 1 
 		const newImage = { type:"image", x: 250, y: 250, angle: 0, size: 300, url, zIndex};
+		const index = images.length; // index of new image
 		dispatch(addImage(newImage));
-		loadImage(url, images, (index, key, svg) => {
+		loadImage(url, images.length, (key, svg) => {
+			console.log("callback1 ", filename);
 			// add id to SVG so it can xreffed for stored colour later
 			svg = svg.replace('<svg ', `<svg filename="${filename}" `);
 			dispatch(updateImageData({index, key, value:svg}));

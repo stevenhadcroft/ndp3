@@ -20,20 +20,27 @@ const canvasSlice = createSlice({
   initialState: {
     images: [],
     texts: [],
-    // template: null
   },
 
   reducers: {
-    resetCanvas: (state, action) => {
-      state.orientation = window.orientation; // TODO improve
-      state.images = [];
-      state.texts = [];
-      state.template = null;
+    
+    fileLoadUpdate: (state, action) => {
+      // console.log('fileLoadUpdate action.payload', action.payload);
+      // const { imageData, textData, templateData } = action.payload;
+      // state.images = imageData || [];
+      // state.texts = textData || [];
+      // state.template = templateData || null;
+      state.fileLoadUpdate = {data:action.payload}; // Force a re-render
+      window.undoHistory = [state];
     },
 
     setSelectedIndex: (state, action) => {
       state.selectedIndex = action.payload;
     },
+
+    // ------------------------------------------
+    // template
+    // ------------------------------------------
 
     setTemplateData: (state, action) => {
       state.template = action.payload;
@@ -45,19 +52,24 @@ const canvasSlice = createSlice({
       pushHistory(state)
     },
     
+    // ------------------------------------------
+    // images
+    // ------------------------------------------
+
     addImage: (state, action) => {
+      // console.log('addImage action.payload', action.payload);
       state.selectedIndex = state.images.length; // Set the selected index to the newly added image
       state.images = state.images.concat([action.payload]);
       pushHistory(state)
     },
     
     setImageData: (state, action) => { 
-      // console.log('action ', action);
       state.images = action.payload.images;
       pushHistory(state);
     },
     
     updateImageData: (state, action) => {
+      // console.log('updateImageData action.payload', action.payload);
       if (state.images[action.payload.index]) {
         state.images[action.payload.index][action.payload.key] = action.payload.value;
         pushHistory(state);
@@ -87,6 +99,10 @@ const canvasSlice = createSlice({
 			pushHistory(state);
     },
 
+    // ------------------------------------------
+    // text
+    // ------------------------------------------
+
     addText: (state, action) => {
       const text = action.payload || DEFAULT_TEXT;
       state.selectedIndex = state.texts.length;
@@ -96,7 +112,7 @@ const canvasSlice = createSlice({
     
     deleteText: (state, action) => {
       if (state.texts.length > 0) {
-        state.selectedIndex = null; // Adjust selected index
+        state.selectedIndex = null;
         state.texts.splice(state.selectedIndex, 1);
         pushHistory(state);
       }
@@ -123,29 +139,32 @@ const canvasSlice = createSlice({
 			pushHistory(state);
     },
 
-    fileLoadUpdate: (state, action) => {
-      const { imageData, textData, templateData } = action.payload;
-      state.images = imageData || [];
-      state.texts = textData || [];
-      state.template = templateData || null;
-      window.undoHistory = [state];
-    },
   },
 });
+
+// ------------------------------------------
+// legacy code
+// ------------------------------------------
 
 // case types.STORE_HISTORY:
 //       window.undoHistory.push(cloneState(state));
 //       if (window.undoHistory.length > 0) {
 //       }
 //       return state;
-
 //     case types.UNDO:
 //       console.log("UNDO PRE POP history ", window.undoHistory);
 //         window.undoHistory.pop();
 //       return { ...newState };
-
 //     case types.SET_ORIENTATION:
 //       return { ...state, orientation: action.orientation };
+// case types.NEW_PROJECT:
+// 	window.undoHistory = [];
+// 	return {
+// 		orientation : window.orientation,
+// 		images: [],
+// 		texts: [],
+// 		template: null,
+// 	};
 
 
 export const {
@@ -167,14 +186,3 @@ export const {
 } = canvasSlice.actions;
 
 export default canvasSlice.reducer;
-
-
-
-// case types.NEW_PROJECT:
-// 	window.undoHistory = [];
-// 	return {
-// 		orientation : window.orientation,
-// 		images: [],
-// 		texts: [],
-// 		template: null,
-// 	};

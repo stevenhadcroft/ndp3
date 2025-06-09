@@ -2150,8 +2150,8 @@ L 257.908447265625 801.0476135253906"/>
 Vendor ID: MS  
 © 2006 Microsoft Corporation. All Rights Reserved.
 http://www.microsoft.com/typography/fonts/
-URL for more Information: http://www.adobe.com/go/font_vendor_id?ID=MS&Name=Verdana&PSName=Verdana&applanguage=en_US-->
-<font-face font-family="Verdana" units-per-em="2048" ascent="2059" descent="430"/>
+URL for more Information: http://www.adobe.com/go/font_vendor_id?ID=MS&Name=Verdana&PSName=Verdana-Bold&applanguage=en_US-->
+<font-face font-family="Verdana_Bold_Bold" units-per-em="2048" ascent="2059" descent="430"/>
 
 <glyph unicode="1" horiz-adv-x="1456" d="
 M 1386 260
@@ -2288,7 +2288,7 @@ Vendor ID: MS
 © 2006 Microsoft Corporation. All Rights Reserved.
 http://www.microsoft.com/typography/fonts/
 URL for more Information: http://www.adobe.com/go/font_vendor_id?ID=MS&Name=Verdana&PSName=Verdana&applanguage=en_US-->
-<font-face font-family="Verdana" units-per-em="2048" ascent="2059" descent="430"/>
+<font-face font-family="Verdana_Regular" units-per-em="2048" ascent="2059" descent="430"/>
 
 <hkern u1="'" u2="A" k="100"/>
 
@@ -2774,7 +2774,7 @@ L 1442 749 Z"/>
 <rect x="-2" y="-2" width="29.75" height="47.75" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_1)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">1</tspan></text>
+<text clip-path="url(#Mask_Mask_1)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">1</tspan></text>
 </g>
 
 <g transform="matrix( 0, 1, -1, 0, 424.85,66.35) ">
@@ -2782,7 +2782,7 @@ L 1442 749 Z"/>
 <rect x="-2" y="-2" width="29.75" height="47.75" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_2)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">2</tspan></text>
+<text clip-path="url(#Mask_Mask_2)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">2</tspan></text>
 </g>
 
 <g transform="matrix( 0, -1, 1, 0, 187.4,545.15) ">
@@ -2790,7 +2790,7 @@ L 1442 749 Z"/>
 <rect x="-2" y="-2" width="29.75" height="47.75" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_3)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">4</tspan></text>
+<text clip-path="url(#Mask_Mask_3)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">4</tspan></text>
 </g>
 
 <g transform="matrix( 0, 1, -1, 0, 424.85,519.35) ">
@@ -2798,7 +2798,7 @@ L 1442 749 Z"/>
 <rect x="-2" y="-2" width="29.75" height="47.75" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_4)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">3</tspan></text>
+<text clip-path="url(#Mask_Mask_4)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">3</tspan></text>
 </g>
 
 <g transform="matrix( 1, 0, 0, 1, 519.7,187.05) ">
@@ -2806,7 +2806,7 @@ L 1442 749 Z"/>
 <rect x="-2" y="-2" width="29.75" height="47.75" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_5)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">6</tspan></text>
+<text clip-path="url(#Mask_Mask_5)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">6</tspan></text>
 </g>
 
 <g transform="matrix( -1, 0, 0, -1, 545.5,424.5) ">
@@ -2814,7 +2814,7 @@ L 1442 749 Z"/>
 <rect x="-2" y="-2" width="29.75" height="47.75" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_6)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">7</tspan></text>
+<text clip-path="url(#Mask_Mask_6)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">7</tspan></text>
 </g>
 
 <g transform="matrix( 1, 0, 0, 1, 66.7,187.05) ">
@@ -2822,7 +2822,7 @@ L 1442 749 Z"/>
 <rect x="-2" y="-2" width="29.75" height="47.75" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_7)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">5</tspan></text>
+<text clip-path="url(#Mask_Mask_7)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">5</tspan></text>
 </g>
 
 <g transform="matrix( -1, 0, 0, -1, 92.5,424.5) ">
@@ -2830,7 +2830,7 @@ L 1442 749 Z"/>
 <rect x="-2" y="-2" width="29.75" height="47.75" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_8)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">8</tspan></text>
+<text clip-path="url(#Mask_Mask_8)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">8</tspan></text>
 </g>
 
 <g transform="matrix( 1, 0, 0, 1, 0,0) ">
@@ -2842,7 +2842,7 @@ L 1442 749 Z"/>
 <rect x="-2" y="-2" width="67.3" height="47.8" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_9)" writing-mode="lr"><tspan x="0" y="18.1" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="18" fill="#666666" xml:space="preserve">Add</tspan><tspan x="0" y="40" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="18" fill="#666666" xml:space="preserve">colour</tspan></text>
+<text clip-path="url(#Mask_Mask_9)" writing-mode="lr"><tspan x="0" y="18.1" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="18" fill="#666666" xml:space="preserve">Add</tspan><tspan x="0" y="40" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="18" fill="#666666" xml:space="preserve">colour</tspan></text>
 </g>
 
 <g transform="matrix( 1, 0, 0, 1, 492.95,56) ">
@@ -2850,7 +2850,7 @@ L 1442 749 Z"/>
 <rect x="-1.85" y="-2" width="67.3" height="47.8" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_10)" writing-mode="lr"><tspan x="24.4" y="18.1" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="18" fill="#666666" xml:space="preserve">Add</tspan><tspan x="0.35" y="40" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="18" fill="#666666" xml:space="preserve">colour</tspan></text>
+<text clip-path="url(#Mask_Mask_10)" writing-mode="lr"><tspan x="24.4" y="18.1" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="18" fill="#666666" xml:space="preserve">Add</tspan><tspan x="0.35" y="40" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="18" fill="#666666" xml:space="preserve">colour</tspan></text>
 </g>
 
 <g transform="matrix( 1, 0, 0, 1, 51.95,510) ">
@@ -2858,7 +2858,7 @@ L 1442 749 Z"/>
 <rect x="-2" y="-2" width="67.3" height="47.8" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_11)" writing-mode="lr"><tspan x="0" y="18.1" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="18" fill="#666666" xml:space="preserve">Add</tspan><tspan x="0" y="40" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="18" fill="#666666" xml:space="preserve">colour</tspan></text>
+<text clip-path="url(#Mask_Mask_11)" writing-mode="lr"><tspan x="0" y="18.1" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="18" fill="#666666" xml:space="preserve">Add</tspan><tspan x="0" y="40" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="18" fill="#666666" xml:space="preserve">colour</tspan></text>
 </g>
 
 <g transform="matrix( 1, 0, 0, 1, 492.95,510) ">
@@ -2866,7 +2866,7 @@ L 1442 749 Z"/>
 <rect x="-1.85" y="-2" width="67.3" height="47.8" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_12)" writing-mode="lr"><tspan x="24.4" y="18.1" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="18" fill="#666666" xml:space="preserve">Add</tspan><tspan x="0.35" y="40" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="18" fill="#666666" xml:space="preserve">colour</tspan></text>
+<text clip-path="url(#Mask_Mask_12)" writing-mode="lr"><tspan x="24.4" y="18.1" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="18" fill="#666666" xml:space="preserve">Add</tspan><tspan x="0.35" y="40" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="18" fill="#666666" xml:space="preserve">colour</tspan></text>
 </g>
 
 <g transform="matrix( 1, 0, 0, 1, 34.4,602.4) ">
@@ -2874,7 +2874,7 @@ L 1442 749 Z"/>
 <rect x="-2" y="-2" width="546.8" height="108.95" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_13)" writing-mode="lr"><tspan x="0" y="11.05" baseline-shift="0%" kerning="auto" font-family="" font-size="11" fill="#666666" xml:space="preserve">Add colour everywhere! (The text 'Add colour' is for reference and doesn't print.) Then add your </tspan><tspan x="0" y="25.4" baseline-shift="0%" kerning="auto" font-family="Verdana" font-size="11" fill="#666666" xml:space="preserve">'fortunes' - pictures/text - into the empty triangles. When you are happy with your design:</tspan><tspan x="0" y="39.75" baseline-shift="0%" kerning="auto" font-family="Verdana" font-size="11" fill="#666666" xml:space="preserve"></tspan><tspan x="0" y="45.1" baseline-shift="0%" kerning="auto" font-family="Verdana" font-size="11" fill="#666666" xml:space="preserve">1. Cut out the main square and fold in half horizontally and vertically</tspan><tspan x="0" y="59.45" baseline-shift="0%" kerning="auto" font-family="Verdana" font-size="11" fill="#666666" xml:space="preserve">2. Turn the paper over to show the blank side and fold each of the corners into the centre</tspan><tspan x="0" y="73.8" baseline-shift="0%" kerning="auto" font-family="Verdana" font-size="11" fill="#666666" xml:space="preserve">3. Turn the paper over so you can see the fortunes and fold each corner into the centre</tspan><tspan x="0" y="88.15" baseline-shift="0%" kerning="auto" font-family="Verdana" font-size="11" fill="#666666" xml:space="preserve">4. Fold the paper along the horizontal and vertical, folding the numbers towards each other </tspan><tspan x="0" y="102.5" baseline-shift="0%" kerning="auto" font-family="Verdana" font-size="11" fill="#666666" xml:space="preserve">5. Gently push your fingers into the pockets you have created to make four pyramids</tspan></text>
+<text clip-path="url(#Mask_Mask_13)" writing-mode="lr"><tspan x="0" y="11.05" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#666666" xml:space="preserve">Add colour everywhere! (The text 'Add colour' is for reference and doesn't print.) Then add your </tspan><tspan x="0" y="25.4" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#666666" xml:space="preserve">'fortunes' - pictures/text - into the empty triangles. When you are happy with your design:</tspan><tspan x="0" y="39.75" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#666666" xml:space="preserve"></tspan><tspan x="0" y="45.1" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#666666" xml:space="preserve">1. Cut out the main square and fold in half horizontally and vertically</tspan><tspan x="0" y="59.45" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#666666" xml:space="preserve">2. Turn the paper over to show the blank side and fold each of the corners into the centre</tspan><tspan x="0" y="73.8" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#666666" xml:space="preserve">3. Turn the paper over so you can see the fortunes and fold each corner into the centre</tspan><tspan x="0" y="88.15" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#666666" xml:space="preserve">4. Fold the paper along the horizontal and vertical, folding the numbers towards each other </tspan><tspan x="0" y="102.5" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#666666" xml:space="preserve">5. Gently push your fingers into the pockets you have created to make four pyramids</tspan></text>
 </g>
 
 <g transform="matrix( 0.7111663818359375, 0, 0, 0.7111663818359375, -111.2,690.9) ">

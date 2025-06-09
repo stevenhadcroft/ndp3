@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react"; // Add useRef import
 import { useSelector, useDispatch } from 'react-redux'
 import CSSModules from 'react-css-modules';
 import styles from '../styles';
@@ -32,7 +31,8 @@ const Canvas = () => {
 	const dispatch = useDispatch();
 	const view = useSelector(state => state.view);
 	const canvas = useSelector(state => state.canvas);
-	
+	const canvasRef = useRef(null);
+	const [canvasDimensions, setCanvasDimensions] = useState({ left: 0 });
 	const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 	const [panx, setPanx] = useState(0);
 	const [pany, setPany] = useState(0);
@@ -40,7 +40,6 @@ const Canvas = () => {
 	
 	const orientation	= canvas.orientation || "portrait";
 	const canvasScale 	= view.canvasScale * (orientation === "portrait" ? 1 : 1.43);
-	const canvasLeft 	= window.innerWidth/2 - document.getElementById('canvas')?.getBoundingClientRect().width/2 + (30); // + for toolbar 
 	const mode 			= view.mode;
 	const dragIndex 	= view.dragIndex;
 	const brushColour 	= view.brushColour;
@@ -49,6 +48,15 @@ const Canvas = () => {
 	const textData 		= canvas.texts || [];
 	const template 		= canvas.template;
 	const canvasTop 	= view.fullScreen ? "15px" : null;
+
+	useEffect(() => {
+        if (canvasRef.current) {
+            const rect = canvasRef.current.getBoundingClientRect();
+            const left = window.innerWidth/2 - rect.width/2 + 30; // + for toolbar
+            setCanvasDimensions({ left});
+        }
+    }, [canvasScale, orientation]); 
+	const canvasLeft = canvasDimensions.left;
 
 	useCanvasFileLoader();
 	
@@ -301,7 +309,11 @@ const Canvas = () => {
 				onMouseUp={onUp} 
 				onTouchEnd={onUp}>	
 
-			<div id="canvas" styleName={`canvas ${orientation}`} style={canvasStyle}>
+			<div 	id="canvas" 
+					styleName={`canvas ${orientation}`} 
+					style={canvasStyle}
+					ref={canvasRef}
+			>
 				<div id="canvas-inner" style={canvasInnerStyle}>
 					{template &&
 						<div id='template' 

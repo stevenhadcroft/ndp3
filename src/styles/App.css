@@ -43,33 +43,6 @@ div {
   clip-path: xywh(0 0 768px 1100px);
 }
 
-/* @media print {
-  html,
-  body,
-  #canvas {
-    height: 300px;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: hidden;
-  }
-  * {
-    font-family: Verdana !important;
-  }
-  .canvas-controls {
-    display: none;
-  }
-} */
-
-
-
-/* input::-webkit-contacts-auto-fill-button {
-  visibility: hidden;
-  display: none !important;
-  pointer-events: none;
-  position: absolute;
-  right: 0;
-} */
-
 input {
   user-select: text;
   -moz-user-select: text;

@@ -317,8 +317,8 @@ L 310.6 282.65"/>
 Vendor ID: MS  
 © 2006 Microsoft Corporation. All Rights Reserved.
 http://www.microsoft.com/typography/fonts/
-URL for more Information: http://www.adobe.com/go/font_vendor_id?ID=MS&Name=Verdana&PSName=Verdana&applanguage=en_US-->
-<font-face font-family="Verdana" units-per-em="2048" ascent="2059" descent="430"/>
+URL for more Information: http://www.adobe.com/go/font_vendor_id?ID=MS&Name=Verdana&PSName=Verdana-Bold&applanguage=en_US-->
+<font-face font-family="Verdana_Bold_Bold" units-per-em="2048" ascent="2059" descent="430"/>
 
 <glyph unicode="1" horiz-adv-x="1456" d="
 M 1386 260
@@ -567,7 +567,7 @@ Vendor ID: MS
 © 2006 Microsoft Corporation. All Rights Reserved.
 http://www.microsoft.com/typography/fonts/
 URL for more Information: http://www.adobe.com/go/font_vendor_id?ID=MS&Name=Verdana&PSName=Verdana&applanguage=en_US-->
-<font-face font-family="Verdana" units-per-em="2048" ascent="2059" descent="430"/>
+<font-face font-family="Verdana_Regular" units-per-em="2048" ascent="2059" descent="430"/>
 
 <hkern u1="'" u2="A" k="100"/>
 
@@ -961,7 +961,7 @@ Q 711 1319 770 1307 829 1296 872 1267 924 1233 947 1183 969 1134 969 1070 969 98
 <rect x="-2" y="-2" width="29.75" height="47.75" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_1)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">1</tspan></text>
+<text clip-path="url(#Mask_Mask_1)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">1</tspan></text>
 </g>
 
 <g transform="matrix( -0.965087890625, 0, 0, -0.966827392578125, 231.6,315.5) ">
@@ -969,7 +969,7 @@ Q 711 1319 770 1307 829 1296 872 1267 924 1233 947 1183 969 1134 969 1070 969 98
 <rect x="-2" y="-2" width="29.75" height="47.75" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_2)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">4</tspan></text>
+<text clip-path="url(#Mask_Mask_2)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">4</tspan></text>
 </g>
 
 <g transform="matrix( 0.4825439453125, 0.8372955322265625, -0.835784912109375, 0.4834136962890625, 320,123.9) ">
@@ -977,7 +977,7 @@ Q 711 1319 770 1307 829 1296 872 1267 924 1233 947 1183 969 1134 969 1070 969 98
 <rect x="-2" y="-2" width="29.75" height="47.75" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_3)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">2</tspan></text>
+<text clip-path="url(#Mask_Mask_3)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">2</tspan></text>
 </g>
 
 <g transform="matrix( -0.4825439453125, -0.8372955322265625, 0.835784912109375, -0.4834136962890625, 118.25,271.15) ">
@@ -985,7 +985,7 @@ Q 711 1319 770 1307 829 1296 872 1267 924 1233 947 1183 969 1134 969 1070 969 98
 <rect x="-2" y="-2" width="29.75" height="47.75" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_4)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">5</tspan></text>
+<text clip-path="url(#Mask_Mask_4)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">5</tspan></text>
 </g>
 
 <g transform="matrix( -0.4825439453125, 0.8372955322265625, -0.835784912109375, -0.4834136962890625, 332.45,249.6) ">
@@ -993,7 +993,7 @@ Q 711 1319 770 1307 829 1296 872 1267 924 1233 947 1183 969 1134 969 1070 969 98
 <rect x="-2" y="-2" width="29.75" height="47.75" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_5)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">3</tspan></text>
+<text clip-path="url(#Mask_Mask_5)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">3</tspan></text>
 </g>
 
 <g transform="matrix( 0.4825439453125, -0.8372955322265625, 0.835784912109375, 0.4834136962890625, 105.8,145.55) ">
@@ -1001,7 +1001,7 @@ Q 711 1319 770 1307 829 1296 872 1267 924 1233 947 1183 969 1134 969 1070 969 98
 <rect x="-2" y="-2" width="29.75" height="47.75" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_6)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">6</tspan></text>
+<text clip-path="url(#Mask_Mask_6)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">6</tspan></text>
 </g>
 
 <g transform="matrix( 0.2860260009765625, 0, 0, 0.2860260009765625, 505.65,744.05) ">
@@ -1035,7 +1035,7 @@ Q 711 1319 770 1307 829 1296 872 1267 924 1233 947 1183 969 1134 969 1070 969 98
 <rect x="-2" y="-2" width="515.7" height="177.35" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_7)" writing-mode="lr"><tspan x="0" y="11.05" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="11" fill="#000000" xml:space="preserve">Hexagon Spinner and Number Roller</tspan><tspan x="0" y="25.4" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve"></tspan><tspan x="0" y="30.75" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve">Add colour everywhere! Then add numbers and/or pictures to each section. If your pictures </tspan><tspan x="0" y="45.1" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve">obscure the numbers, you can add more numbers using the Speech Builder 'Add text' tool.</tspan><tspan x="0" y="59.45" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve"></tspan><tspan x="0" y="64.8" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="11" fill="#000000" xml:space="preserve">To make the Hexagon Spinner:</tspan><tspan baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve"></tspan><tspan x="0" y="79.15" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve">Cut along the outline of the hexagon. Make a small hole</tspan><tspan x="0" y="93.5" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve">in the centre and use a blunted cocktail stick or clean</tspan><tspan x="0" y="107.85" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve">spent match as the spindle.</tspan><tspan x="0" y="122.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve"></tspan><tspan x="0" y="127.55" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="11" fill="#000000" xml:space="preserve">To make the Number Roller:</tspan><tspan baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve"></tspan><tspan x="0" y="141.9" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve">Cut along the outline of the rectangle and tab. Fold along</tspan><tspan x="0" y="156.25" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve">the section divisions. Gently form the Roller into shape</tspan><tspan x="0" y="170.6" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve">and fix the tab with sticky tape.</tspan></text>
+<text clip-path="url(#Mask_Mask_7)" writing-mode="lr"><tspan x="0" y="11.05" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="11" fill="#000000" xml:space="preserve">Hexagon Spinner and Number Roller</tspan><tspan x="0" y="25.4" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve"></tspan><tspan x="0" y="30.75" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve">Add colour everywhere! Then add numbers and/or pictures to each section. If your pictures </tspan><tspan x="0" y="45.1" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve">obscure the numbers, you can add more numbers using the Speech Builder 'Add text' tool.</tspan><tspan x="0" y="59.45" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve"></tspan><tspan x="0" y="64.8" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="11" fill="#000000" xml:space="preserve">To make the Hexagon Spinner:</tspan><tspan baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve"></tspan><tspan x="0" y="79.15" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve">Cut along the outline of the hexagon. Make a small hole</tspan><tspan x="0" y="93.5" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve">in the centre and use a blunted cocktail stick or clean</tspan><tspan x="0" y="107.85" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve">spent match as the spindle.</tspan><tspan x="0" y="122.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve"></tspan><tspan x="0" y="127.55" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="11" fill="#000000" xml:space="preserve">To make the Number Roller:</tspan><tspan baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve"></tspan><tspan x="0" y="141.9" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve">Cut along the outline of the rectangle and tab. Fold along</tspan><tspan x="0" y="156.25" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve">the section divisions. Gently form the Roller into shape</tspan><tspan x="0" y="170.6" baseline-shift="0%" kerning="auto" font-family="Verdana_Regular" font-size="11" fill="#000000" xml:space="preserve">and fix the tab with sticky tape.</tspan></text>
 </g>
 
 <g transform="matrix( 1.2403564453125, 0, 0, 1.2403564453125, 66.75,467.6) ">
@@ -1043,7 +1043,7 @@ Q 711 1319 770 1307 829 1296 872 1267 924 1233 947 1183 969 1134 969 1070 969 98
 <rect x="-2" y="-2" width="29.75" height="47.75" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_8)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">1</tspan></text>
+<text clip-path="url(#Mask_Mask_8)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">1</tspan></text>
 </g>
 
 <g transform="matrix( 1.2403564453125, 0, 0, 1.2403564453125, 147.2,467.6) ">
@@ -1051,7 +1051,7 @@ Q 711 1319 770 1307 829 1296 872 1267 924 1233 947 1183 969 1134 969 1070 969 98
 <rect x="-2" y="-2" width="29.75" height="47.75" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_9)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">2</tspan></text>
+<text clip-path="url(#Mask_Mask_9)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">2</tspan></text>
 </g>
 
 <g transform="matrix( 1.2403564453125, 0, 0, 1.2403564453125, 227.55,467.6) ">
@@ -1059,7 +1059,7 @@ Q 711 1319 770 1307 829 1296 872 1267 924 1233 947 1183 969 1134 969 1070 969 98
 <rect x="-2" y="-2" width="29.75" height="47.75" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_10)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">3</tspan></text>
+<text clip-path="url(#Mask_Mask_10)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">3</tspan></text>
 </g>
 
 <g transform="matrix( 1.2403564453125, 0, 0, 1.2403564453125, 307.95,467.6) ">
@@ -1067,7 +1067,7 @@ Q 711 1319 770 1307 829 1296 872 1267 924 1233 947 1183 969 1134 969 1070 969 98
 <rect x="-2" y="-2" width="29.75" height="47.75" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_11)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">4</tspan></text>
+<text clip-path="url(#Mask_Mask_11)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">4</tspan></text>
 </g>
 
 <g transform="matrix( 1.2403564453125, 0, 0, 1.2403564453125, 388.3,467.6) ">
@@ -1075,7 +1075,7 @@ Q 711 1319 770 1307 829 1296 872 1267 924 1233 947 1183 969 1134 969 1070 969 98
 <rect x="-2" y="-2" width="29.75" height="47.75" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_12)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">5</tspan></text>
+<text clip-path="url(#Mask_Mask_12)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">5</tspan></text>
 </g>
 
 <g transform="matrix( 1.2403564453125, 0, 0, 1.2403564453125, 468.65,467.6) ">
@@ -1083,6 +1083,6 @@ Q 711 1319 770 1307 829 1296 872 1267 924 1233 947 1183 969 1134 969 1070 969 98
 <rect x="-2" y="-2" width="29.75" height="47.75" fill="#FFFFFF" stroke="none"/>
 </clipPath>
 
-<text clip-path="url(#Mask_Mask_13)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">6</tspan></text>
+<text clip-path="url(#Mask_Mask_13)" writing-mode="lr"><tspan x="0" y="36.2" baseline-shift="0%" kerning="auto" font-family="Verdana_Bold_Bold" font-weight="bold" font-size="36" fill="#666666" xml:space="preserve">6</tspan></text>
 </g>
 </svg>

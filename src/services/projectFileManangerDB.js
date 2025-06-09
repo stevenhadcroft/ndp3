@@ -17,8 +17,13 @@ db.version(1).stores({
     directories: "++id,dirname",
 });
  
-export const storeProject = (name, description, thumbnail, data, dirname, orientation) => {
-    const file = {name, description, thumbnail, data, dirname, orientation};
+//------------------------------------------------
+// PROJECT FUNCTIONS
+//------------------------------------------------
+
+export const storeProject = (params) => {
+    const {name, projectid, description, thumbnail, data, dirname, orientation} = params;
+    const file = {name, projectid, description, thumbnail, data, dirname, orientation};
     console.log('storeProject() file ', file);
     return new Promise((resolve, reject) => {
         db.transaction('rw', db.projects, async() => {
@@ -31,6 +36,23 @@ export const storeProject = (name, description, thumbnail, data, dirname, orient
         });
 	});
 }
+
+export const getProject = async (file) => {
+}
+
+export const deleteProject = async (file) => {
+    // alert(file)
+    const existingFile = await db.projects.where({name:file.name}).first();
+    return new Promise( async (resolve, reject) => {
+        await db.projects.delete(existingFile.id);
+        resolve();
+	});
+}
+
+//------------------------------------------------
+// DIRECTORY FUNCTIONS
+//------------------------------------------------
+
 
 export const createDir = (dirname) => {
     const file = {dirname};
@@ -47,18 +69,6 @@ export const getDirs = () => {
 	});     
   }
 
-export const getProject = async (file) => {
-}
-
-export const deleteProject = async (file) => {
-    // alert(file)
-    const existingFile = await db.projects.where({name:file.name}).first();
-    return new Promise( async (resolve, reject) => {
-        await db.projects.delete(existingFile.id);
-        resolve();
-	});
-}
-
 export const deleteDir = async (file) => {
     // alert(file)
     const existingFile = await db.directories.where({dirname:file.dirname}).first();
@@ -72,14 +82,14 @@ export const getProjectList = (dirname) => {
     return new Promise( async (resolve, reject) => {
         let projects = await db.projects.where("id").above(0).toArray();
 
-        console.log('dirname ', dirname);
-        console.log('projects ', projects);
-        if (dirname){
-            projects = projects.filter(proj => proj.dirname === dirname); 
-            // console.log('dirname ', dirname);
-        } else {
-            projects = projects.filter(proj => !proj.dirname); 
-        }
+        // console.log('dirname ', dirname);
+        // console.log('projects ', projects);
+        // if (dirname){
+        //     projects = projects.filter(proj => proj.dirname === dirname); 
+        //     // console.log('dirname ', dirname);
+        // } else {
+        //     projects = projects.filter(proj => !proj.dirname); 
+        // }
         
         console.log('>>> projects ', projects);
         const directories = await db.directories.where("id").above(0).toArray();

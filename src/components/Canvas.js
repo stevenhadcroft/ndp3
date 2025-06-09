@@ -1,17 +1,16 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import CSSModules from 'react-css-modules';
 import styles from '../styles';
+import { eMode, eDirection } from "../constants";
+import useCanvasFileLoader from "../hooks/useCanvasFileLoader"; 
 import TransformWidget from "./TransformWidget";
-import { eMode } from "../constants";
-import { eDirection } from "../constants";
 import { BrushSVG } from "./BrushSVG";
-import useCanvasFileLoader from "../hooks/useCanvasFileLoader"; // Import the new hook
+import { getHighestZdepth } from "../utils";
 
 import {
 	storeHistroy,
-	// setTemplateLock,
 } from "../actions";
 
 import { 
@@ -26,6 +25,7 @@ import {
 	setDragIndex,
 } from "../features/viewSlice";
 
+
 let clickOffset = {};
 
 const Canvas = () => {
@@ -39,8 +39,8 @@ const Canvas = () => {
 	const [zoom, setZoom] = useState(1);
 	
 	const orientation	= canvas.orientation || "portrait";
-	const canvasScale 	= view.canvasScale * (orientation === "portrait" ? 1 : 1.36);
-	const canvasLeft 	= window.innerWidth/2 - canvasScale*750/2 - (orientation === "portrait" ? -25 : 50);
+	const canvasScale 	= view.canvasScale * (orientation === "portrait" ? 1 : 1.43);
+	const canvasLeft 	= window.innerWidth/2 - document.getElementById('canvas')?.getBoundingClientRect().width/2 + (30); // + for toolbar 
 	const mode 			= view.mode;
 	const dragIndex 	= view.dragIndex;
 	const brushColour 	= view.brushColour;
@@ -59,15 +59,6 @@ const Canvas = () => {
 			case eMode.EDIT_TEXT: dispatch(updateTextData({key, value})); break;
 			default: break;
 		}
-	};
-
-	const getHighestZdepth = () => {
-		return Math.max.apply(
-			Math,
-			images.map(function(o) {
-				return o.zIndex;
-			})
-		);
 	};
 
 	//---------------------
@@ -147,7 +138,7 @@ const Canvas = () => {
 				if (!brushColour) {
 					dispatch(setDragIndex(index));
 					dispatch(setSelectedIndex(index));
-					updateData(index, "zIndex", getHighestZdepth() + 1);
+					updateData(index, "zIndex", getHighestZdepth(images));
 
 					//set offset to
 					const canvasRect = document.getElementById("canvas").getBoundingClientRect();
@@ -184,7 +175,7 @@ const Canvas = () => {
 		}
 		dispatch(setDragIndex(index));
 		dispatch(setSelectedIndex(index));
-		updateData(index, "zIndex", getHighestZdepth() + 1);
+		updateData(index, "zIndex", getHighestZdepth(images) );
 
 		//set offset to
 		const canvasRect = document.getElementById("canvas").getBoundingClientRect();
@@ -294,43 +285,35 @@ const Canvas = () => {
 			color:item.colour,
 		}
 	}
+	const templateStyle = orientation === "landscape" ? {
+		width: `${768}px`,
+		height: `${1100}px`,
+		background: "#fff",
+		transform: "translate(166px, -166px) rotate(90deg)"
+	} : null;
+	const canvasStyle = { transform: `scale(${canvasScale})`, left: `${canvasLeft}px`, top: canvasTop, clipPath: "none", background: "#ffffff11"} // 
+	const canvasInnerStyle = { transform: `scale(${zoom}) translate(${panx}px, ${pany}px)` };
 	
-
 	return (
-		
 		<div 	styleName="page" 
 				onTouchMove={onTouchMove} 
 				onMouseMove={onMouseMove} 
 				onMouseUp={onUp} 
 				onTouchEnd={onUp}>	
 
-	
-			<div 	id="canvas" 
-					styleName={`canvas ${orientation}`} 
-					style={{ 	transform: `scale(${canvasScale})`, 
-								left:`${canvasLeft}px`, 
-								top: canvasTop, 
-								clipPath:"none",
-							}}>
-				
-				<div id="canvas-inner" style={{transform:`scale(${zoom}) translate(${panx}px, ${pany}px)`}}>
+			<div id="canvas" styleName={`canvas ${orientation}`} style={canvasStyle}>
+				<div id="canvas-inner" style={canvasInnerStyle}>
 					{template &&
 						<div id='template' 
 							styleName='template'
-							// NEEDS STYLE width/height for LANDSCAPE print
-							style={orientation === "landscape" ? {
-								width: `${800*0.9}px`,
-								height: `${1120*0.9}px`,
-								background:"#fff", 
-								transform:  "translate(150px, -120px) rotate(90deg)"
-							} : null}
+							style={templateStyle} // NEEDS STYLE width/height for LANDSCAPE print
 							onMouseDown={evt => onImageClick(evt, 0, eMode.EDIT_TEMPLATE)}
 							onTouchStart={evt => onImageTouch(evt, 0, eMode.EDIT_TEMPLATE)}
 							dangerouslySetInnerHTML={{ __html: template.svg }}
 						/>
 					}
-
-					<div style={{ clipPath: "xywh(0 0 768px 1024px)" }}>
+					{/* NOTE - needed to use class for clippath because inline styles didn't work for printing */}
+					<div className={orientation === "landscape" ? "clipPathLandscape" : "clipPathPortrait"}>
 						{images.map((item, index) => {
 							const id = `image-${index}`;
 							return (

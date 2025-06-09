@@ -13,12 +13,12 @@ canvas
 .canvas.portrait,
 .canvas-controls.portrait {
   width: 768px;
-  height: 1024px;
+  height: 1100px;
 }
 
 .canvas.landscape,
 .canvas-controls.landscape {
-  width: 1024px;
+  width: 1100px;
   height: 768px;
 }
 
@@ -46,8 +46,12 @@ canvas
   left: 0px;
   top: 0px;
   width: 768px;
-  height: 1024px;
+  height: 1094px;
 }
+
+/* @print .template {
+  transform: rotate(90deg);
+} */
 
 /* canvas controls */
 .canvas-icon {

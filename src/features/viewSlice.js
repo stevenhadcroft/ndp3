@@ -39,9 +39,6 @@ const viewSlice = createSlice({
     setBrushColour: (state, action) => {
       state.brushColour = action.payload;
     },
-    setOrientation: (state, action) => {
-      state.orientation = action.payload;
-    },
     showLoader: (state, action) => {
       state.showLoader = action.payload;
     },

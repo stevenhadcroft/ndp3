@@ -25,17 +25,26 @@ const canvasSlice = createSlice({
   reducers: {
     
     fileLoadUpdate: (state, action) => {
-      // console.log('fileLoadUpdate action.payload', action.payload);
-      // const { imageData, textData, templateData } = action.payload;
-      // state.images = imageData || [];
-      // state.texts = textData || [];
-      // state.template = templateData || null;
-      state.fileLoadUpdate = {data:action.payload}; // Force a re-render
+      // don't reset here becauase we want to keep the current stat
+      state.fileLoadUpdate = {data:action.payload};
       window.undoHistory = [state];
     },
 
     setSelectedIndex: (state, action) => {
+      // NOTE - leave here (i.e. not in view) - because the index is used in the canvas
       state.selectedIndex = action.payload;
+    },
+
+    resetCanvas : (state) => {
+      state.images = [];
+      state.texts = [];
+      state.template = null;
+      state.selectedIndex = null;
+      window.undoHistory = [];
+    },
+    
+    setOrientation: (state, action) => {
+      state.orientation = action.payload;
     },
 
     // ------------------------------------------
@@ -64,7 +73,7 @@ const canvasSlice = createSlice({
     },
     
     setImageData: (state, action) => { 
-      state.images = action.payload.images;
+      state.images = action.payload;
       pushHistory(state);
     },
     
@@ -170,6 +179,7 @@ const canvasSlice = createSlice({
 export const {
   resetCanvas,
   setSelectedIndex,
+  setOrientation,
   setTemplateData,
   updateTemplateData,
   addImage,

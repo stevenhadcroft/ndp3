@@ -1,5 +1,4 @@
-import { useDispatch } from 'react-redux'
-import { Constants, eMode } from "../constants";
+import { Constants } from "../constants";
 import axios from "axios";
 import Swal from 'sweetalert2'
 
@@ -14,43 +13,8 @@ window.REFRESH_CREDS = () => {
 }
 window.REFRESH_CREDS();
 
-// const onSignOut = () => { // DUPED FUNCTION FROM MENU LEFT
-//   // const dispatch = useDispatch();
-//   dispatch(showLoader(false));
-//   dispatch(setMenuOpen(false));
-//   unlinkMachine();
-//   dispatch(setMode(eMode.USER_OPTIONS));
-// };
-
-// function useCancel() {
-  // const dispatch = useDispatch();
-  // dispatch(showLoader(false));
-  // dispatch(setMenuOpen(false));
-  // dispatch(setMode(null));
-// }
-
-// const onCancel = () => {
-//   const dispatch = useDispatch();
-//   dispatch(showLoader(false));
-//   dispatch(setMenuOpen(false));
-//   dispatch(setMode(null));
-// };
 
 const responseOk = (response) => {
-  // let response = JSON.parse(r);
-  
-  // console.log('resp ', resp);
-  // console.log('response ', response);
-  // console.log('response.data ', response.data);
-  // console.log('response.data ', typeof response.data);
-  // console.log('XX response.data ', JSON.parse(response.data));
-  console.log('response.data.error ', response.data.error);
-  console.log('response.data.complete ', response.data.complete);
-  // console.log('response.data.complete ', response.data.complete);
-
-  // let resp = JSON.parse(response.data);
-  // console.log('resp ', resp);
-
   if (response.data.complete === 1) {
     return true;
 
@@ -62,11 +26,35 @@ const responseOk = (response) => {
       confirmButtonText: 'Continue'
     })
     window.UNSAFELY_CALL_onSignOut()
-    // const dispatch = useDispatch();
     return false;
   }
 }
 
+const genericCall = (params) => {
+  const { data, resolve, reject, decode = false } = params;
+    axios({
+        method: 'post',
+        url: Constants.API_URL + 'functions.php',
+        data
+      })
+      .then(function (response) {
+        if (responseOk(response)){
+          if (decode) {
+            resolve(decodeURIComponent(response.data.data.data));
+          } else {
+            resolve(response.data);
+          }
+        }
+      })
+      .catch(() => {
+        Swal.fire({
+          title: 'Oops, theres a problem',
+          // text: 'Sorry, the project can not be loaded',
+          icon: 'error',
+          confirmButtonText: 'Continue'
+        });
+      });
+}
 
 
 //------------------------------------------------
@@ -95,82 +83,25 @@ const responseOk = (response) => {
 // PROJECT FUNCTIONS
 //------------------------------------------------
 
-export const storeProject = (name, projectid, description, thumbnail, rawdata, dirname, orientation) => {
-    console.log('projectid ', projectid);
-    const data = { 
-                  ...credentials, 
-                  mode : "storeProject", 
-                  name, 
-                  projectid,
-                  description, 
-                  thumbnail, 
-                  data:encodeURIComponent(JSON.stringify(rawdata)), 
-                  dirname,
-                  orientation
-              };
-
-    return new Promise((resolve, reject)=>{
-        axios({
-            method: 'post',
-            url: Constants.API_URL + 'functions.php',
-            data
-          })
-          .then(function (response) {
-            if (responseOk(response)){
-              resolve(response.data);
-            }
-          });
-    })
+export const storeProject = (params) => {
+  let data = { ...credentials, mode: "storeProject", ...params };
+  data.data = encodeURIComponent(JSON.stringify(params.data));
+  return new Promise((resolve, reject) => {
+    genericCall({ data, resolve, reject });
+  })
 }
 
 export const getProject = async (file) => {
   const data = { ...credentials, mode: "getProject", projectid: file.id };
   return new Promise((resolve, reject) => {
-    axios({
-      method: 'post',
-      url: Constants.API_URL + 'functions.php',
-      data
-    })
-      .then(function (response) {
-        try {
-          if (responseOk(response)) {
-            // resolve(response.data);
-            resolve(decodeURIComponent(response.data.data.data));
-          }
-        } catch (e) {
-          // console.error("GET PROJECT ERROR ", e);
-          Swal.fire({
-            title: 'Oops, theres a problem',
-            text: 'Sorry, the project list can not be loaded',
-            icon: 'error',
-            confirmButtonText: 'Continue'
-          });
-        }
-      })
-      .catch(() => {
-        Swal.fire({
-          title: 'Oops, theres a problem',
-          text: 'Sorry, the project can not be loaded',
-          icon: 'error',
-          confirmButtonText: 'Continue'
-        });
-      });
+    genericCall({data, resolve, reject, decode:true});
   })
 }
 
 export const deleteProject = async (file) => {
     const data = { ...credentials, mode: "deleteProject", projectid:file.id };
     return new Promise((resolve, reject)=>{
-        axios({
-            method: 'post',
-            url: Constants.API_URL + 'functions.php',
-            data
-          })
-          .then(function (response) {
-            if (responseOk(response)){
-              resolve(response.data);
-            }
-          });
+      genericCall({data, resolve, reject});
     })
 }
 
@@ -181,51 +112,23 @@ export const deleteProject = async (file) => {
 export const createDir = (dirname) => {
     const data = {...credentials, mode: "createDir", dirname};
     return new Promise((resolve, reject)=>{
-        axios({
-            method: 'post',
-            url: Constants.API_URL + 'functions.php',
-            data
-          })
-          .then(function (response) {
-            if (responseOk(response)){
-              resolve(response.data);
-            }
-          });
+      genericCall({data, resolve, reject});
     })
 }
 
 export const getDirs = () => {
   const data = {...credentials, mode: "getDirs"};
   return new Promise((resolve, reject)=>{
-      axios({
-          method: 'post',
-          url: Constants.API_URL + 'functions.php',
-          data
-        })
-        .then(function (response) {
-          if (responseOk(response)){
-            resolve(response.data);
-          }
-        });
+    genericCall({data, resolve, reject});
   })
 }
 
 export const deleteDir = async (file) => {
     const data = { ...credentials, mode: "deleteDir", dirid:file.id };
     return new Promise((resolve, reject)=>{
-        axios({
-            method: 'post',
-            url: Constants.API_URL + 'functions.php',
-            data
-          })
-          .then(function (response) {
-            if (responseOk(response)){
-              resolve(response.data);
-            }
-          });
+      genericCall({data, resolve, reject});
     })
 }
-
 
 
 export const getProjectList = (dirname) => {
@@ -253,21 +156,10 @@ export const getProjectList = (dirname) => {
             reject(null);
           });
     })
-    
-    // return new Promise( async (resolve, reject) => {
-    //     let projects = await db.projects.where("id").above(0).toArray();
-
-    //     if (dirname){
-    //         projects = projects.filter(proj => proj.dirname === dirname); 
-    //     } else {
-    //         projects = projects.filter(proj => !proj.dirname); 
-    //     }
-        
-    //     console.log('>>> projects ', projects);
-    //     const directories = await db.directories.where("id").above(0).toArray();
-    //     resolve({projects,directories});
-	// });
 }
+
+
+
 
 // export const storeImageColouring = (imageId, data) => {
 //     const file = {name:imageId, data};

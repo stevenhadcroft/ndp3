@@ -36,11 +36,9 @@ const App = () => {
 	return (
 		<div className="app">
 			<Canvas />
-			<div style={{ pointerEvents: view.dragIndex >= 0 ? "none" : "initial" }}>
-				<ToolBar />
-				<Header />
-				<DialoguePanelManager />
-			</div>
+			<ToolBar />
+			<Header />
+			<DialoguePanelManager />
 			{view.showLoader && <Spinner />}
 		</div>
 	);

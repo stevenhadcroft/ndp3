@@ -10,7 +10,7 @@ const useCanvasResize = () => {
   const dispatch = useDispatch();
   
   const resizeCanvas = useCallback(() => {
-    let scale = ((window.innerHeight - 60) / 1024); // - 0.03 - 0.04;
+    let scale = ((window.innerHeight - 60) / 1100);
     dispatch(setCanvasScale(scale));
   }, [dispatch]);
   

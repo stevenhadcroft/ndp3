@@ -14,8 +14,8 @@ import {
     createDir,
     deleteDir,
     getDirs,
-} from '../services/projectFileManangerCloud';
-// } from './services/projectFileManangerDB';
+// } from '../services/projectFileManangerCloud';
+} from '../services/projectFileManangerDB';
 
 import { 
     showLoader,
@@ -23,14 +23,14 @@ import {
     cancelMode, 
     showPhonetics,
     addPhonetic,
-    setOrientation
 } from "../features/viewSlice";
 
 import { 
     resetCanvas,
-    setTemplateData,
-    setImageData,
-    setTextData,
+    setOrientation,
+    // setTemplateData,
+    // setImageData,
+    // setTextData,
     fileLoadUpdate,
 } from "../features/canvasSlice";
 
@@ -158,6 +158,7 @@ function DialogueProject({ mode }) {
                     dispatch(showLoader(true));
                     file.projectid = file.id; // COULD BE CONFUSING LATER ON
                     getProject(file).then(data => { // ONLINE GOTTA LOAD IT
+                        console.log('getProject() data ', data);
                         const parsed = JSON.parse(data);
                         openProject(parsed);
                         dispatch(showLoader(false));
@@ -190,16 +191,13 @@ function DialogueProject({ mode }) {
     // open and save
     //------------------------------------------------------------------------
     const openProject = (file) => {
+        console.log('openProject() file ', file);
         let data = window.LOCAL ? file.data : file;
-        // console.log("data ", data);
         if (data) {
-            dispatch(setOrientation(data.orientation));
             dispatch(cancelMode());
-            // dispatch(setTemplateData([]));
-            // dispatch(setImageData([]));
-            // dispatch(setTextData([]));
-            dispatch(fileLoadUpdate(data));
-            
+            dispatch(resetCanvas());
+            dispatch(setOrientation(data.orientation));
+            dispatch(fileLoadUpdate(data));    
         } else {
             alert('ERROR : no file data')
         }
@@ -223,20 +221,23 @@ function DialogueProject({ mode }) {
                 // clear out SVG data
                 if (projectData.imageData) projectData.imageData.forEach(image => delete(image.svg))
                 delete(projectData.templateData.svg)
-                
-                // console.log('file ', file);
 
-                const description = "";
-                const dirname = view.currentDir;
-                storeProject(file.name, Math.floor(file.id), description, thumbnail, projectData, dirname, canvas.orientation);
-                
+                storeProject({
+                    name:file.name,
+                    projectid:Math.floor(file.id),
+                    description:"", 
+                    thumbnail, 
+                    data:projectData, 
+                    dirname:view.currentDir, 
+                    orientation:canvas.orientation
+                })
+                    
                 // makeSVGgrabbableReset();
-                
                 if (view.mode === eMode.SAVE_BEFORE_NEW) {
                     // dispatch(newProject());
-                    dispatch(cancelMode());
                     dispatch(resetCanvas());
                 }
+
                 dispatch(cancelMode());
                 dispatch(showLoader(false));
             });

@@ -35,7 +35,15 @@ div {
 }
 
 
-@media print {
+.clipPathLandscape {
+  clip-path: xywh(0 0 1100px 768px);
+}
+
+.clipPathPortrait {
+  clip-path: xywh(0 0 768px 1100px);
+}
+
+/* @media print {
   html,
   body,
   #canvas {
@@ -50,7 +58,7 @@ div {
   .canvas-controls {
     display: none;
   }
-}
+} */
 
 
 

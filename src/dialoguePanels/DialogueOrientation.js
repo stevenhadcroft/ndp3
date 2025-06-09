@@ -1,39 +1,33 @@
 import { useDispatch } from 'react-redux'
 import CSSModules from 'react-css-modules';
 import styles from '../styles';
+import useDefaultTemplate from "../hooks/useDefaultTemplate"; 
 
 import { 
-	cancelMode,
-    setMenuOpen,
+	cancelMode
 } from "../features/viewSlice";
 
 import { 
 	resetCanvas,
+    setOrientation
 } from "../features/canvasSlice";
 
-
 import DraggablePanel from "./DraggablePanel";
-
 
 const DialogueOrientation = () => {
 
     // HOOKS ---------------------------------------------------
     const dispatch = useDispatch();
+    const loadDefaultTemplate = useDefaultTemplate();
 
     // HANDLERS ---------------------------------------------------
     const onNewProject = (orientation) => {
-        window.orientation = orientation; // TODO IMPROVE
-        // if (window.undoHistory && window.undoHistory.length>0){
-        //     dispatch(setMode(eMode.NEW_PROJECT));
-        // } else {
-        //     dispatch(newProject());
-        // }
-        // dispatch(newProject());
+        // window.orientation = orientation; // TODO IMPROVE
         dispatch(cancelMode());
         dispatch(resetCanvas());
-        dispatch(setMenuOpen(false));
+        dispatch(setOrientation(orientation));
+        loadDefaultTemplate();
       };
-    
     
     //--------------------------------------------------------------
 	// Main

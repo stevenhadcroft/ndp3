@@ -6,7 +6,7 @@ export const loadImage = (url, index, callback1, newImage, callback2) => {
 		evt.setAttribute("height", "100%");
 		evt.setAttribute("viewBox", "0 0 500 500");
 		
-		console.log('loadImage LOADED imageData ', newImage);
+		// console.log('loadImage LOADED imageData ', newImage);
 
 		// DO COLOURS
 		setTimeout(()=>{
@@ -48,9 +48,7 @@ export const loadTemplate = (url, imageData, callback) => {
 		evt.setAttribute("id", "template-svg");
 		evt.setAttribute("width", "100%");
 		evt.setAttribute("height", "100%");
-		// evt.setAttribute("viewBox", "0 0 768 1024");
-		// var ids = [];
-
+		
 		// PROB NOT NEEDED
 		// var els = evt.querySelectorAll("g");
 		// for (let i = 0; i < els.length; ++i) {
@@ -124,7 +122,7 @@ export const load = (path) => {
 					resolve(xhr.responseXML.documentElement);
 				}
 			} catch (e) {
-				console.log(e);
+				// console.log(e);
 			}
 		};
 		xhr.open("GET", path, true);

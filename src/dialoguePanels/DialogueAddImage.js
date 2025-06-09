@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import CSSModules from 'react-css-modules';
 import styles from '../styles';
+import { getHighestZdepth } from "../utils";
 
 import { 
 	Constants, 
@@ -161,7 +162,7 @@ const DialogueAddImage = () => {
 		const url = window.IMAGE_FILES[ind].url;
         const filename = window.IMAGE_FILES[ind].filename;
         const images = canvas.images || [];
-		const zIndex = images.length>0 ? Math.max.apply(Math, images.map(function(o) { return o.zIndex; })) + 1 : 1; // get highest zindex + 1 
+		const zIndex = images.length>0 ? getHighestZdepth(images) : 1;
 		const newImage = { type:"image", x: 250, y: 250, angle: 0, size: 300, url, zIndex};
 		const index = images.length; // index of new image
 		dispatch(addImage(newImage));

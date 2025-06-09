@@ -107,6 +107,8 @@ export const cloneDeepOLD = (entity, cache = new WeakMap()) => {
 // };
 
 export const print = (orientation) => {
+
+    // document.getElementById('template').style.transform = "rotate(90deg)";
     var win = window.open("", "PRINT");
 
     win.document.write(`<html><head><title>NDP3 Speech Builder</title>`);
@@ -116,17 +118,18 @@ export const print = (orientation) => {
     win.document.write(`* {-webkit-print-color-adjust: exact !important; color-adjust: exact !important;}`);
     win.document.write(`</style>`);
     win.document.write(`</head><body>`);
-    if (orientation === "landscape") {
-        win.document.write(`<div style="transform:scale(1) translate(0px, 0px)">`);
-        win.document.write(`<div style="position:absolute; height:${800 * 0.9}px; width:${1120 * 0.9}px; overflow:hidden;>`);
-        win.document.write(document.getElementById("canvas-inner").innerHTML);
 
+    let w, h;
+    if (orientation === "landscape") {
+        w = 1100;
+        h = 768;
     } else {
-        win.document.write(`<div style="transform:scale(1.05) translate(10px, 10px)">`);
-        win.document.write(`<div style="position:absolute; height:${1120 * 0.915}px; width:${800 * 0.96}px; overflow:hidden;>`);
-        win.document.write(document.getElementById("canvas-inner").innerHTML);
+        w = 768;
+        h = 1100;
     }
-    win.document.write("</div>");
+    //border:solid 3px #000; 
+    win.document.write(`<div style="position:absolute; width:${w}px; height:${h}px; overflow:hidden;>`);
+    win.document.write(document.getElementById("canvas").innerHTML);
     win.document.write("</div>");
     win.document.write("</body></html>");
 
@@ -178,5 +181,14 @@ export const validateKey = (key) => {
     return value === 80 ? true : false;
     // return value === 80 ? true : false;
 }
+
+
+export const getHighestZdepth = (arr) => {
+    return Math.max.apply(Math,
+        arr.map(function(o) {
+            return o.zIndex + 1;
+        })
+    );
+};
 
 

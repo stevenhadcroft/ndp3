@@ -65,7 +65,7 @@ export const createDir = (dirname) => {
 export const getDirs = () => {
    return new Promise( async (resolve, reject) => {
         const directories = await db.directories.where("id").above(0).toArray();
-        resolve({directories});
+        resolve({data:directories});
 	});     
   }
 

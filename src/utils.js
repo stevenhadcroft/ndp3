@@ -1,3 +1,4 @@
+// const { ipcRenderer } = require('electron');
 
 
 // export const loadImageData = (path) => {
@@ -19,6 +20,8 @@
 // 	});
 // 	// reject(err)
 // }
+
+
 
 const clone = (item) => {
     if (!item) { return item; } // null, undefined values check
@@ -94,51 +97,6 @@ export const cloneDeepOLD = (entity, cache = new WeakMap()) => {
 };
 */
 
-// export const print = () => {
-// 	var win = window.open("", "PRINT");
-// 	win.document.write("<html><head><title>NDP3 Speech Builder</title>");
-// 	win.document.write('</head><body><div style="position:absolute; height:1120px; width:800px; overflow:hidden;>');
-// 	win.document.write(document.getElementById("canvas").innerHTML);
-// 	win.document.write("</div></body></html>");
-// 	win.focus(); // necessary for IE >= 10*/
-// 	win.print();
-// 	win.close();
-// 	return true;
-// };
-
-export const print = (orientation) => {
-
-    // document.getElementById('template').style.transform = "rotate(90deg)";
-    var win = window.open("", "PRINT");
-
-    win.document.write(`<html><head><title>NDP3 Speech Builder</title>`);
-    win.document.write(`<style type="text/css">@page { size: ${orientation}; }</style>`);
-    win.document.write(`<style type="text/css" media="print">`);
-    win.document.write(`@page { size: ${orientation}; }`);
-    win.document.write(`* {-webkit-print-color-adjust: exact !important; color-adjust: exact !important;}`);
-    win.document.write(`</style>`);
-    win.document.write(`</head><body>`);
-
-    let w, h;
-    if (orientation === "landscape") {
-        w = 1100;
-        h = 768;
-    } else {
-        w = 768;
-        h = 1100;
-    }
-    //border:solid 3px #000; 
-    win.document.write(`<div style="position:absolute; width:${w}px; height:${h}px; overflow:hidden;>`);
-    win.document.write(document.getElementById("canvas").innerHTML);
-    win.document.write("</div>");
-    win.document.write("</body></html>");
-
-    win.focus(); // necessary for IE >= 10*/
-    win.print();
-    win.close();
-    return true;
-};
-
 export const makeSVGgrabbable = (view) => {
     // make svgs grabbable
     // but setting these w/h distorts the svg of rotated
@@ -185,10 +143,21 @@ export const validateKey = (key) => {
 
 export const getHighestZdepth = (arr) => {
     return Math.max.apply(Math,
-        arr.map(function(o) {
+        arr.map(function (o) {
             return o.zIndex + 1;
         })
     );
 };
 
+
+export const isElectron = () => {
+    return typeof process !== 'undefined' &&
+        typeof process.versions === 'object' &&
+        !!process.versions.electron;
+}
+
+export const isElectronRenderer = () =>
+            typeof window !== 'undefined' &&
+            typeof window.process === 'object' &&
+            window.process.type === 'renderer';
 

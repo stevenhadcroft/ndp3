@@ -18,6 +18,9 @@ const viewSlice = createSlice({
   },
 
   reducers: {
+    setGeneric: (state, action) => {
+      state[action.payload.key] = action.payload.value;
+    },
     setDragIndex: (state, action) => {
       state.dragIndex = action.payload;
     },
@@ -129,6 +132,7 @@ const viewSlice = createSlice({
 
 
 export const {
+  setGeneric,
   setMode,
   cancelMode,
   setDragIndex,

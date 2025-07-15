@@ -25,7 +25,7 @@ import {
 	duplicateText,
 } from "../features/canvasSlice";
 
-import { print } from "../utils";
+import { print } from "../print";
 
 const styleModules = {...buttonStyles, ...menuStyles, ...uiStyles};
 

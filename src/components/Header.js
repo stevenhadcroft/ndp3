@@ -64,7 +64,7 @@ const Header = (props) => {
               </button> */}
         <div style={{ padding: "0 20px" }}>
           <button styleName="menu-row" onClick={onSignOut}>Sign out</button>
-          <div style={{position:"absolute", left:"30px", bottom:"80px", fontSize:"12px"}}>Version 2.0.0</div>
+          <div style={{position:"absolute", left:"30px", bottom:"80px", fontSize:"12px"}}>Version 2.0.1001</div>
         </div>
       </div>
     );

@@ -66,14 +66,18 @@ export const print = (orientation) => {
             </html>
         `;
         
+        printElectron(htmlContentElectron);
         
-        if (isElectronRenderer()) {
-            // Use Electron's native print API
-            printElectron(htmlContentElectron);
-        } else {        
-            // Fallback to browser printing
-            printWeb(htmlContent);
-        }
+        // if (isElectronRenderer()) {
+        //     // Use Electron's native print API
+        //     // printElectron(htmlContent);
+        //     alert("Printing in Electron Renderer");
+        //     printElectron(htmlContentElectron);
+        // } else {        
+        //     alert("Printing in Web Browser");
+        //     // Fallback to browser printing
+        //     printWeb(htmlContent);
+        // }
 
         return true;
 

@@ -23,9 +23,6 @@ module.exports = {
 
     osxNotarize: {
       tool: 'notarytool',
-      // appleId: 'steven@hadcroft.com',
-      // appleIdPassword: 'wbyq-buiz-irae-exnt',
-      // teamId: 'B4AWA83RK2',      
       appleId: process.env.APPLE_ID,
       appleIdPassword: process.env.APPLE_PASSWORD,
       teamId: process.env.APPLE_TEAM_ID

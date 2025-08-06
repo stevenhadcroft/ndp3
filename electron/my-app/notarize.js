@@ -10,10 +10,9 @@ console.log('🔍 Starting notarization process...');
         tool: 'notarytool',  // Explicitly specify notarytool
         appBundleId: 'com.ndp3.app',        
         appPath: '/Users/stevenhadcroft/Desktop/electronforge-helloworld-2/my-app/out/NDP3-darwin-arm64/NDP3.app',
-        appleId: 'steven@hadcroft.com',
-        appleIdPassword: 'wbyq-buiz-irae-exnt', // or use `@keychain:` reference
-        // appleIdPassword: '@keychain:AC_PASSWORD',
-        teamId: 'B4AWA83RK2',
+        appleId: process.env.APPLE_ID,
+        appleIdPassword: process.env.APPLE_PASSWORD,
+        teamId: process.env.APPLE_TEAM_ID,
 
         // Add progress callback
         onProgress: (status) => {

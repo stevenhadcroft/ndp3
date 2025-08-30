@@ -93,8 +93,6 @@ const printElectron = (htmlContent) => {
     });
 }
 
-
-
 const printWeb = (htmlContent) => {
     const win = window.open("", "PRINT");
     if (!win) {

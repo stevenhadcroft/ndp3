@@ -28,6 +28,16 @@
   height: 300px;
 }
 
+/* TODO - combine with .modal */
+/* TODO - reorg style modules */
+.modal-update {
+  text-align: center;
+  left: calc(50% - 300px) !important;
+  top: calc(50% - 150px) !important;
+  width: 600px;
+  height: 110px;
+}
+
 .dialogue-header {
   display: flex;
   height: 80px;

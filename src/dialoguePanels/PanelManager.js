@@ -10,6 +10,7 @@ import DialogueConfirmNew from "./DialogueConfirmNew";
 import DialogueOrientation from "./DialogueOrientation";
 import DialogueMyAccount from "./DialogueMyAccount";
 import DialogueUser from "./DialogueUser";
+import DialogueUpdateProgress from "./DialogueUpdateProgress";
 // import DialogueEnterLicense from "./DialogueEnterLicense";
 
 const App = () => {
@@ -31,6 +32,7 @@ const App = () => {
             {view.mode === eMode.COLOUR_IMAGE && <DialogueAddColour />}
             {view.mode === eMode.COLOUR_TEXT && <DialogueAddColour />}
             {view.mode === eMode.MY_ACCOUNT && <DialogueMyAccount />}
+            {view.mode === eMode.APP_UPDATING && <DialogueUpdateProgress />}
             {view.showPhonetics && <DialogueAddPhonetics />}
             {/* {view.mode === eMode.SET_ORIENTATION && <DialogueOrientation/>} */}
 		</>

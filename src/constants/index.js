@@ -69,6 +69,8 @@ export const eMode = {
     CONFIRM_DELETE: "mode-confirm-delete",
     CONFIRM_NEW: "mode-confirm-new",
     SET_ORIENTATION: "mode-set-orientation",
+    
+    APP_UPDATING: "mode-app-updating",
 }
 
 export const Constants = {

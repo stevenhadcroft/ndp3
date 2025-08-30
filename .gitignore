@@ -23,6 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 
 # electron
-/electron/my-app/.env
-/electron/my-app/node_modules
+/electron/.env
+/electron/node_modules
 

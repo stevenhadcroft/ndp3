@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import useNudgeKeyboardHandler from "./hooks/useNudgeKeyboardHandler";
 import useDefaultTemplate from "./hooks/useDefaultTemplate"; 
 import useCanvasResize from "./hooks/useResizeCanvas";
-import { setMode } from "./features/viewSlice";
+import { setMode, setAppUpdateStatus } from "./features/viewSlice";
 import { eMode } from "./constants";
 import { checkLocalLicense } from './services/localLicenseMananger';
 import Canvas from "./components/Canvas";
@@ -21,6 +21,21 @@ const App = () => {
 	useNudgeKeyboardHandler();
 	useCanvasResize();
 	
+	// Progress bar handling
+	useEffect(() => {
+		// dispatch(setMode(eMode.APP_UPDATING));
+		// dispatch(setAppUpdateStatus({percent:50}))
+		if (window && window.electronAPI) {
+			window.electronAPI.onUpdateProgress((event, progress) => {
+				dispatch(setMode(eMode.APP_UPDATING));
+				dispatch(setAppUpdateStatus({ percent: progress.percent }));
+				// `Downloading: ${Math.round(progress.percent)}%
+				// (${formatBytes(progress.transferred)} / ${formatBytes(progress.total)})
+				// Speed: ${formatBytes(progress.bytesPerSecond)}/s`;
+			});
+		}
+	}, []);
+
 	useEffect(() => {
 		async function fetchData() {
 			await loadImageDirectoryData();

@@ -15,6 +15,7 @@ const viewSlice = createSlice({
     searchLogic: eSearchLogic.BEGINS,
     searchTerm: '',
     showMenuPopup: false,
+    appUpdateStatus: {}
   },
 
   reducers: {
@@ -47,6 +48,9 @@ const viewSlice = createSlice({
     },
     setDir: (state, action) => {
       state.currentDir = action.payload;
+    },
+    setAppUpdateStatus: (state, action) => {
+      state.appUpdateStatus = action.payload;
     },
 
     applyTemplateFilter: (state, action) => {
@@ -146,6 +150,7 @@ export const {
   setSearch,
   showLoader,
   setDir,
+  setAppUpdateStatus
   // fullScreen,
 } = viewSlice.actions;
 

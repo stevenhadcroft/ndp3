@@ -7,5 +7,13 @@ import colour from './colour.module.css';
 import menuStyles from './menu-left.module.css';
 
 
-export default {...buttons, ...dialogue, ...layout, ...ui, ...canvas, ...colour, ...menuStyles};
+export default {
+    ...buttons, 
+    ...dialogue, 
+    ...layout, 
+    ...ui, 
+    ...canvas, 
+    ...colour, 
+    ...menuStyles
+};
 

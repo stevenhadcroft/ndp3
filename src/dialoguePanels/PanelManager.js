@@ -11,12 +11,27 @@ import DialogueOrientation from "./DialogueOrientation";
 import DialogueMyAccount from "./DialogueMyAccount";
 import DialogueUser from "./DialogueUser";
 import DialogueUpdateProgress from "./DialogueUpdateProgress";
+
+import CSSModules from 'react-css-modules';
+import styles from '../styles';
 // import DialogueEnterLicense from "./DialogueEnterLicense";
 
 const App = () => {
 	const view = useSelector(state => state.view);
 	return (
 		<>
+    
+            {(
+                view.mode === eMode.SET_ORIENTATION
+                || view.mode === eMode.CONFIRM_NEW
+                || view.mode === eMode.OPEN_PROJECT
+                || view.mode === eMode.SAVE_PROJECT
+                || view.mode === eMode.ADD_IMAGE
+                || view.mode === eMode.CHOOSE_TEMPLATE
+            ) &&
+                <div styleName="background-tint"/>
+            }
+
             {view.mode === eMode.CONFIRM_NEW && <DialogueConfirmNew />}
             {view.mode === eMode.SET_ORIENTATION && <DialogueOrientation />}
             {(view.mode === eMode.SAVE_PROJECT || view.mode === eMode.SAVE_BEFORE_NEW) &&
@@ -35,12 +50,14 @@ const App = () => {
             {view.mode === eMode.APP_UPDATING && <DialogueUpdateProgress />}
             {view.showPhonetics && <DialogueAddPhonetics />}
             {/* {view.mode === eMode.SET_ORIENTATION && <DialogueOrientation/>} */}
+           
 		</>
 	);
 }
 
 
+export default CSSModules(App, styles, {allowMultiple:true});
 
 
 
-export default App;
+// export default App;

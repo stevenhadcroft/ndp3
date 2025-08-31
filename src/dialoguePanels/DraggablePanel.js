@@ -110,11 +110,10 @@ function DraggablePanel({id, title, colour, type, children, buttons, central}) {
 			styleName={`panel ${type || ""}`} 
 			style={
 				central
-					? { left: "50%", top:"50%", transform: "translate(-50%, calc(-50% - 30px))", backgroundColor:colour || null}
-					: { left: `${winx}px`, top: `${winy}px`, backgroundColor:colour || null}
+				? { left: "50%", top:"50%", transform: "translate(-50%, calc(-50% - 30px))", backgroundColor:colour || null}
+				: { left: `${winx}px`, top: `${winy}px`, backgroundColor:colour || null}
 			}
-		>
-
+			>
 			<div id={`${id}-header`} styleName="dialogue-header">
 				<span styleName="title" style={{flex:"1"}}>{title}</span>
 					{buttons}

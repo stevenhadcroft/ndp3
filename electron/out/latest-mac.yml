@@ -1,13 +1,13 @@
 {
-  "version": "2.0.22",
+  "version": "2.0.24",
   "files": [
     {
-      "url": "NDP3-darwin-arm64-2.0.22.zip",
-      "sha512": "sxdvqj9g5CI3C8Q8m4h6u+HgVyUnBZJMTWidGPbO1YX4T3k3zcZ1RXi1ACVl3x06LFk3pracPozpCAw0a58yog==",
-      "size": 167895216
+      "url": "NDP3-darwin-arm64-2.0.24.zip",
+      "sha512": "16lJlxTpYV+jpnbZv2/4kgCCrEvIOKH8wqPVJbE7j/6vAedXuG/OnEGud2jZXL1OZq8IrFq3k6/vYza6KnqQ0w==",
+      "size": 135035095
     }
   ],
-  "path": "NDP3-darwin-arm64-2.0.22.zip",
-  "sha512": "sxdvqj9g5CI3C8Q8m4h6u+HgVyUnBZJMTWidGPbO1YX4T3k3zcZ1RXi1ACVl3x06LFk3pracPozpCAw0a58yog==",
-  "releaseDate": "2025-08-29T16:25:52.224Z"
+  "path": "NDP3-darwin-arm64-2.0.24.zip",
+  "sha512": "16lJlxTpYV+jpnbZv2/4kgCCrEvIOKH8wqPVJbE7j/6vAedXuG/OnEGud2jZXL1OZq8IrFq3k6/vYza6KnqQ0w==",
+  "releaseDate": "2025-09-02T18:24:06.245Z"
 }

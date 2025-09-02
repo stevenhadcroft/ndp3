@@ -98,21 +98,21 @@ autoUpdater.on('download-progress', (progressObj) => {
 autoUpdater.on('update-downloaded', (info) => {
   log.info('Update downloaded:', info);
   // Clear the progress bar
-  if (mainWindow) {
-    mainWindow.setProgressBar(-1);
-  }
-
-  const dialogOpts = {
-    type: 'info',
-    buttons: ['Restart', 'Later'],
-    title: 'Update Ready',
-    message: `Version ${info.version} is ready to install`,
-    detail: 'The update will be installed when you restart the application.'
-  };
-
-  dialog.showMessageBox(dialogOpts).then(({ response }) => {
-    if (response === 0) autoUpdater.quitAndInstall();
-  });
+  // if (mainWindow) {
+  //   mainWindow.setProgressBar(-1);
+  // }
+  autoUpdater.quitAndInstall();
+  
+  // const dialogOpts = {
+  //   type: 'info',
+  //   buttons: ['Restart', 'Later'],
+  //   title: 'Update Ready',
+  //   message: `Version ${info.version} is ready to install`,
+  //   detail: 'The update will be installed when you restart the application.'
+  // };
+  // dialog.showMessageBox(dialogOpts).then(({ response }) => {
+  //   if (response === 0) autoUpdater.quitAndInstall();
+  // });
 });
 
 /*

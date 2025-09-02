@@ -30,23 +30,28 @@
   height: calc(100% - 85px);
 }
 
-.modal {
+.modal,
+.modal-update {
   text-align: center;
   left: calc(50% - 300px) !important;
   top: calc(50% - 150px) !important;
   width: 600px;
+}
+
+.modal {
   height: 300px;
 }
 
 /* TODO - combine with .modal (modal is used for download panel) */
 /* TODO - reorg style modules */
 .modal-update {
-  text-align: center;
-  left: calc(50% - 300px) !important;
-  top: calc(50% - 150px) !important;
-  width: 600px;
   height: 110px;
+  .dialogue-header {
+    height: 15px;
+  }
 }
+
+
 
 .dialogue-header {
   display: flex;

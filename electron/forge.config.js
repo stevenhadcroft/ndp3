@@ -8,18 +8,18 @@ module.exports = {
   packagerConfig: {
     asar: true,
     icon: './icons/NDP3_icon_256',
-    name: 'NDP3',
-    executableName: 'NDP3',
+    name: 'NDP3 Speech Builder',
+    executableName: 'NDP3 Speech Builder',
 
 
     // WINDOWS - NEEDED ????
     // ...existing config...
     win32metadata: {
       CompanyName: 'Steven Hadcroft',
-      FileDescription: 'NDP3',
-      OriginalFilename: 'NDP3.exe',
-      ProductName: 'NDP3',
-      InternalName: 'NDP3'
+      FileDescription: 'NDP3 Speech Builder',
+      OriginalFilename: 'NDP3 Speech Builder.exe',
+      ProductName: 'NDP3 Speech Builder',
+      InternalName: 'NDP3 Speech Builder'
     },
 
 
@@ -56,16 +56,14 @@ module.exports = {
       platforms: ['darwin'],
       config: {
         icon: './icons/NDP3_icon_256.icns', // macOS needs .icns
-        name: 'NDP3'
+        name: 'NDP3 Speech Builder'
       }
     },
     {
       name: '@electron-forge/maker-squirrel',
       platforms: ['win32'],
       config: {
-        // authors: 'Steven Hadcroft',
-        // description: 'NDP3 Application',
-        name: 'NDP3',
+        name: 'NDP3 Speech Builder',
         iconUrl: './icons/NDP3_icon_256.ico', // Windows needs .ico
         setupIcon: './icons/NDP3_icon_256.ico',
         certificateFile: process.env.WINDOWS_CERT_PATH,

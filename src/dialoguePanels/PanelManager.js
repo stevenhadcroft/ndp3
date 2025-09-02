@@ -20,7 +20,6 @@ const App = () => {
 	const view = useSelector(state => state.view);
 	return (
 		<>
-    
             {(
                 view.mode === eMode.SET_ORIENTATION
                 || view.mode === eMode.CONFIRM_NEW

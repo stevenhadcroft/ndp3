@@ -4,34 +4,60 @@ const path = require('path');
 
 async function generateYml() {
   const version = require('../package.json').version;
-  const zipFile = `NDP3-darwin-arm64-${version}.zip`;
-  const zipPath = path.join(__dirname, '../out/make/zip/darwin/arm64', zipFile);
-
-  // Generate SHA512 hash
-  const fileBuffer = fs.readFileSync(zipPath);
-  const hashSum = crypto.createHash('sha512');
-  hashSum.update(fileBuffer);
-  const sha512 = hashSum.digest('base64');
-
-  // Get file size
-  const stats = fs.statSync(zipPath);
-
-  const yml = {
-    version,
-    files: [{
-      url: zipFile,
-      sha512,
-      size: stats.size
-    }],
-    path: zipFile,
-    sha512,
-    releaseDate: new Date().toISOString()
+  
+  // Configure platforms
+  const platforms = {
+    mac: {
+      file: `NDP3-darwin-arm64-${version}.zip`,
+      path: path.join(__dirname, '../out/make/zip/darwin/arm64'),
+      ymlName: 'latest-mac.yml'
+    },
+    windows: {
+      file: `NDP3-Setup-${version}.exe`,
+      path: path.join(__dirname, '../out/make/squirrel.windows/x64'),
+      ymlName: 'latest.yml'
+    }
   };
 
-  fs.writeFileSync(
-    path.join(__dirname, '../out/latest-mac.yml'),
-    JSON.stringify(yml, null, 2)
-  );
+  // Generate YML for each platform
+  for (const [platform, config] of Object.entries(platforms)) {
+    try {
+      const filePath = path.join(config.path, config.file);
+      
+      if (!fs.existsSync(filePath)) {
+        console.log(`⚠️  Skipping ${platform}: ${config.file} not found`);
+        continue;
+      }
+
+      // Generate SHA512 hash
+      const fileBuffer = fs.readFileSync(filePath);
+      const hashSum = crypto.createHash('sha512');
+      hashSum.update(fileBuffer);
+      const sha512 = hashSum.digest('base64');
+
+      // Get file size
+      const stats = fs.statSync(filePath);
+
+      const yml = {
+        version,
+        files: [{
+          url: config.file,
+          sha512,
+          size: stats.size
+        }],
+        path: config.file,
+        sha512,
+        releaseDate: new Date().toISOString()
+      };
+
+      // Write YML file
+      const ymlPath = path.join(__dirname, '../out', config.ymlName);
+      fs.writeFileSync(ymlPath, JSON.stringify(yml, null, 2));
+      console.log(`✅ Generated ${config.ymlName}`);
+    } catch (error) {
+      console.error(`❌ Error generating ${platform} YML:`, error);
+    }
+  }
 }
 
-generateYml();
+generateYml().catch(console.error);

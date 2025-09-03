@@ -13,7 +13,7 @@ async function generateYml() {
       ymlName: 'latest-mac.yml'
     },
     windows: {
-      file: `NDP3-Setup-${version}.exe`,
+      file: `NDP3 Speech Builder-${version} Setup.exe`,
       path: path.join(__dirname, '../out/make/squirrel.windows/x64'),
       ymlName: 'latest.yml'
     }

@@ -1,3 +1,4 @@
+
 const { Octokit } = require('@octokit/rest');
 const fs = require('fs');
 const path = require('path');
@@ -11,7 +12,10 @@ async function uploadYml() {
     const owner = process.env.GITHUB_OWNER;
     const repo = process.env.GITHUB_REPO;
     const packageVersion = require('../package.json').version;
-    const ymlPath = path.join(__dirname, '../out/latest-mac.yml');
+    const files = [
+        { name: 'latest-mac.yml', path: path.join(__dirname, '../out/latest-mac.yml') },
+        { name: 'latest.yml', path: path.join(__dirname, '../out/latest.yml') }
+    ];
 
     try {
         // Get the release by tag
@@ -21,21 +25,25 @@ async function uploadYml() {
             tag: `v${packageVersion}`
         });
 
-        // Upload the YML file
-        const ymlContent = fs.readFileSync(ymlPath);
-        await octokit.repos.uploadReleaseAsset({
-            owner,
-            repo,
-            release_id: release.id,
-            name: 'latest-mac.yml',
-            data: ymlContent,
-            headers: {
-                'content-type': 'application/x-yaml',
-                'content-length': ymlContent.length
+        for (const file of files) {
+            if (fs.existsSync(file.path)) {
+                const content = fs.readFileSync(file.path);
+                await octokit.repos.uploadReleaseAsset({
+                    owner,
+                    repo,
+                    release_id: release.id,
+                    name: file.name,
+                    data: content,
+                    headers: {
+                        'content-type': 'application/x-yaml',
+                        'content-length': content.length
+                    }
+                });
+                console.log(`✅ Successfully uploaded ${file.name}`);
+            } else {
+                console.warn(`⚠️ File not found: ${file.path}`);
             }
-        });
-
-        console.log('✅ Successfully uploaded latest-mac.yml');
+        }
     } catch (error) {
         console.error('❌ Error uploading YML:', error);
         process.exit(1);

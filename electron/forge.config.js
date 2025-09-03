@@ -1,7 +1,5 @@
 const { FusesPlugin } = require('@electron-forge/plugin-fuses');
 const { FuseV1Options, FuseVersion } = require('@electron/fuses');
-// const osxSign = require('electron-osx-sign');
-const { notarize } = require('@electron/notarize');
 require('dotenv').config();
 
 module.exports = {
@@ -56,15 +54,15 @@ module.exports = {
       platforms: ['darwin'],
       config: {
         icon: './icons/NDP3_icon_256.icns', // macOS needs .icns
-        name: 'NDP3 Speech Builder'
+        name: 'NDP3SpeechBuilder'
       }
     },
-    {
+     {
       name: '@electron-forge/maker-squirrel',
       platforms: ['win32'],
       config: {
-        name: 'NDP3 Speech Builder',
-        iconUrl: './icons/NDP3_icon_256.ico', // Windows needs .ico
+        name: 'NDP3SpeechBuilder',
+        iconUrl: 'http://berthasworkers.com/dev/ndp3v2/NDP3_icon_256.ico', // Windows needs .ico
         setupIcon: './icons/NDP3_icon_256.ico',
         certificateFile: process.env.WINDOWS_CERT_PATH,
         certificatePassword: process.env.WINDOWS_CERT_PASSWORD

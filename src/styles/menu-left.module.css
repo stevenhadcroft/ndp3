@@ -37,15 +37,10 @@ header .title {
   }
 }
 
-
 .menutab {
   position: absolute;
   left: 10px;
   top: 12px;
-  /* width: 40px;
-  height: 100px !important;
-  border-radius: 0 10px 9px 0 !important;
-  cursor: pointer; */
   background: transparent;
   background-size: contain;
   background-color: #2c83d4;
@@ -53,7 +48,6 @@ header .title {
   margin: 0 12px;
   color: #fff;
   padding: 0px;
-  /* box-shadow: 2px 4px 3px #00000022; */
   z-index: 9999;
 }
 
@@ -77,12 +71,9 @@ header .title {
 /* ----------- PANEL -----------  */
 
 .bg-panel {
-  /* background-color: #295b88; */
   background-color: #ddd;
-  /* background-image: linear-gradient(to right, #01245733 , #01245700); */
   height: 100%;
   width: 360px;
-  /* padding:0 20px; */
   position: absolute;
   z-index: 9999;
   box-shadow: 5px 5px 5px 5px #00000022;
@@ -97,37 +88,24 @@ header .title {
   left:-400px;
 }
 
-
 .menu-container {
-  /* padding:20px 0px; */
   position: absolute;
   background-color: #ffffff;;
-  /* left: 10px; */
   top: 50px;
   color: #000;
   font-size: 18px;
-  /* width: 100%; */
   box-sizing: border-box;
   height: 100%;
 }
 
 .menu-square {
-  /* display: block; */
   width: 60px;
   height: 60px;
   border-top: solid 1px #aaa;
-  /* background: transparent;
-  background-size: contain;
-  background-color: #FFF; */
   border: 0;
   padding: 0;
-  /* border: solid 1px #AAA; */
-  /* border-radius: 99px; */
   margin: 12px 0;
   font-size: 18px;
-  /* font-weight: 600;
-  color: #fff;
-  text-transform: uppercase; */
 }
   
 .menu-row {
@@ -150,8 +128,6 @@ header .title {
 .left-menu {
   display: block;
   width: 50px;
-  /* height: 50px; */
-  /* height: 6.5vh; */
   min-height: 35px;
   max-height: 50px;
   background: transparent;
@@ -159,34 +135,27 @@ header .title {
   background-color: #FFF;
   border: 0;
   padding: 0;
-  /* border: solid 1px #AAA; */
   border-radius: 99px;
   margin: 0px 8px;
   font-size: 16px;
   font-weight: 600;
   color: #fff;
   text-transform: uppercase;
-  /* box-shadow: 2px 4px 3px #00000022; */
 }
 
 .left-menu img {
   width:46px;
-  /* margin-top:12px */
 }
 
 .left-menu-label {
   position: absolute;
-  /* background: #fff; */
   background: #2c83d4;
   color:#fff;
   font-weight: bold;
   font-size: 14px;
   padding: 8px 12px;
-  /* border: solid 2px #000000; */
-  /* border: solid 2px #2c83d499; */
   margin-left: 60px;
   margin-top: 8px;
   border-radius:8px;
   white-space: nowrap;
-  /* box-shadow: 4px 4px 2px 2px #00000033; */
 }

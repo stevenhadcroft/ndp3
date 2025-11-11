@@ -49,7 +49,7 @@ const DialogueAddColour = () => {
 	//--------------------------------------------------------------
     const Buttons = (
         <Fragment>
-            <button styleName="primary narrow blue" onClick={onClose}>Done</button>
+            <button styleName="primary narrow" onClick={onClose}>Done</button>
         </Fragment>
     )
 

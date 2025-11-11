@@ -7,16 +7,29 @@ async function generateYml() {
   
   // Configure platforms
   const platforms = {
+    // mac: {
+    //   file: `NDP3-darwin-arm64-${version}.zip`,
+    //   path: path.join(__dirname, '../out/make/zip/darwin/arm64'),
+    //   ymlName: 'latest-mac.yml'
+    // },
+    // windows: {
+    //   file: `NDP3 Speech Builder-${version} Setup.exe`,
+    //   path: path.join(__dirname, '../out/make/squirrel.windows/x64'),
+    //   ymlName: 'latest.yml'
+    // }
+
+
     mac: {
-      file: `NDP3-darwin-arm64-${version}.zip`,
+      file: `NDP3-Speech-Builder-darwin-arm64-${version}.zip`,
       path: path.join(__dirname, '../out/make/zip/darwin/arm64'),
       ymlName: 'latest-mac.yml'
     },
     windows: {
-      file: `NDP3 Speech Builder-${version} Setup.exe`,
+      file: `NDP3-Speech-Builder-${version} Setup.exe`,
       path: path.join(__dirname, '../out/make/squirrel.windows/x64'),
       ymlName: 'latest.yml'
     }
+
   };
 
   // Generate YML for each platform

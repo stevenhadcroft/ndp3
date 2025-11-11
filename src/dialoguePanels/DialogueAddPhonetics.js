@@ -34,7 +34,7 @@ const DialogueAddPhonetics = () => {
 	//--------------------------------------------------------------
 	const Buttons = (
         <>
-            <button styleName="primary narrow blue" onClick={onClose}>Done</button>
+            <button styleName="primary narrow" onClick={onClose}>Done</button>
         </>
     )
 

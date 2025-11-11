@@ -199,8 +199,8 @@ const DialogueAddImage = () => {
 	//--------------------------------------------------------------
 	const Buttons = (
 		<>
-			<button styleName="primary narrow blue" onClick={() => dispatch(cancelMode())}>Back to main</button>
-			<button styleName="primary narrow green" onClick={() => onLoadClicked(localSelectedIndex)}>Use selected</button>
+			<button styleName="primary narrow" onClick={() => dispatch(cancelMode())}>Back to main</button>
+			<button styleName="primary narrow" onClick={() => onLoadClicked(localSelectedIndex)}>Use selected</button>
 		</>
 	)
 

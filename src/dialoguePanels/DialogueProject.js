@@ -260,8 +260,8 @@ function DialogueProject({ mode }) {
     const Buttons = (
         <>
             <button styleName="primary narrow red" onClick={() => setConfirmDelete(true)}>Delete</button>
-            <button styleName="primary narrow blue" onClick={onCancelClick}>Cancel</button>
-            <button styleName="primary narrow green" onClick={onCTAClick}>{mode}</button>
+            <button styleName="primary narrow" onClick={onCancelClick}>Cancel</button>
+            <button styleName="primary narrow" onClick={onCTAClick}>{mode}</button>
         </>
     )
 
@@ -299,7 +299,7 @@ function DialogueProject({ mode }) {
                         <div style={{ margin: "20px 0" }}>{`Are you sure you want to delete this ${selectedDirectoryId !== -1 ? "folder and all of its contents?" : "this project?"}`}</div>
                         <br /><br />
                         <div>
-                            <button styleName="primary narrow blue" onClick={() => setConfirmDelete(false)}>Cancel</button>
+                            <button styleName="primary narrow" onClick={() => setConfirmDelete(false)}>Cancel</button>
                             <button styleName="primary narrow red" onClick={onDeleteClick}>Delete</button>
                         </div>
                     </div>
@@ -315,8 +315,8 @@ function DialogueProject({ mode }) {
                         <input type="text" style={{ width: "300px" }} ref={inputRefCreateFolder} />
                         <br /><br /><br /><br />
                         <div>
-                            <button styleName="primary narrow blue" onClick={() => setConfirmName(false)}>Cancel</button>
-                            <button styleName="primary narrow green" onClick={onCreateDirClick}>Submit</button>
+                            <button styleName="primary narrow" onClick={() => setConfirmName(false)}>Cancel</button>
+                            <button styleName="primary narrow" onClick={onCreateDirClick}>Submit</button>
                         </div>
                     </div>
                 </>

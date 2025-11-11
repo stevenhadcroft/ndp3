@@ -4,15 +4,11 @@ button {
   border: none;
 }
 
-/* --- PRIMARY --------------------------- */
-
-.primary {
-  /* display: block; */
+button.primary,
+button.secondary {
   width: 240px;
   height: 50px;
-  background: transparent;
   background-size: contain;
-  background-color: #2c83d4;
   border: 0;
   padding: 0;
   border-radius: 8px;
@@ -21,24 +17,15 @@ button {
   font-weight: 600;
   color: #fff;
   text-transform: uppercase;
-  box-shadow: 2px 4px 3px #00000022;
+}
+
+.primary {
+  background-color: #2c83d4;
+  /* box-shadow: 2px 4px 3px #00000022; */
 }
 
 .secondary {
-  /* display: block; */
-  width: 240px;
-  height: 40px;
   background: transparent;
-  background-size: contain;
-  /* background-color: #2c83d4; */
-  border: 0;
-  padding: 0;
-  border-radius: 8px;
-  margin: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
-  text-transform: uppercase;
   /* box-shadow: 2px 4px 3px #00000022; */
 }
 
@@ -56,48 +43,24 @@ button {
     border: solid 2px #ffcc00;
 }
 
-
-
-
 button .small {
-  /* width: 200px; */
   height: 50px;
 }
-
-
-
-
 
 .primary.narrow {
   width: 180px;
 }
-.primary.orange,
-.left-menu.orange {
-  /* background-color: #dc9800; */
-}
-.primary.yellow,
-.left-menu.yellow {
-  /* background-color: #ffc400; */
-}
+
 .primary.green
 .left-menu.green {
   background-color: #339900;
 }
-.primary.blue-dark,
-.left-menu.blue-dark {
-  /* background-color: #125594; */
-}
-.primary.blue,
-.left-menu.blue {
-  /* background-color: #2c83d4; */
-}
+
 .primary.bluetrans,
 .left-menu.bluetrans {
-  /* background-color: #2c83d433; */
   margin-top: 50px;
 }
 
-/* .button.red { background-color: #cc0000; } */
 .primary.red {
   background-color: #cc0000;
   background: transparent;

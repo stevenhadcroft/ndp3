@@ -28,7 +28,7 @@ const DialogueEnterLicense = () => {
                         ref={inputRef}
                         />
                 </div>
-                <button className="menu-button last green dialogue" onClick={onSubmit}>Submit</button>
+                <button className="menu-button last dialogue" onClick={onSubmit}>Submit</button>
             </div>
         </DraggablePanel>
 	);

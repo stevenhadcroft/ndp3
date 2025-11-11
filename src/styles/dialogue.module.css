@@ -1,15 +1,12 @@
 .panel {
   position: absolute;
-  /* background: #38658e; */
   background: #295b88;
   color: #fff;
   font-weight: bold;
   padding: 5px 20px 20px 20px;
   border-radius: 30px;
   min-width: 350px;
-  /* border:solid 3px #00000022; */
   box-shadow: 10px 6px 6px 2px #00000044;
-  /* z-index: 999999; */
   z-index: 9999;
 }
 

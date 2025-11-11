@@ -183,7 +183,7 @@ const DialogueUser = () => {
 
     const Buttons = (
         <>
-            <button styleName="primary narrow blue" onClick={() => { }}>Done</button>
+            <button styleName="primary narrow" onClick={() => { }}>Done</button>
         </>
     )
 
@@ -200,9 +200,9 @@ const DialogueUser = () => {
         <DraggablePanel central={true} id='sign-in' title="Options">   {/* buttons={Buttons} */}
             <div style={{ textAlign: 'center'}}>
                 <div style={{ height: "20px" }} />
-                <button styleName="primary narrow green" onClick={() => { dispatch(setMode(eMode.USER_SIGN_IN)) }}>Sign In</button>
+                <button styleName="primary narrow" onClick={() => { dispatch(setMode(eMode.USER_SIGN_IN)) }}>Sign In</button>
                 <div style={{ height: "20px" }} />
-                <button styleName="primary narrow green" onClick={() => { dispatch(setMode(eMode.USER_REGISTER)) }}>Register</button>
+                <button styleName="primary narrow" onClick={() => { dispatch(setMode(eMode.USER_REGISTER)) }}>Register</button>
                 <div style={{ height: "50px" }} />
                 <button styleName="secondary narrow" onClick={()=>dispatch(setMode(eMode.USER_OPTIONS))}>Forgotten License Key</button>
             </div>
@@ -227,7 +227,7 @@ const DialogueUser = () => {
 
                 <div style={center}>
                     <button styleName="primary narrow red" onClick={()=>dispatch(setMode(eMode.USER_OPTIONS))}>Cancel</button>
-                    <button styleName="primary narrow green" onClick={onSignIn}>Submit</button>
+                    <button styleName="primary narrow" onClick={onSignIn}>Submit</button>
                 </div>
 
                 <div style={center}>
@@ -285,7 +285,7 @@ const DialogueUser = () => {
 
                 <div style={center}>
                     <button styleName="primary narrow red" onClick={()=>dispatch(setMode(eMode.USER_OPTIONS))}>Cancel</button>
-                    <button styleName="primary narrow green" onClick={onRegister}>Submit</button>
+                    <button styleName="primary narrow" onClick={onRegister}>Submit</button>
                 </div>
                 
             </div>

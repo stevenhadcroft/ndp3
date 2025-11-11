@@ -36,9 +36,9 @@ const DialogueConfirmNew = () => {
         <DraggablePanel type="modal">
             <div style={{marginBottom:"20px"}}>Do you want to save the current project?</div>
             <div styleName="dialogue-inner no-scroll" >
-                <button styleName="primary narrow blue" onClick={onClose}>Cancel</button>
-                <button styleName="primary narrow orange" onClick={onDontSave}>Don't Save</button>
-                <button styleName="primary narrow green" onClick={onSave}>Save</button>
+                <button styleName="primary narrow" onClick={onClose}>Cancel</button>
+                <button styleName="primary narrow" onClick={onDontSave}>Don't Save</button>
+                <button styleName="primary narrow" onClick={onSave}>Save</button>
             </div>
         </DraggablePanel>
 	);

@@ -52,14 +52,14 @@ const Menu = ({ menuCanvasOverlap }) => {
 
     const Buttons = () => (
         <div styleName="menu-container">
-            <button styleName="primary blue" onClick={handleNewProject}>New project</button>
-            <button styleName="primary blue" onClick={() => handleSetMode(eMode.OPEN_PROJECT)}>Open project</button>
-            <button styleName="primary green" onClick={() => handleSetMode(eMode.CHOOSE_TEMPLATE)}>Choose template</button>
-            <button styleName="primary green" onClick={() => handleSetMode(eMode.ADD_IMAGE)}>Add images</button>
-            <button styleName="primary green" onClick={() => handleSetMode(eMode.COLOUR_IMAGE)}>Add colour</button>
-            <button styleName="primary green" onClick={handleAddText}>Add text</button>
-            <button styleName="primary orange" onClick={() => handleSetMode(eMode.SAVE_PROJECT)}>Save project</button>
-            <button styleName="primary orange" onClick={handlePrint}>Print project</button>
+            <button styleName="primary" onClick={handleNewProject}>New project</button>
+            <button styleName="primary" onClick={() => handleSetMode(eMode.OPEN_PROJECT)}>Open project</button>
+            <button styleName="primary" onClick={() => handleSetMode(eMode.CHOOSE_TEMPLATE)}>Choose template</button>
+            <button styleName="primary" onClick={() => handleSetMode(eMode.ADD_IMAGE)}>Add images</button>
+            <button styleName="primary" onClick={() => handleSetMode(eMode.COLOUR_IMAGE)}>Add colour</button>
+            <button styleName="primary" onClick={handleAddText}>Add text</button>
+            <button styleName="primary" onClick={() => handleSetMode(eMode.SAVE_PROJECT)}>Save project</button>
+            <button styleName="primary" onClick={handlePrint}>Print project</button>
         </div>
     );
 

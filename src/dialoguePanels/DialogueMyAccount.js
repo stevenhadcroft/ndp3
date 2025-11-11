@@ -31,7 +31,7 @@ const DialogueMyAccount = () => {
 	//--------------------------------------------------------------
     const Buttons = (
         <>
-            <button styleName="primary narrow blue" onClick={()=>dispatch(cancelMode())}>Done</button>
+            <button styleName="primary narrow" onClick={()=>dispatch(cancelMode())}>Done</button>
         </>
     )
 
@@ -49,9 +49,9 @@ const DialogueMyAccount = () => {
                 <div styleName="dark-background">
                     <h3>Users</h3>
                     <p>This account has 3 associated sub accounts.</p> 
-                    <button styleName="primary green" onClick={onSubmit}>Show primary users</button>
+                    <button styleName="primary" onClick={onSubmit}>Show primary users</button>
                     {/* <UserList/> */}
-                    {/* <button className="menu-button first green" onClick={onSubmit}>Show secondary users</button>
+                    {/* <button className="menu-button first" onClick={onSubmit}>Show secondary users</button>
                     <UserList/> */}
                     
                     {/* To add more accounts please contact NDP3 */}
@@ -60,7 +60,7 @@ const DialogueMyAccount = () => {
                 <div styleName="dark-background">
                     <h3>Transfer licence</h3> 
                     <p>Click below to unregister the license from this device. Once unregistered you can re-register the same licence on a different device.</p> 
-                    <button styleName="primary orange" onClick={onUnlink}>{view.userName ? "Unregister" : "Register"} Device</button>
+                    <button styleName="primary" onClick={onUnlink}>{view.userName ? "Unregister" : "Register"} Device</button>
                     <p>Speech Builder will not run without an active licence.</p>
                 </div>
 

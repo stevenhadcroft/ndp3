@@ -74,7 +74,7 @@ const DialogueText = () => {
 	//--------------------------------------------------------------
     const Buttons = (
         <>
-            <button styleName="primary narrow blue" onClick={()=>dispatch(cancelMode())}>Done</button>
+            <button styleName="primary narrow" onClick={()=>dispatch(cancelMode())}>Done</button>
         </>
     )
 

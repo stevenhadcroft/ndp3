@@ -12,6 +12,7 @@ import Header from "./components/Header";
 import { Spinner } from "./components/UIkit/Spinner";
 import DialoguePanelManager from "./dialoguePanels/PanelManager";
 import { loadImageDirectoryData } from "./loaders";
+// import MenuGuide from './guide/MenuGuide';
 
 const App = () => {
 
@@ -55,6 +56,7 @@ const App = () => {
 			<Header />
 			<DialoguePanelManager />
 			{view.showLoader && <Spinner />}
+			{/* <MenuGuide /> */}
 		</div>
 	);
 }

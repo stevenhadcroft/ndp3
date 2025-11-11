@@ -6,10 +6,10 @@ module.exports = {
   packagerConfig: {
     asar: true,
     icon: './icons/NDP3_icon_256',
-    name: 'NDP3 Speech Builder',
+    name: 'NDP3-Speech-Builder',
     executableName: 'NDP3 Speech Builder',
-
-
+    appBundleId: 'com.ndp3.app',
+    
     // WINDOWS - NEEDED ????
     // ...existing config...
     win32metadata: {
@@ -30,7 +30,7 @@ module.exports = {
     },
 
     // Important: Add this to ensure signing happens
-    // signBundle: true,
+    // signBundle: true, // NOT NEEDED ???
     
     osxNotarize: {
       tool: 'notarytool',

@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import CSSModules from 'react-css-modules';
 import buttonStyles from '../styles/buttons.module.css';
-import menuStyles from '../styles/menu-left.module.css';
+import toolbarStyles from '../styles/toolbar.module.css';
 import uiStyles from '../styles/ui.module.css';
 
 import { 
@@ -28,7 +28,7 @@ import {
 
 import { print } from "../print";
 
-const styleModules = {...buttonStyles, ...menuStyles, ...uiStyles};
+const styleModules = {...buttonStyles, ...toolbarStyles, ...uiStyles};
 
 let TO;
 

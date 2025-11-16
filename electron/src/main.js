@@ -8,6 +8,7 @@ const fs = require('fs');
 // manually create 'app-update'
 //-----------------------------------------------
 // const feed = 'your_site/update/windows_64'
+// CHECK IF THIS IS NEEDED??? DON"T THINK IT IS
 let yaml = '';
 yaml += "provider: generic\n"
 yaml += "url: your_site/update/windows_64\n"
@@ -249,6 +250,7 @@ async function handlePrint(htmlContent) {
 
 // IPC handlers
 function setupIPC() {
+
   ipcMain.handle('call-print', async (event, htmlContent) => {
     try {
       await handlePrint(htmlContent);
@@ -257,6 +259,10 @@ function setupIPC() {
       console.error('Print error:', error);
       return { success: false, error: error.message };
     }
+  });
+
+  ipcMain.handle('close-app', () => {
+    app.quit();
   });
 }
 
@@ -283,5 +289,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', handleActivate);
+
+
 
 

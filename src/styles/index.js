@@ -4,7 +4,7 @@ import layout from './layout.module.css';
 import ui from './ui.module.css';
 import canvas from './canvas.module.css';
 import colour from './colour.module.css';
-import menuStyles from './menu-left.module.css';
+import toolbarStyles from './toolbar.module.css';
 
 
 export default {
@@ -14,6 +14,6 @@ export default {
     ...ui, 
     ...canvas, 
     ...colour, 
-    ...menuStyles
+    ...toolbarStyles
 };
 

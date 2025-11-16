@@ -17,6 +17,7 @@ import {
 
 import { 
     setMode, 
+    setGeneric
 } from "../features/viewSlice";
 
 import DraggablePanel from "./DraggablePanel";
@@ -68,9 +69,8 @@ const DialogueUser = () => {
             dispatch(setImageData([]));
             dispatch(setTextData([]));
             dispatch(setTemplateData([]));
-            // dispatch(setUserName(email)); 
-
             dispatch(setMode(eMode.USER_ACTIVE))
+            dispatch(setGeneric({key:"userIsAuth", value:true}))
             linkMachine();
             
         } else if (response.complete === 1 && response.approval !== "approved") {

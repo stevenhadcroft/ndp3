@@ -1,5 +1,6 @@
 const { FusesPlugin } = require('@electron-forge/plugin-fuses');
 const { FuseV1Options, FuseVersion } = require('@electron/fuses');
+const { version } = require('./package.json');
 require('dotenv').config();
 
 module.exports = {
@@ -9,8 +10,8 @@ module.exports = {
     name: 'NDP3-Speech-Builder',
     executableName: 'NDP3 Speech Builder',
     appBundleId: 'com.ndp3.app',
-    
-    // WINDOWS - NEEDED ????
+
+    // WINDOWS - NEEDED ????§
     // ...existing config...
     win32metadata: {
       CompanyName: 'Steven Hadcroft',
@@ -20,7 +21,6 @@ module.exports = {
       InternalName: 'NDP3 Speech Builder'
     },
 
-
     osxSign: {
       identity: 'Developer ID Application: Steven Hadcroft (B4AWA83RK2)',
       hardenedRuntime: true,
@@ -29,8 +29,6 @@ module.exports = {
       "gatekeeper-assess": false
     },
 
-    // Important: Add this to ensure signing happens
-    // signBundle: true, // NOT NEEDED ???
     
     osxNotarize: {
       tool: 'notarytool',
@@ -42,6 +40,10 @@ module.exports = {
       retries: 3
     }
 
+    // Important: Add this to ensure signing happens
+    // signBundle: true,
+    
+
   },
 
   makers: [
@@ -49,21 +51,24 @@ module.exports = {
       name: '@electron-forge/maker-zip',
       platforms: ['darwin', 'linux'],
     },
+
     {
       name: '@electron-forge/maker-dmg',
       platforms: ['darwin'],
       config: {
         icon: './icons/NDP3_icon_256.icns', // macOS needs .icns
-        name: 'NDP3SpeechBuilder'
+        name: `NDP3-Speech-Builder-${version}`, // This controls the DMG filename
+        
       }
     },
      {
       name: '@electron-forge/maker-squirrel',
       platforms: ['win32'],
       config: {
-        name: 'NDP3SpeechBuilder',
+        // name: 'NDP3SpeechBuilder',
         iconUrl: 'http://berthasworkers.com/dev/ndp3v2/NDP3_icon_256.ico', // Windows needs .ico
         setupIcon: './icons/NDP3_icon_256.ico',
+        setupExe: `NDP3-Speech-Builder-${version}.Setup.exe`, // Add this line to control setup filename
         certificateFile: process.env.WINDOWS_CERT_PATH,
         certificatePassword: process.env.WINDOWS_CERT_PASSWORD
       }

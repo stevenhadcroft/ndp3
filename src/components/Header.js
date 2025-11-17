@@ -1,9 +1,11 @@
-import { eMode } from "../constants";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { eMode } from "../constants";
 import CSSModules from "react-css-modules";
 import buttonStyles from "../styles/buttons.module.css";
 import menuStyles from "../styles/menu.module.css";
 import uiStyles from "../styles/ui.module.css";
+// import packageJson from '../../package.json';
 
 import { 
   showLoader,
@@ -19,9 +21,10 @@ const styleModules = { ...buttonStyles, ...menuStyles, ...uiStyles };
 const Header = (props) => {
   const view = useSelector((state) => state.view);
   const dispatch = useDispatch();
-  const mode = view.mode;
+  // const mode = view.mode;
+  const [version, setVersion] = useState('');
 
-  const onSetMode = (m) => dispatch(setMode(m));
+  // const onSetMode = (m) => dispatch(setMode(m));
 
   // const onNewProject = (orientation) => {
   //   window.orientation = orientation; // TODO IMPROVE
@@ -33,11 +36,10 @@ const Header = (props) => {
   //   dispatch(setMenuOpen(false));
   // };
 
-
-  const onMenuClose = () => {
-    dispatch(setMenuOpen(false));
-    // ()=>onSetMode(null)
-  };
+  // const onMenuClose = () => {
+  //   dispatch(setMenuOpen(false));
+  //   // ()=>onSetMode(null)
+  // };
 
   const onSignOut = () => {
     dispatch(showLoader(false));
@@ -62,26 +64,38 @@ const Header = (props) => {
     }
   };
 
+  useEffect(() => {
+    const fetchVersion = async () => {
+      if (window.electronAPI && window.electronAPI.getVersion) {
+        const v = await window.electronAPI.getVersion();
+        setVersion(v);
+      }
+    };
+    fetchVersion();
+  }, []);
+
   let Buttons = () => {
     return (
       <div styleName="menu-container" style={{ width: "100%" }}>
 
-        {/* <button styleName="menu-row"
-                // style={{border:"none", marginTop:"100px"}}
-                // onClick={() => onSetMode(eMode.SAVE_PROJECT)}
-                >
-                Add new image packs
-              </button> */}
-
         {view.userIsAuth &&
-        <div style={{ padding: "0 20px" }}>
-          <button styleName="menu-row" onClick={onSignOut}>Sign out</button>
+        <div style={{ padding: "0 10px" }}>
+          <button styleName="menu-row" onClick={onSignOut}>
+            <img src={`./imgs/gui/sign-out.png`}/> Sign out
+          </button>
         </div>
         }
 
-        <div style={{ padding: "0 20px" }}>
-          <button styleName="menu-row" onClick={onCloseApp}>Exit Speech Builder</button>
+        <div style={{ padding: "0 10px" }}>
+          <button styleName="menu-row" onClick={onCloseApp}>
+            <img src={`./imgs/gui/quit-app.png`}/> Quit NDP3 Speech Builder
+          </button>
         </div>
+
+        <div style={{ position:"absolute", padding:"20px", bottom:"80px", fontSize: "12px" }}>
+          Version {version}
+        </div>
+        
       </div>
     );
   };

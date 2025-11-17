@@ -9,23 +9,23 @@ const fs = require('fs');
 //-----------------------------------------------
 // const feed = 'your_site/update/windows_64'
 // CHECK IF THIS IS NEEDED??? DON"T THINK IT IS
-let yaml = '';
-yaml += "provider: generic\n"
-yaml += "url: your_site/update/windows_64\n"
-yaml += "useMultipleRangeRequest: false\n"
-yaml += "channel: latest\n"
-yaml += "updaterCacheDirName: " + app.getName()
+// let yaml = '';
+// yaml += "provider: generic\n"
+// yaml += "url: your_site/update/windows_64\n"
+// yaml += "useMultipleRangeRequest: false\n"
+// yaml += "channel: latest\n"
+// yaml += "updaterCacheDirName: " + app.getName()
 
-let update_file = [path.join(process.resourcesPath, 'app-update.yml'), yaml]
-let dev_update_file = [path.join(process.resourcesPath, 'dev-app-update.yml'), yaml]
-let chechFiles = [update_file, dev_update_file]
+// let update_file = [path.join(process.resourcesPath, 'app-update.yml'), yaml]
+// let dev_update_file = [path.join(process.resourcesPath, 'dev-app-update.yml'), yaml]
+// let chechFiles = [update_file, dev_update_file]
 
-for (let file of chechFiles) {
-    if (!fs.existsSync(file[0])) {
-        fs.writeFileSync(file[0], file[1], () => { })
-    }
-}
-log.info('FIX END - app-update.yml - process.resourcesPath ', process.resourcesPath);
+// for (let file of chechFiles) {
+//     if (!fs.existsSync(file[0])) {
+//         fs.writeFileSync(file[0], file[1], () => { })
+//     }
+// }
+// log.info('FIX END - app-update.yml - process.resourcesPath ', process.resourcesPath);
 //-----------------------------------------------
 
 // (async () => {
@@ -264,6 +264,11 @@ function setupIPC() {
   ipcMain.handle('close-app', () => {
     app.quit();
   });
+
+  ipcMain.handle('get-version', () => {
+    return app.getVersion();
+  });
+  
 }
 
 // App lifecycle

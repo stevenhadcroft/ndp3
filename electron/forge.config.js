@@ -3,11 +3,15 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 const { version } = require('./package.json');
 require('dotenv').config();
 
+// Determine platform-specific name
+const isWindows = process.platform === 'win32';
+const appName = isWindows ? 'NDP3SpeechBuilder' : 'NDP3 Speech Builder';
+
 module.exports = {
   packagerConfig: {
     asar: true,
     icon: './icons/NDP3_icon_256',
-    name: 'NDP3 Speech Builder',
+   name: appName, // Conditional: no spaces on Windows, spaces allowed on macOS
     executableName: 'NDP3 Speech Builder',
     appBundleId: 'com.ndp3.app',
 
@@ -18,7 +22,7 @@ module.exports = {
       FileDescription: 'NDP3 Speech Builder',
       OriginalFilename: 'NDP3 Speech Builder.exe',
       ProductName: 'NDP3 Speech Builder',
-      InternalName: 'NDP3 Speech Builder'
+      InternalName: 'NDP3SpeechBuilder'
     },
 
     osxSign: {
@@ -61,6 +65,7 @@ module.exports = {
       name: '@electron-forge/maker-squirrel',
       platforms: ['win32'],
       config: {
+        name: 'NDP3SpeechBuilder',  // no spaces
         iconUrl: 'http://berthasworkers.com/dev/ndp3v2/NDP3_icon_256.ico', // Windows needs .ico
         setupIcon: './icons/NDP3_icon_256.ico',
         setupExe: `NDP3-Speech-Builder-${version}.Setup.exe`, // Add this line to control setup filename

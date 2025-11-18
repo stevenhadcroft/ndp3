@@ -1,9 +1,0 @@
-version: 2.0.12
-files:
-  - url: NDP3-darwin-arm64-2.0.12.zip
-    sha512: GENERATED_SHA512_HASH
-    size: FILE_SIZE_IN_BYTES
-    blockMapSize: BLOCK_MAP_SIZE
-path: NDP3-darwin-arm64-2.0.12.zip
-sha512: GENERATED_SHA512_HASH
-releaseDate: '2025-08-07T21:02:12.199Z'

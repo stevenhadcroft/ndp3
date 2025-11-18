@@ -16,7 +16,7 @@ button.secondary {
   font-size: 16px;
   font-weight: 600;
   color: #fff;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
 }
 
 .primary {
@@ -39,7 +39,7 @@ button.secondary {
     font-size: 16px;
     font-weight: 600;
     color: #fff;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     border: solid 2px #ffcc00;
 }
 

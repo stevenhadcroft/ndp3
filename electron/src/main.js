@@ -7,35 +7,24 @@ const fs = require('fs');
 //-----------------------------------------------
 // manually create 'app-update'
 //-----------------------------------------------
-// const feed = 'your_site/update/windows_64'
-// CHECK IF THIS IS NEEDED??? DON"T THINK IT IS
+// ALTHOUGH PLACEHOLDER - 
+// SEEMS WE DO NEED THE SCRIPT BELOW FOR UPDATES TO WORK PROPERLY
+// OR MAYBE ITS BECASE FILE HAS BBEEN DOWNLOADED
 // let yaml = '';
 // yaml += "provider: generic\n"
 // yaml += "url: your_site/update/windows_64\n"
 // yaml += "useMultipleRangeRequest: false\n"
 // yaml += "channel: latest\n"
 // yaml += "updaterCacheDirName: " + app.getName()
-
 // let update_file = [path.join(process.resourcesPath, 'app-update.yml'), yaml]
 // let dev_update_file = [path.join(process.resourcesPath, 'dev-app-update.yml'), yaml]
 // let chechFiles = [update_file, dev_update_file]
-
 // for (let file of chechFiles) {
 //     if (!fs.existsSync(file[0])) {
 //         fs.writeFileSync(file[0], file[1], () => { })
 //     }
 // }
-// log.info('FIX END - app-update.yml - process.resourcesPath ', process.resourcesPath);
 //-----------------------------------------------
-
-// (async () => {
-//   const { updateElectronApp } = await import('update-electron-app');
-//   updateElectronApp({
-//     repo: 'stevenhadcroft/ndp3',
-//     updateInterval: '1 hour',
-//     logger: require('electron-log')
-//   });
-// })();
 
 // Configure logging
 log.transports.file.level = 'info';
@@ -83,11 +72,7 @@ autoUpdater.on('download-progress', (progressObj) => {
   let logMessage = `Download speed: ${progressObj.bytesPerSecond}`;
   logMessage += ` - Downloaded ${progressObj.percent}%`;
   logMessage += ` (${progressObj.transferred}/${progressObj.total})`;
-  log.info(logMessage);
-  // Send progress to window if you want to show it in UI
-  // if (mainWindow) {
-  //   mainWindow.setProgressBar(progressObj.percent / 100);
-  // }
+  
   mainWindow.webContents.send('download-progress', {
       percent: progressObj.percent,
       transferred: progressObj.transferred,
@@ -96,54 +81,22 @@ autoUpdater.on('download-progress', (progressObj) => {
   });
 });
 
+// IMPORTANT - kick starts install if already downloaded
 autoUpdater.on('update-downloaded', (info) => {
   log.info('Update downloaded:', info);
-  // Clear the progress bar
-  // if (mainWindow) {
-  //   mainWindow.setProgressBar(-1);
-  // }
-  autoUpdater.quitAndInstall();
-  
-  // const dialogOpts = {
-  //   type: 'info',
-  //   buttons: ['Restart', 'Later'],
-  //   title: 'Update Ready',
-  //   message: `Version ${info.version} is ready to install`,
-  //   detail: 'The update will be installed when you restart the application.'
-  // };
-  // dialog.showMessageBox(dialogOpts).then(({ response }) => {
-  //   if (response === 0) autoUpdater.quitAndInstall();
-  // });
-});
-
-/*
-// Update event handlers
-autoUpdater.on('update-available', () => {
-
-  log.info('Update available');
-  // autoUpdater.checkForUpdatesAndNotify();
   const dialogOpts = {
     type: 'info',
-    buttons: ['Restart', 'Later'],
-    title: 'Application Update',
-    message: "", // process.platform === 'win32' ? releaseNotes : releaseName,
-    detail:
-    // 'A new version has been downloaded. Restart the application to apply the updates.'
-    'A new version has been found. Restart the application to apply the updates.'
-  }
-  
-  dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) autoUpdater.quitAndInstall()
-    })
+    buttons: ['Install Now', 'Later'],
+    title: 'Update Ready',
+    message: `Version ${info.version} is ready to install`,
+    detail: 'The application will restart to apply the update.'
+  };
+  dialog.showMessageBox(dialogOpts).then(({ response }) => {
+    if (response === 0) {
+      autoUpdater.quitAndInstall();
+    }
+  });
 });
-
-// autoUpdater.on('update-downloaded', () => {
-//   log.info('Update downloaded');
-//   autoUpdater.quitAndInstall();
-// });
-*/
-
-/* */
 
 //--------------------------------------------
 // Main App 
@@ -251,6 +204,7 @@ async function handlePrint(htmlContent) {
 // IPC handlers
 function setupIPC() {
 
+  // ipcMain.removeHandler('call-print');
   ipcMain.handle('call-print', async (event, htmlContent) => {
     try {
       await handlePrint(htmlContent);
@@ -260,11 +214,13 @@ function setupIPC() {
       return { success: false, error: error.message };
     }
   });
-
+  
+  // ipcMain.removeHandler('close-app');
   ipcMain.handle('close-app', () => {
     app.quit();
   });
-
+  
+  // ipcMain.removeHandler('get-version');
   ipcMain.handle('get-version', () => {
     return app.getVersion();
   });

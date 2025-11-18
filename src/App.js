@@ -52,7 +52,7 @@ const App = () => {
 
 	return (
 		<div className="app">
-			<Canvas />
+			{view.userIsAuth && <Canvas />}
 			<ToolBar />
 			<Header />
 			<DialoguePanelManager />

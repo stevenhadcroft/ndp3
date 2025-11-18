@@ -7,7 +7,7 @@ module.exports = {
   packagerConfig: {
     asar: true,
     icon: './icons/NDP3_icon_256',
-    name: 'NDP3-Speech-Builder',
+    name: 'NDP3 Speech Builder',
     executableName: 'NDP3 Speech Builder',
     appBundleId: 'com.ndp3.app',
 
@@ -42,8 +42,6 @@ module.exports = {
 
     // Important: Add this to ensure signing happens
     // signBundle: true,
-    
-
   },
 
   makers: [
@@ -51,21 +49,18 @@ module.exports = {
       name: '@electron-forge/maker-zip',
       platforms: ['darwin', 'linux'],
     },
-
     {
       name: '@electron-forge/maker-dmg',
       platforms: ['darwin'],
       config: {
         icon: './icons/NDP3_icon_256.icns', // macOS needs .icns
-        name: `NDP3-Speech-Builder-${version}`, // This controls the DMG filename
-        
+        // name: `NDP3-Speech-Builder-${version}`, // This controls the DMG filename
       }
     },
      {
       name: '@electron-forge/maker-squirrel',
       platforms: ['win32'],
       config: {
-        // name: 'NDP3SpeechBuilder',
         iconUrl: 'http://berthasworkers.com/dev/ndp3v2/NDP3_icon_256.ico', // Windows needs .ico
         setupIcon: './icons/NDP3_icon_256.ico',
         setupExe: `NDP3-Speech-Builder-${version}.Setup.exe`, // Add this line to control setup filename

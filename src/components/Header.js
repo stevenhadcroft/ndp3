@@ -101,21 +101,16 @@ const Header = (props) => {
   };
   Buttons = CSSModules(Buttons, styleModules, { allowMultiple: true });
 
+  const imgsrc = view.showMenuPopup ? "./imgs/gui/close.png" : "./imgs/gui/menu.png";
+  const headstr = view.showMenuPopup ? <span style={{marginLeft:"-16px"}}>Close menu</span> : <><strong>NDP3</strong><sup>&reg;</sup> Speech Builder</>;
   return (
     <header>
 
       {!view.fullScreen && 
       <div styleName="menu-header">
-        <button styleName="menutab" onClick={onMenuOpen}>
-          {!view.showMenuPopup && <img src="./imgs/gui/menu.png" alt=""/>}
-          {view.showMenuPopup && <img src="./imgs/gui/close.png" alt=""/>}
-          </button>
-				{/* <button styleName="icon small" onClick={onMenuClose} style={{ top: "10px", left: "5px", position: "absolute" }}>
-          <img src="./imgs/gui/close_dark.png" alt="" />
-        </button> */}
-
+        <button styleName="menutab" onClick={onMenuOpen}><img src={imgsrc} alt=""/></button>
         <button styleName="menutab" >
-          <span styleName="title"><strong>NDP3</strong><sup>&reg;</sup> Speech Builder</span>
+          <span styleName="title">{headstr}</span>
         </button>
       </div>
       }

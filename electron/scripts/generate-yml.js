@@ -8,12 +8,15 @@ async function generateYml() {
   // Configure platforms
   const platforms = {
     mac: {
-      file: `NDP3-Speech-Builder-darwin-arm64-${version}.zip`,
+      // config defined as 'NDP3 Speech Builder' but upload to github adds periods
+      fileIn: `NDP3 Speech Builder-darwin-arm64-${version}.zip`,
+      fileOut: `NDP3.Speech.Builder-darwin-arm64-${version}.zip`,
       path: path.join(__dirname, '../out/make/zip/darwin/arm64'),
       ymlName: 'latest-mac.yml'
     },
     windows: {
-      file: `NDP3-Speech-Builder-${version}.Setup.exe`,
+      fileIn: `NDP3-Speech-Builder-${version}.Setup.exe`,
+      fileOut: `NDP3-Speech-Builder-${version}.Setup.exe`,
       path: path.join(__dirname, '../out/make/squirrel.windows/x64'),
       ymlName: 'latest.yml'
     }
@@ -22,10 +25,10 @@ async function generateYml() {
   // Generate YML for each platform
   for (const [platform, config] of Object.entries(platforms)) {
     try {
-      const filePath = path.join(config.path, config.file);
+      const filePath = path.join(config.path, config.fileIn);
       
       if (!fs.existsSync(filePath)) {
-        console.log(`⚠️  Skipping ${platform}: ${config.file} not found`);
+        console.log(`⚠️  Skipping ${platform}: ${config.fileIn} not found`);
         continue;
       }
 
@@ -41,11 +44,11 @@ async function generateYml() {
       const yml = {
         version,
         files: [{
-          url: config.file,
+          url: config.fileOut,
           sha512,
           size: stats.size
         }],
-        path: config.file,
+        path: config.fileOut,
         sha512,
         releaseDate: new Date().toISOString()
       };

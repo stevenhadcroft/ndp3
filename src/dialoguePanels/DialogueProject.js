@@ -261,7 +261,7 @@ function DialogueProject({ mode }) {
         <>
             <button styleName="primary narrow red" onClick={() => setConfirmDelete(true)}>Delete</button>
             <button styleName="primary narrow" onClick={onCancelClick}>Cancel</button>
-            <button styleName="primary narrow" onClick={onCTAClick}>{mode}</button>
+            <button styleName="primary narrow" onClick={onCTAClick}>{mode === "open" ? "Open" : "Save"}</button>
         </>
     )
 

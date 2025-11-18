@@ -48,6 +48,9 @@ const App = () => {
             {view.mode === eMode.MY_ACCOUNT && <DialogueMyAccount />}
             {view.mode === eMode.APP_UPDATING && <DialogueUpdateProgress />}
             {view.showPhonetics && <DialogueAddPhonetics />}
+
+            {/* <DialogueUpdateProgress /> */}
+
             {/* {view.mode === eMode.SET_ORIENTATION && <DialogueOrientation/>} */}
            
 		</>

@@ -13,7 +13,7 @@ const DialogueUpdateProgress = () => {
     return (
         <DraggablePanel type="modal-update">
             <div styleName="update-progress-header">
-                Downloading Update
+                Downloading update {appUpdateStatus && appUpdateStatus.version ? `v${appUpdateStatus.version}` : ''}
             </div>
             <div styleName="dialogue-inner no-scroll">
                 <div styleName="update-progress-container">

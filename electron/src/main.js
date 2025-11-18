@@ -47,10 +47,13 @@ setInterval(() => {
   autoUpdater.checkForUpdates();
 }, 60 * 60 * 1000);
 
+let updateInfo = {}; // Store update info
 
 // Update event handlers
 autoUpdater.on('update-available', (info) => {
   log.info('Update available:', info);
+  updateInfo = info; // Store the update info
+
   const dialogOpts = {
     type: 'info',
     buttons: ['Download', 'Later'],
@@ -77,7 +80,8 @@ autoUpdater.on('download-progress', (progressObj) => {
       percent: progressObj.percent,
       transferred: progressObj.transferred,
       total: progressObj.total,
-      bytesPerSecond: progressObj.bytesPerSecond
+      bytesPerSecond: progressObj.bytesPerSecond,
+      version: updateInfo ? updateInfo.version : null // Include version
   });
 });
 

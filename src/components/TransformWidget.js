@@ -1,4 +1,5 @@
 import { useState, useEffect, Fragment } from "react";
+import { colors } from "../styles/tokens/colors";
 
 let startAngle = null;
 let startScale = null;
@@ -16,8 +17,8 @@ function TransformWidget(props) {
 
 	const styleHander = {
 		position: "absolute",
-		backgroundColor: "#0099CC",
-		border: "solid 3px #0099CC",
+		backgroundColor: colors.ui.transformWidget,
+		border: `solid 3px ${colors.ui.transformWidget}`,
 		width: `${HANDLE_SIZE}px`,
 		height: `${HANDLE_SIZE}px`,
 		transform: `rotate(${item.angle}deg)`,

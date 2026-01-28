@@ -15,12 +15,12 @@ button.secondary {
   margin: 8px;
   font-size: 16px;
   font-weight: 600;
-  color: #fff;
+  color: var(--color-button-primary-text);
   /* text-transform: uppercase; */
 }
 
 .primary {
-  background-color: #2c83d4;
+  background-color: var(--color-button-primary);
   /* box-shadow: 2px 4px 3px #00000022; */
 }
 
@@ -38,9 +38,9 @@ button.secondary {
     margin: 8px 30px;
     font-size: 16px;
     font-weight: 600;
-    color: #fff;
+    color: var(--color-button-primary-text);
     /* text-transform: uppercase; */
-    border: solid 2px #ffcc00;
+    border: solid 2px var(--color-button-tertiary);
 }
 
 button .small {
@@ -53,7 +53,7 @@ button .small {
 
 .primary.green
 .left-menu.green {
-  background-color: #339900;
+  background-color: var(--color-button-green-bg);
 }
 
 .primary.bluetrans,
@@ -62,10 +62,10 @@ button .small {
 }
 
 .primary.red {
-  background-color: #cc0000;
+  background-color: var(--color-button-red-bg);
   background: transparent;
-  border: 2px #ff6600 solid !important;
-  color: #ff6600;
+  border: 2px var(--color-button-red-border) solid !important;
+  color: var(--color-button-red-text);
   box-shadow: none;
 }
 
@@ -79,7 +79,7 @@ button .small {
 /* --- FILTER --------------------------- */
 
 .filter {
-  background: #ffffffaa;
+  background: var(--color-background-white-semi);
   padding: 5px 10px;
   margin: 2px 5px;
   font-size: 16px;
@@ -88,8 +88,8 @@ button .small {
 }
 
 .filter.active {
-  background: #ff9900;
-  color: #ffffff;
+  background: var(--color-state-active);
+  color: var(--color-white);
 }
 
 /* --- PHONETIC --------------------------- */
@@ -98,7 +98,7 @@ button .small {
   position: relative;
   /* top: 3px;
   left: -4px; */
-  background: #ff9900;
+  background: var(--color-ui-phonetic);
   font-size: 26px;
   padding: 4px 10px;
   border-radius: 0 5px 5px 0;
@@ -118,8 +118,8 @@ button .small {
 
 .phonetic-pot {
   cursor: pointer;
-  background: #fff;
-  color: #333;
+  background: var(--color-ui-phonetic-pot);
+  color: var(--color-ui-phonetic-pot-text);
   text-align: center;
   font-size: 24px;
   line-height: 40px;
@@ -128,15 +128,15 @@ button .small {
   margin: 3px;
   padding: 5px;
   font-weight: normal;
-  box-shadow: inset 0px 0px 0px 3px #99330000;
+  box-shadow: inset 0px 0px 0px 3px transparent;
 }
 
 .phonetic-pot.selected {
-  box-shadow: inset 0px 0px 0px 4px #ff9900;
+  box-shadow: inset 0px 0px 0px 4px var(--color-state-selected);
 }
 
 .search {
-  background: #ffffffaa;
+  background: var(--color-background-white-semi);
   padding: 10px 20px;
   margin: 2px 5px;
   font-size: 16px;

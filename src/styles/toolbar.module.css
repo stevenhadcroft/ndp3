@@ -89,9 +89,9 @@ header .title {
 
 .menu-container {
   position: absolute;
-  background-color: #ffffff;;
+  background-color: var(--color-background-menu);
   top: 50px;
-  color: #000;
+  color: var(--color-text-primary);
   font-size: 18px;
   box-sizing: border-box;
   height: 100%;
@@ -131,14 +131,14 @@ header .title {
   max-height: 50px;
   background: transparent;
   background-size: contain;
-  background-color: #FFF;
+  background-color: var(--color-white);
   border: 0;
   padding: 0;
   border-radius: 99px;
   margin: 0px 8px;
   font-size: 16px;
   font-weight: 600;
-  color: #fff;
+  color: var(--color-text-inverse);
   text-transform: uppercase;
 }
 
@@ -148,8 +148,8 @@ header .title {
 
 .left-menu-label {
   position: absolute;
-  background: #2c83d4;
-  color:#fff;
+  background: var(--color-ui-toolbar-label);
+  color: var(--color-text-inverse);
   font-weight: bold;
   font-size: 14px;
   padding: 8px 12px;

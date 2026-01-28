@@ -1,4 +1,5 @@
 import { useState, useEffect, Fragment, useRef, useMemo } from "react";
+import { colors } from "../styles/tokens/colors";
 
 const HANDLE_SIZE = 50;
 const ICON_SIZE = 50;
@@ -13,8 +14,8 @@ function TransformWidget({ item = {}, mousePosX, mousePosY, setAngle, setSize, t
 
   const styleHander = useMemo(() => ({
     position: "absolute",
-    backgroundColor: "#0099CC",
-    border: "solid 3px #0099CC",
+    backgroundColor: colors.ui.transformWidget,
+    border: `solid 3px ${colors.ui.transformWidget}`,
     width: `${HANDLE_SIZE}px`,
     height: `${HANDLE_SIZE}px`,
     transform: `rotate(${item.angle}deg)`,

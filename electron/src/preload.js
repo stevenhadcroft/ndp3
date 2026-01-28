@@ -10,6 +10,20 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // onUpdateAvailable: (callback) => ipcRenderer.on('update-available', callback),
   onUpdateProgress: (callback) => ipcRenderer.on('download-progress', callback),
   // onUpdateDownloaded: (callback) => ipcRenderer.on('update-downloaded', callback),
-  // getVersion: () => ipcRenderer.invoke('get-version'),
   // downloadUpdate: () => ipcRenderer.invoke('download-update')
+
+  // File system operations
+  saveProject: (data) => ipcRenderer.invoke('save-project', data),
+  loadProject: (filename) => ipcRenderer.invoke('load-project', filename),
+  deleteProject: (filename) => ipcRenderer.invoke('delete-project', filename),
+  listProjects: (dirname) => {
+    console.log('Invoking list-projects');
+    ipcRenderer.invoke('list-projects', dirname)
+  },
+  getUserDataPath: () => ipcRenderer.invoke('get-user-data-path'),
+
+   // Directory operations
+  createDir: (dirname) => ipcRenderer.invoke('create-dir', dirname),
+  getDirs: () => ipcRenderer.invoke('get-dirs'),
+  deleteDir: (dirname) => ipcRenderer.invoke('delete-dir', dirname)
 });

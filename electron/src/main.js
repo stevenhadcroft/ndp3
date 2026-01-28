@@ -158,6 +158,9 @@ function createMainWindow() {
 
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
+   // Setup IPC handlers after window is created
+  setupIPC();
+
   // Dev tools (commented out for production)
   // mainWindow.webContents.openDevTools();
 
@@ -208,7 +211,19 @@ async function handlePrint(htmlContent) {
 // IPC handlers
 function setupIPC() {
 
-  // ipcMain.removeHandler('call-print');
+  // Remove duplicate handlers
+  ipcMain.removeHandler('call-print');
+  ipcMain.removeHandler('close-app');
+  ipcMain.removeHandler('get-version');
+  ipcMain.removeHandler('save-project');
+  ipcMain.removeHandler('load-project');
+  ipcMain.removeHandler('delete-project');
+  ipcMain.removeHandler('list-projects');
+  ipcMain.removeHandler('get-user-data-path');
+  ipcMain.removeHandler('create-dir');
+  ipcMain.removeHandler('get-dirs');
+  ipcMain.removeHandler('delete-dir');
+
   ipcMain.handle('call-print', async (event, htmlContent) => {
     try {
       await handlePrint(htmlContent);
@@ -219,16 +234,192 @@ function setupIPC() {
     }
   });
   
-  // ipcMain.removeHandler('close-app');
   ipcMain.handle('close-app', () => {
     app.quit();
   });
   
-  // ipcMain.removeHandler('get-version');
   ipcMain.handle('get-version', () => {
     return app.getVersion();
   });
   
+  ipcMain.handle('get-dirs', async () => {
+    console.log( 'IPC get-dirs called with dirname:');
+  });
+ 
+
+  //-------------------------------------
+  // File system operations
+  //-------------------------------------
+  // File system paths
+  const projectsDir = path.join(app.getPath('userData'), 'projects');
+  const dirsMetaFile = path.join(app.getPath('userData'), 'directories.json');
+  
+  // Ensure projects directory exists
+  fs.mkdir(projectsDir, { recursive: true }).catch(console.error);
+  
+  // Existing handlers
+  ipcMain.handle('get-user-data-path', () => app.getPath('userData'));
+  
+  // Project handlers
+  ipcMain.handle('save-project', async (event, data) => {
+    try {
+      const { name, projectid, description, thumbnail, data: projectData, dirname, orientation } = data;
+      const filename = `${name}.json`;
+      
+      let filepath;
+      if (dirname) {
+        const dirPath = path.join(projectsDir, dirname);
+        await fs.mkdir(dirPath, { recursive: true });
+        filepath = path.join(dirPath, filename);
+      } else {
+        filepath = path.join(projectsDir, filename);
+      }
+      
+      await fs.writeFile(filepath, JSON.stringify({
+        name,
+        projectid,
+        description,
+        thumbnail,
+        data: projectData,
+        dirname,
+        orientation,
+        savedAt: new Date().toISOString()
+      }, null, 2));
+      
+      return { success: true, filepath };
+    } catch (error) {
+      log.error('Error saving project:', error);
+      return { success: false, error: error.message };
+    }
+  });
+  
+  ipcMain.handle('load-project', async (event, filename) => {
+    try {
+      const filepath = path.join(projectsDir, filename);
+      const data = await fs.readFile(filepath, 'utf8');
+      return { success: true, data: JSON.parse(data) };
+    } catch (error) {
+      log.error('Error loading project:', error);
+      return { success: false, error: error.message };
+    }
+  });
+  
+  ipcMain.handle('delete-project', async (event, filename) => {
+    try {
+      const filepath = path.join(projectsDir, filename);
+      await fs.unlink(filepath);
+      return { success: true };
+    } catch (error) {
+      log.error('Error deleting project:', error);
+      return { success: false, error: error.message };
+    }
+  });
+  
+  ipcMain.handle('list-projects', async (event, dirname) => {
+    try {
+      let searchDir = projectsDir;
+      if (dirname) {
+        searchDir = path.join(projectsDir, dirname);
+      }
+      
+      // try {
+      //   await fs.access(searchDir);
+      // } catch {
+      //   return { success: true, projects: [] };
+      // }
+      
+      const files = await fs.readdir(searchDir);
+      const projects = [];
+      
+      for (const file of files) {
+        if (file.endsWith('.json')) {
+          const filepath = path.join(searchDir, file);
+          const data = await fs.readFile(filepath, 'utf8');
+          projects.push(JSON.parse(data));
+        }
+      }
+      
+      return { success: true, projects };
+    } catch (error) {
+      log.error('Error listing projects:', error);
+      return { success: false, error: error.message, projects: [] };
+    }
+  });
+
+  // Directory handlers
+  ipcMain.handle('create-dir', async (event, dirname) => {
+    try {
+      let dirs = [];
+      try {
+        const data = await fs.readFile(dirsMetaFile, 'utf8');
+        dirs = JSON.parse(data);
+      } catch (error) {
+        dirs = [];
+      }
+      
+      if (!dirs.some(d => d.dirname === dirname)) {
+        dirs.push({
+          dirname,
+          createdAt: new Date().toISOString()
+        });
+        
+        await fs.writeFile(dirsMetaFile, JSON.stringify(dirs, null, 2));
+        
+        const dirPath = path.join(projectsDir, dirname);
+        await fs.mkdir(dirPath, { recursive: true });
+      }
+      
+      return { success: true };
+    } catch (error) {
+      log.error('Error creating directory:', error);
+      return { success: false, error: error.message };
+    }
+  });
+  
+  ipcMain.handle('XXget-dirs', async () => {
+    try {
+      let dirs = [];
+      try {
+        const data = await fs.readFile(dirsMetaFile, 'utf8');
+        dirs = JSON.parse(data);
+      } catch (error) {
+        dirs = [];
+      }
+      
+      return { success: true, directories: dirs };
+    } catch (error) {
+      log.error('Error getting directories:', error);
+      return { success: false, error: error.message, directories: [] };
+    }
+  });
+  
+  ipcMain.handle('delete-dir', async (event, dirname) => {
+    try {
+      let dirs = [];
+      try {
+        const data = await fs.readFile(dirsMetaFile, 'utf8');
+        dirs = JSON.parse(data);
+      } catch (error) {
+        dirs = [];
+      }
+      
+      dirs = dirs.filter(d => d.dirname !== dirname);
+      await fs.writeFile(dirsMetaFile, JSON.stringify(dirs, null, 2));
+      
+      const dirPath = path.join(projectsDir, dirname);
+      try {
+        await fs.rm(dirPath, { recursive: true, force: true });
+      } catch (error) {
+        log.warn('Directory not found physically:', error);
+      }
+      
+      return { success: true };
+    } catch (error) {
+      log.error('Error deleting directory:', error);
+      return { success: false, error: error.message };
+    }
+  });
+
 }
 
 // App lifecycle

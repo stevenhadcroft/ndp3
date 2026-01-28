@@ -1,0 +1,124 @@
+/*
+ * CSS Custom Properties (CSS Variables) for Color Tokens
+ * Generated from src/styles/tokens/colors.js
+ * Use these variables in CSS modules: var(--color-button-primary)
+ */
+
+:root {
+  /* Brand Colors - Blues */
+  --color-blue-primary: #2c83d4;
+  --color-blue-bright: #0099CC;
+  --color-blue-dark: #0F6ACB;
+  --color-blue-navy: #012457;
+  --color-blue-slate: #295b88;
+  --color-blue-medium: #48759e;
+
+  /* Brand Colors - Oranges */
+  --color-orange-primary: #ff9900;
+  --color-orange-dark: #ff6600;
+  --color-orange-light: #ffcc00;
+
+  /* Brand Colors - Greens */
+  --color-green-primary: #339900;
+  --color-green-light: #44be06;
+  --color-green-material: #4CAF50;
+
+  /* Brand Colors - Reds */
+  --color-red-primary: #cc0000;
+  --color-red-dark: #9F051E;
+
+  /* Brand Colors - Neutrals */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray-50: #f8fafc;
+  --color-gray-100: #ddd;
+  --color-gray-200: #ccc;
+  --color-gray-300: #aaa;
+  --color-gray-400: #999;
+  --color-gray-500: #666;
+  --color-gray-600: #333;
+  --color-gray-700: #2a2a2a;
+
+  /* Interactive Elements */
+  --color-interactive-primary: var(--color-blue-primary);
+  --color-interactive-primary-hover: var(--color-blue-dark);
+  --color-interactive-accent: var(--color-blue-bright);
+  --color-interactive-accent-hover: var(--color-blue-dark);
+
+  /* Buttons */
+  --color-button-primary: var(--color-blue-primary);
+  --color-button-primary-text: var(--color-white);
+  --color-button-secondary: transparent;
+  --color-button-secondary-text: var(--color-white);
+  --color-button-tertiary: var(--color-orange-light);
+  --color-button-tertiary-text: var(--color-white);
+  --color-button-green-bg: var(--color-green-primary);
+  --color-button-green-ui-bg: var(--color-green-material);
+  --color-button-red-bg: var(--color-red-primary);
+  --color-button-red-border: var(--color-orange-dark);
+  --color-button-red-text: var(--color-orange-dark);
+
+  /* States */
+  --color-state-success: var(--color-green-material);
+  --color-state-warning: var(--color-orange-primary);
+  --color-state-error: var(--color-red-primary);
+  --color-state-info: var(--color-blue-bright);
+  --color-state-active: var(--color-orange-primary);
+  --color-state-selected: var(--color-orange-primary);
+  --color-state-disabled: var(--color-gray-300);
+
+  /* Backgrounds */
+  --color-background-app: var(--color-blue-navy);
+  --color-background-canvas: var(--color-white);
+  --color-background-canvas-icon: rgb(0, 153, 204);
+  --color-background-panel: var(--color-blue-slate);
+  --color-background-dialogue: var(--color-blue-slate);
+  --color-background-menu: var(--color-white);
+  --color-background-toolbar: var(--color-blue-primary);
+  --color-background-overlay: var(--color-black);
+  --color-background-dark: var(--color-black);
+  --color-background-light-panel: var(--color-gray-100);
+  --color-background-dark-ui: var(--color-gray-700);
+
+  /* Borders */
+  --color-border-default: var(--color-gray-200);
+  --color-border-light: var(--color-gray-100);
+  --color-border-medium: var(--color-gray-300);
+  --color-border-dark: var(--color-gray-400);
+  --color-border-active: var(--color-orange-primary);
+  --color-border-selected: var(--color-orange-primary);
+  --color-border-focus: var(--color-blue-bright);
+  --color-border-white: var(--color-white);
+
+  /* Text */
+  --color-text-primary: var(--color-black);
+  --color-text-secondary: var(--color-gray-500);
+  --color-text-tertiary: var(--color-gray-400);
+  --color-text-inverse: var(--color-white);
+  --color-text-disabled: var(--color-gray-400);
+  --color-text-dark-gray: var(--color-gray-600);
+
+  /* UI Elements */
+  --color-ui-canvas-control: var(--color-blue-bright);
+  --color-ui-transform-widget: var(--color-blue-bright);
+  --color-ui-progress-bar: var(--color-green-material);
+  --color-ui-phonetic: var(--color-orange-primary);
+  --color-ui-phonetic-pot: var(--color-white);
+  --color-ui-phonetic-pot-text: var(--color-gray-600);
+  --color-ui-menu-header: var(--color-blue-primary);
+  --color-ui-toolbar-label: var(--color-blue-primary);
+  --color-ui-scrollbar-track: var(--color-gray-100);
+  --color-ui-scrollbar-handle: var(--color-blue-dark);
+  --color-ui-range-thumb: var(--color-green-light);
+
+  /* Common Transparent Colors */
+  --color-overlay-dark: #000000CC;
+  --color-overlay-medium: #00000044;
+  --color-overlay-subtle: #00000022;
+  --color-overlay-very-subtle: #00000011;
+  --color-background-white-semi: #ffffffaa;
+  --color-background-white-soft: #ffffff33;
+  --color-background-white-subtle: #ffffff22;
+  --color-shadow-light: #00000022;
+  --color-shadow-medium: #00000044;
+}

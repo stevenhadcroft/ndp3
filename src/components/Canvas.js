@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import CSSModules from 'react-css-modules';
 import styles from '../styles';
 import { eMode, eDirection } from "../constants";
+import { colors, withOpacity, opacity, brandColors } from "../styles/tokens/colors";
 import useCanvasFileLoader from "../hooks/useCanvasFileLoader"; 
 import TransformWidget from "./TransformWidget";
 import { BrushSVG } from "./BrushSVG";
@@ -269,7 +270,7 @@ const Canvas = () => {
 			left: `${item.x - item.size / 2}px`,
 			top: `${item.y - item.size / 2}px`,
 			transform: `rotate(${item.angle}deg)`,
-			border: selectedIndex === index && mode === eMode.EDIT_IMAGE && !brushColour ? "solid 3px #0099CC" : "solid 3px #0099CC00",
+			border: selectedIndex === index && mode === eMode.EDIT_IMAGE && !brushColour ? `solid 3px ${colors.ui.canvasControl}` : `solid 3px ${withOpacity(colors.ui.canvasControl, '00')}`,
 			width: `${item.size}px`,
 			height: `${item.size}px`,
 		}
@@ -281,10 +282,10 @@ const Canvas = () => {
 			left: `${item.x - item.size / 2}px`,
 			top: `${item.y - item.size / 3 / 2}px`,
 			transform: `rotate(${item.angle}deg)`,
-			border: selectedIndex === index && mode === eMode.EDIT_TEXT && !brushColour ? "solid 3px #0099CC" : "solid 3px #0099CC00",
+			border: selectedIndex === index && mode === eMode.EDIT_TEXT && !brushColour ? `solid 3px ${colors.ui.canvasControl}` : `solid 3px ${withOpacity(colors.ui.canvasControl, '00')}`,
 			width: `${item.size}px`,
 			height: `${item.size / 4}px`,
-			
+
 			fontFamily:item.fontFamily,
 			fontSize:`${item.fontSize}px`,
 			textAlign:`${item.justify}`,
@@ -296,10 +297,10 @@ const Canvas = () => {
 	const templateStyle = orientation === "landscape" ? {
 		width: `${768}px`,
 		height: `${1100}px`,
-		background: "#fff",
+		background: brandColors.white,
 		transform: "translate(166px, -166px) rotate(90deg)"
 	} : null;
-	const canvasStyle = { transform: `scale(${canvasScale})`, left: `${canvasLeft}px`, top: canvasTop, clipPath: "none", background: "#ffffff11"} // 
+	const canvasStyle = { transform: `scale(${canvasScale})`, left: `${canvasLeft}px`, top: canvasTop, clipPath: "none", background: withOpacity(brandColors.white, opacity.light)} // 
 	const canvasInnerStyle = { transform: `scale(${zoom}) translate(${panx}px, ${pany}px)` };
 	
 	return (

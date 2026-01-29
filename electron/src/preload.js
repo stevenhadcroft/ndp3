@@ -18,7 +18,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   deleteProject: (filename) => ipcRenderer.invoke('delete-project', filename),
   listProjects: (dirname) => {
     console.log('Invoking list-projects');
-    ipcRenderer.invoke('list-projects', dirname)
+    return ipcRenderer.invoke('list-projects', dirname)
   },
   getUserDataPath: () => ipcRenderer.invoke('get-user-data-path'),
 

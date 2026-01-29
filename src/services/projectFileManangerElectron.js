@@ -1,21 +1,6 @@
-// import Dexie from 'dexie';
-// import { Constants } from "../constants";
-
 window.LOCAL = 1;
 
-// let credentials = {userid:null, token:null};
-// window.REFRESH_CREDS = () => {
-//   credentials = JSON.parse(localStorage.getItem("NDP3Credentials"));
-//   console.log('credentials from localStorage ', credentials);  
-// }
-// window.REFRESH_CREDS();
-
-
-// const db = new Dexie("NDP3ProjectFiles_"+Constants.LOCAL_DATA_FILES_ID);
-// db.version(1).stores({ 
-//     projects: "++id,name,description,thumbnail,data,dirname",
-//     directories: "++id,dirname",
-// });
+// ~/Library/Application Support/<app-name>/projects/
  
 //------------------------------------------------
 // PROJECT FUNCTIONS
@@ -92,17 +77,16 @@ export const getProjectList = async (dirname) => {
                 window.electronAPI.listProjects(dirname),
                 window.electronAPI.getDirs()
             ]);
-            
-            // let projects = projectsResult.success ? projectsResult.projects : [];
-            // const directories = dirsResult.success ? dirsResult.directories : [];
-            
-            // // Filter by directory if needed
+
+            let projects = projectsResult.success ? projectsResult.projects : [];
+            const directories = dirsResult.success ? dirsResult.directories : [];
+
+            // Filter by directory if needed
             // if (dirname) {
             //     projects = projects.filter(proj => proj.dirname === dirname);
             // }
-            
-            // return { projects, directories };
-            return { projects:projectsResult, directories:dirsResult };
+
+            return { projects, directories };
             
         } catch (error) {
             console.error('Error getting project list:', error);
@@ -131,30 +115,35 @@ export const createDir = (dirname) => {
     });
 }
 
-export const getDirs = async () => {
-    if (window.electronAPI) {
-        try {
-            const result = await window.electronAPI.getDirs();
-            if (result.success) {
-                return result.directories.map(d => ({
-                    dirname: d.dirname,
-                    createdAt: d.createdAt
-                }));
-            }
-            return [];
-        } catch (error) {
-            console.error('Error getting directories:', error);
-            return [];
-        }
-    }
-    return [];
-}
-
-export const deleteDir = async (dirname) => {
+export const getDirs = () => {
     return new Promise(async (resolve, reject) => {
         if (window.electronAPI) {
             try {
-                const result = await window.electronAPI.deleteDir(dirname);
+                const result = await window.electronAPI.getDirs();
+                if (result.success) {
+                    const directories = result.directories.map(d => ({
+                        dirname: d.dirname,
+                        createdAt: d.createdAt
+                    }));
+                    resolve({data: directories});
+                } else {
+                    resolve({data: []});
+                }
+            } catch (error) {
+                console.error('Error getting directories:', error);
+                resolve({data: []});
+            }
+        } else {
+            resolve({data: []});
+        }
+    });
+}
+
+export const deleteDir = async (file) => {
+    return new Promise(async (resolve, reject) => {
+        if (window.electronAPI) {
+            try {
+                const result = await window.electronAPI.deleteDir(file.dirname);
                 resolve(result);
             } catch (error) {
                 reject(error);

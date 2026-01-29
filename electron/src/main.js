@@ -2,28 +2,27 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('node:path');
 const { autoUpdater } = require('electron-updater');
 const log = require('electron-log');
-const fs = require('fs');
+const fsSync = require('fs');
+const { promises: fs } = require('fs');
 
 //-----------------------------------------------
 // manually create 'app-update'
 //-----------------------------------------------
-// ALTHOUGH PLACEHOLDER - 
-// SEEMS WE DO NEED THE SCRIPT BELOW FOR UPDATES TO WORK PROPERLY
-// OR MAYBE ITS BECASE FILE HAS BBEEN DOWNLOADED
-// let yaml = '';
-// yaml += "provider: generic\n"
-// yaml += "url: your_site/update/windows_64\n"
-// yaml += "useMultipleRangeRequest: false\n"
-// yaml += "channel: latest\n"
-// yaml += "updaterCacheDirName: " + app.getName()
-// let update_file = [path.join(process.resourcesPath, 'app-update.yml'), yaml]
-// let dev_update_file = [path.join(process.resourcesPath, 'dev-app-update.yml'), yaml]
-// let chechFiles = [update_file, dev_update_file]
-// for (let file of chechFiles) {
-//     if (!fs.existsSync(file[0])) {
-//         fs.writeFileSync(file[0], file[1], () => { })
-//     }
-// }
+// KEEP THIS (ALTHOUGH FEELS PLACEHOLDER) -  SEEMS WE DO NEED THE SCRIPT BELOW FOR UPDATES TO WORK PROPERLY
+let yaml = '';
+yaml += "provider: generic\n"
+yaml += "url: your_site/update/windows_64\n"
+yaml += "useMultipleRangeRequest: false\n"
+yaml += "channel: latest\n"
+yaml += "updaterCacheDirName: " + app.getName()
+let update_file = [path.join(process.resourcesPath, 'app-update.yml'), yaml]
+let dev_update_file = [path.join(process.resourcesPath, 'dev-app-update.yml'), yaml]
+let chechFiles = [update_file, dev_update_file]
+for (let file of chechFiles) {
+    if (!fsSync.existsSync(file[0])) {
+        fsSync.writeFileSync(file[0], file[1], () => { })
+    }
+}
 //-----------------------------------------------
 
 // Configure logging
@@ -241,11 +240,6 @@ function setupIPC() {
   ipcMain.handle('get-version', () => {
     return app.getVersion();
   });
-  
-  ipcMain.handle('get-dirs', async () => {
-    console.log( 'IPC get-dirs called with dirname:');
-  });
- 
 
   //-------------------------------------
   // File system operations
@@ -376,7 +370,7 @@ function setupIPC() {
     }
   });
   
-  ipcMain.handle('XXget-dirs', async () => {
+  ipcMain.handle('get-dirs', async () => {
     try {
       let dirs = [];
       try {

@@ -102,10 +102,10 @@ function DialogueProject({ mode }) {
                         })
                 }
             })
-            .catch(()=>{
+            .catch((evt)=>{
                 Swal.fire({
                     title: 'Sorry, we have a problem!',
-                    text: 'The project can not be accessed',
+                    text: JSON.stringify(evt),
                     icon: 'error',
                     confirmButtonText: 'Continue'
                 });

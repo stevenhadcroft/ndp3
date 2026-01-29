@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, screen } = require('electron');
 const path = require('node:path');
 const { autoUpdater } = require('electron-updater');
 const log = require('electron-log');
@@ -113,8 +113,13 @@ let splashWindow = null;
 
 // Window creation
 function createSplashWindow() {
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+
   splashWindow = new BrowserWindow({
-    fullscreen: true,
+    // fullscreen: true,
+    width: Math.floor(width * 0.5),
+    height: Math.floor(height * 0.7),
+    center: true,
     transparent: true,
     webPreferences: {
       nodeIntegration: false,
@@ -128,7 +133,7 @@ function createSplashWindow() {
     splashWindow = null;
     if (mainWindow) {
       mainWindow.show();
-      mainWindow.setFullScreen(true);
+      // mainWindow.setFullScreen(true);
 
       // Check for updates shorly after launch
       setTimeout(() => {
@@ -147,8 +152,13 @@ function createSplashWindow() {
 }
 
 function createMainWindow() {
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+
   mainWindow = new BrowserWindow({
-    fullscreen: true,
+    // fullscreen: true,
+    width: Math.floor(width * 1),
+    height: Math.floor(height * 1),
+    center: true,
     show: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),

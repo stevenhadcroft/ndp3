@@ -1,13 +1,13 @@
 {
-  "version": "2.0.50",
+  "version": "2.0.53",
   "files": [
     {
-      "url": "NDP3.Speech.Builder-darwin-arm64-2.0.50.zip",
-      "sha512": "kYd5enojVEoI82GP7SRoUw8Ixnr77IQqCK658qOfwWwEsYgr5zn1zIF9wWCt5yqToFN7hnHy8L+1s0yuzbRSLQ==",
-      "size": 161076994
+      "url": "NDP3.Speech.Builder-darwin-arm64-2.0.53.zip",
+      "sha512": "fGBuv92EDGU68+M1kpTOkF6NQBTL8jAyicObSkMfBveRn+575A6T07kQbj6KMcUIblBXT4qKsYKfTnBOXs1PYQ==",
+      "size": 161009873
     }
   ],
-  "path": "NDP3.Speech.Builder-darwin-arm64-2.0.50.zip",
-  "sha512": "kYd5enojVEoI82GP7SRoUw8Ixnr77IQqCK658qOfwWwEsYgr5zn1zIF9wWCt5yqToFN7hnHy8L+1s0yuzbRSLQ==",
-  "releaseDate": "2026-01-28T23:20:05.737Z"
+  "path": "NDP3.Speech.Builder-darwin-arm64-2.0.53.zip",
+  "sha512": "fGBuv92EDGU68+M1kpTOkF6NQBTL8jAyicObSkMfBveRn+575A6T07kQbj6KMcUIblBXT4qKsYKfTnBOXs1PYQ==",
+  "releaseDate": "2026-01-29T20:26:23.300Z"
 }

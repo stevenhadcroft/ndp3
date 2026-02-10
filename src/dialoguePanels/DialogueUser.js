@@ -46,11 +46,22 @@ const DialogueUser = () => {
     // HANDLERS ---------------------------------------------------
     const onSignIn = async () => {
 
-        // const data = { email: "steven@stevenhadcroft.com", password: "pass1234" }
         const email = inputRefSignInEmail.current.value;
-        const password = "temp disabled"; // inputRefSignInPassword.current.value;
-        
-        if (!email || !password){
+        const key = inputRefSignInPassword.current.value;
+        // Z4Z4M7
+
+        //-----check key
+        if (!validateKey(key)){
+            Swal.fire({
+                title: 'Error!',
+                text: 'Key not valid',
+                icon: 'error',
+                confirmButtonText: 'Continue'
+              })
+            return;
+        }
+
+        if (!email){
             Swal.fire({
                 title: 'Error!',
                 text: 'Please complete all details',
@@ -58,10 +69,10 @@ const DialogueUser = () => {
                 confirmButtonText: 'Continue'
             })
         }
-        const data = { email, password };
-        let response = await getUser(data)
 
-        // alert(JSON.stringify(response));
+        // moved from using password to key
+        const data = { email, password: '' };
+        let response = await getUser(data)
 
         if (response.complete === 1 && response.approval === "approved") {
 
@@ -105,10 +116,6 @@ const DialogueUser = () => {
         const passwordConfirm = inputRefRegisterPassword2.current.value;
 
         //-----check key
-        // 0 && 0 && 
-        // validateKey(key);
-        // return;
-
         if (!validateKey(key)){
             Swal.fire({
                 title: 'Error!',
@@ -199,12 +206,12 @@ const DialogueUser = () => {
     const Options = () =>
         <DraggablePanel central={true} id='sign-in' title="Options">   {/* buttons={Buttons} */}
             <div style={{ textAlign: 'center'}}>
-                <div style={{ height: "20px" }} />
                 <button styleName="primary narrow" onClick={() => { dispatch(setMode(eMode.USER_SIGN_IN)) }}>Sign In</button>
                 <div style={{ height: "20px" }} />
                 <button styleName="primary narrow" onClick={() => { dispatch(setMode(eMode.USER_REGISTER)) }}>Register</button>
-                <div style={{ height: "50px" }} />
-                <button styleName="secondary narrow" onClick={()=>dispatch(setMode(eMode.USER_OPTIONS))}>Forgotten License Key</button>
+                <div style={{ height: "20px" }} />
+                {/* <div style={{ height: "50px" }} /> */}
+                {/* <button styleName="link" onClick={()=>dispatch(setMode(eMode.USER_OPTIONS))}>Forgotten License Key</button> */}
             </div>
         </DraggablePanel>
 
@@ -220,7 +227,7 @@ const DialogueUser = () => {
 
                 <div style={{ height: "20px" }} />
 
-                <div style={{ fontWeight: "normal" }}>Licence Key</div>
+                <div style={{ fontWeight: "normal" }}>Licence key</div>
                 <br /><input style={{ width: "100%" }} name="password" type="text" className="rounded" ref={inputRefSignInPassword} />
 
                 <div style={{ height: "50px" }} />
@@ -230,9 +237,11 @@ const DialogueUser = () => {
                     <button styleName="primary narrow" onClick={onSignIn}>Submit</button>
                 </div>
 
-                <div style={center}>
+                <div style={{ height: "20px" }} />
+
+                {/* <div style={center}>
                     <button styleName="secondary narrow red" onClick={()=>dispatch(setMode(eMode.USER_OPTIONS))}>Forgotten License Key</button>
-                </div>
+                </div> */}
                 
 
             </div>
@@ -271,12 +280,12 @@ const DialogueUser = () => {
 
                 <div style={{ display: "flex" }}>
                     <div style={flex}>
-                        <div style={{ fontWeight: "normal" }}>Licence Key</div>
+                        <div style={{ fontWeight: "normal" }}>Licence key</div>
                         <br /><input type="text" className="rounded" ref={inputRefRegisterPassword} />
                     </div>
                     {/* <div style={{ height: "30px" }} /> */}
                     <div style={flex}>
-                        <div style={{ fontWeight: "normal" }}>Re Enter Licence Key</div>
+                        <div style={{ fontWeight: "normal" }}>Re-enter licence key</div>
                         <br /><input type="text" className="rounded" ref={inputRefRegisterPassword2} />
                     </div>
                 </div>

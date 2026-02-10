@@ -1,12 +1,34 @@
 import { useState, useEffect, useRef } from "react";
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux';
 import CSSModules from 'react-css-modules';
 import { eMode } from "../constants";
 import styles from '../styles';
 import DraggablePanel from "./DraggablePanel";
 import Swal from 'sweetalert2';
-
 import {
+    showLoader,
+    setDir,
+    cancelMode,
+    showPhonetics,
+    addPhonetic,
+} from "../features/viewSlice";
+import {
+    resetCanvas,
+    setOrientation,
+    fileLoadUpdate,
+} from "../features/canvasSlice";
+import { cloneDeep, makeSVGgrabbable, makeSVGgrabbableReset } from "../utils";
+import html2canvas from "html2canvas";
+
+// Import both file managers
+import * as electronFileManager from '../services/projectFileManangerElectron';
+import * as dbFileManager from '../services/projectFileManangerDB';
+
+// Detect if running in Electron and use appropriate file manager
+const isElectron = typeof window !== 'undefined' && window.electronAPI;
+const fileManager = isElectron ? electronFileManager : dbFileManager;
+
+const {
     getProjectList,
     getProject,
     storeProject,
@@ -14,30 +36,7 @@ import {
     createDir,
     deleteDir,
     getDirs,
-// } from '../services/projectFileManangerCloud';
-// } from '../services/projectFileManangerDB';
-} from '../services/projectFileManangerElectron';
-
-import { 
-    showLoader,
-    setDir,
-    cancelMode, 
-    showPhonetics,
-    addPhonetic,
-} from "../features/viewSlice";
-
-import { 
-    resetCanvas,
-    setOrientation,
-    // setTemplateData,
-    // setImageData,
-    // setTextData,
-    fileLoadUpdate,
-} from "../features/canvasSlice";
-
-import { cloneDeep, makeSVGgrabbable, makeSVGgrabbableReset } from "../utils";
-import html2canvas from "html2canvas";
-
+} = fileManager;
 
 function DialogueProject({ mode }) {
 
@@ -310,12 +309,14 @@ function DialogueProject({ mode }) {
             {confirmName &&
                 <>
                     <div styleName="dialogue-inner align-center" style={{ display: "block" }}>
-                        <br /><br /><br /><br />
-                        <span style={{ margin: "20px 0" }}>Please enter folder name?</span>
-                        &nbsp;&nbsp;
-                        <input type="text" style={{ width: "300px" }} ref={inputRefCreateFolder} />
-                        <br /><br /><br /><br />
-                        <div>
+                        {/* <br /><br /><br /><br /> */}
+
+                        <div style={{marginTop:"5%"}}>
+                            <div style={{ margin: "20px 0" }}>Please enter folder name?</div>
+                            <input type="text" style={{ width: "300px" }} ref={inputRefCreateFolder} />
+                        </div>
+                        
+                        <div style={{marginTop:"5%"}}>
                             <button styleName="primary narrow" onClick={() => setConfirmName(false)}>Cancel</button>
                             <button styleName="primary narrow" onClick={onCreateDirClick}>Submit</button>
                         </div>

@@ -1,7 +1,7 @@
 {
   "name": "NDP3 Speech Builder",
   "productName": "NDP3 Speech Builder",
-  "version": "2.0.53",
+  "version": "2.0.54",
   "description": "NDP3 Speech Builder",
   "main": "src/main.js",
   "scripts": {

@@ -9,23 +9,25 @@ button.secondary {
   width: 240px;
   height: 50px;
   background-size: contain;
-  border: 0;
   padding: 0;
-  border-radius: 8px;
+  border-radius: 99px;
   margin: 8px;
   font-size: 16px;
   font-weight: 600;
-  color: var(--color-button-primary-text);
   /* text-transform: uppercase; */
 }
 
 .primary {
   background-color: var(--color-button-primary);
+  border: 0;
+  color: var(--color-button-primary-text);
   /* box-shadow: 2px 4px 3px #00000022; */
 }
 
 .secondary {
   background: transparent;
+  border: solid 2px var(--color-button-primary);
+  color: var(--color-white);
   /* box-shadow: 2px 4px 3px #00000022; */
 }
 
@@ -33,14 +35,21 @@ button.secondary {
     background: transparent;
     background-size: contain;
     border: 0;
-    padding: 1px 10px 12px 15px;
-    border-radius: 8px;
+    padding: 1px 25px 12px 25px;
+    border-radius: 99px;
     margin: 8px 30px;
     font-size: 16px;
     font-weight: 600;
     color: var(--color-button-primary-text);
     /* text-transform: uppercase; */
     border: solid 2px var(--color-button-tertiary);
+}
+
+.link {
+  font-size: 16px;
+  background: transparent;
+  color: var(--color-button-link);
+  text-decoration: underline;
 }
 
 button .small {
@@ -67,6 +76,11 @@ button .small {
   border: 2px var(--color-button-red-border) solid !important;
   color: var(--color-button-red-text);
   box-shadow: none;
+}
+
+.primary.green {
+  background-color: var(--color-button-green-bg);
+  color: var(--color-button-green-text);
 }
 
 /* --- FILTER --------------------------- */

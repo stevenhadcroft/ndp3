@@ -50,12 +50,14 @@ export const colors = {
   // Buttons
   button: {
     primary: brandColors.blue.primary,
+    primaryDark: brandColors.blue.dark,
     primaryText: brandColors.white,
     secondary: 'transparent',
     secondaryText: brandColors.white,
     tertiary: brandColors.orange.light,
     tertiaryText: brandColors.white,
-    greenBg: brandColors.green.primary,
+    greenBg: brandColors.blue.dark,
+    greenText: brandColors.white,
     greenUiBg: brandColors.green.material,
     redBg: brandColors.red.primary,
     redBorder: brandColors.orange.dark,

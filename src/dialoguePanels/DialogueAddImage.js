@@ -16,6 +16,7 @@ import {
 	setSearch,
 	showPhonetics,
 	addPhonetic,
+	showLoader,
 } from "../features/viewSlice";
 
 import {
@@ -31,7 +32,7 @@ import DraggablePanel from "./DraggablePanel";
 export const Spinner = () => {
 	return (
 		<div style={{ zIndex: 999999, position: "absolute", marginLeft: "30px", marginTop: "-120px", XXopacity: 0.5 }}>
-			<img src="../imgs/spinner.svg" width="80px" height="80px" />
+			<img src="./imgs/spinner.svg" width="80px" height="80px" />
 		</div>
 	);
 };
@@ -179,17 +180,25 @@ const DialogueAddImage = () => {
 
 	// HANDLERS ---------------------------------------------------
 	const onLoadClicked = (ind) => {
+		dispatch(showLoader(true));
 		const url = window.IMAGE_FILES[ind].url;
 		const filename = window.IMAGE_FILES[ind].filename;
 		const images = canvas.images || [];
 		const zIndex = images.length > 0 ? getHighestZdepth(images) : 1;
-		const newImage = { type: "image", x: 250, y: 250, angle: 0, size: 300, url, zIndex };
+
+		// Calculate center position based on canvas orientation
+		const orientation = canvas.orientation || "portrait";
+		const centerX = orientation === "portrait" ? 384 : 550;
+		const centerY = orientation === "portrait" ? 550 : 384;
+
+		const newImage = { type: "image", x: centerX, y: centerY, angle: 0, size: 300, url, zIndex };
 		const index = images.length; // index of new image
 		dispatch(addImage(newImage));
 		loadImage(url, images.length, (key, svg) => {
 			// add id to SVG so it can xreffed for stored colour later
 			svg = svg.replace('<svg ', `<svg filename="${filename}" `);
 			dispatch(updateImageData({ index, key, value: svg }));
+			dispatch(showLoader(false));
 		});
 		dispatch(cancelMode());
 	};

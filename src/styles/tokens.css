@@ -52,7 +52,8 @@
   --color-button-secondary-text: var(--color-white);
   --color-button-tertiary: var(--color-orange-light);
   --color-button-tertiary-text: var(--color-white);
-  --color-button-green-bg: var(--color-green-primary);
+  --color-button-green-bg: var(--color-blue-dark);
+  --color-button-green-text: var(--color-white);
   --color-button-green-ui-bg: var(--color-green-material);
   --color-button-red-bg: var(--color-red-primary);
   --color-button-red-border: var(--color-orange-dark);

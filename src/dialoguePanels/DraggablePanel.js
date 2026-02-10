@@ -11,7 +11,7 @@ function dragElement(elmnt) {
 		pos2 = 0,
 		pos3 = 0,
 		pos4 = 0;
-		if (!elmnt) return false;
+	if (!elmnt) return false;
 
 
 	function dragMouseDown(e) {
@@ -46,7 +46,7 @@ function dragElement(elmnt) {
 		elmnt.ontouchstart = dragTouchStart;
 	}
 
-	
+
 
 	function elementDrag(e) {
 		e = e || window.event;
@@ -65,7 +65,7 @@ function dragElement(elmnt) {
 		localStorage.setItem(Constants.LOCAL_DATA_CONFIG + "dragPanelPosY" + elmnt.id, elmnt.offsetTop - pos2);
 	}
 
-	
+
 
 	function elementMove(e) { /// DO
 		var evt = (typeof e.originalEvent === 'undefined') ? e : e.originalEvent;
@@ -95,7 +95,7 @@ function dragElement(elmnt) {
 }
 
 // function DraggablePanel(props) {
-function DraggablePanel({id, title, colour, type, children, buttons, central}) {
+function DraggablePanel({ id, title, colour, type, children, buttons, central }) {
 	const x = (window.innerWidth) / 2 - 150;
 	const y = 50; //(window.innerHeight) / 2;
 	const winx = localStorage.getItem(Constants.LOCAL_DATA_CONFIG + "dragPanelPosX" + id) || x;
@@ -106,21 +106,21 @@ function DraggablePanel({id, title, colour, type, children, buttons, central}) {
 	}, []);
 
 	return (
-		<div id={id} 
-			styleName={`panel ${type || ""}`} 
+		<div id={id}
+			styleName={`panel ${type || ""}`}
 			style={
 				central
-				? { left: "50%", top:"50%", transform: "translate(-50%, calc(-50% - 30px))", backgroundColor:colour || null}
-				: { left: `${winx}px`, top: `${winy}px`, backgroundColor:colour || null}
+					? { left: "50%", top: "50%", transform: "translate(-50%, calc(-50% - 30px))", backgroundColor: colour || null }
+					: { left: `${winx}px`, top: `${winy}px`, backgroundColor: colour || null }
 			}
-			>
+		>
 			<div id={`${id}-header`} styleName="dialogue-header">
-				<span styleName="title" style={{flex:"1"}}>{title}</span>
-					{buttons}
+				<span styleName="title" style={{ flex: "1" }}>{title}</span>
+				{buttons}
 			</div>
 			{children}
 		</div>
 	);
 }
 
-export default CSSModules(DraggablePanel, styles, {allowMultiple:true});
+export default CSSModules(DraggablePanel, styles, { allowMultiple: true });

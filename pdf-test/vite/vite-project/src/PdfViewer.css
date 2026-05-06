@@ -1,0 +1,334 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.pdf-viewer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #012457;
+  color: #ccc;
+  font-family: sans-serif;
+  position: relative;
+}
+
+/* Toolbar */
+.pdf-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: #2d2d2d;
+  border-bottom: 1px solid #444;
+  flex-shrink: 0;
+}
+
+.pdf-title {
+  font-size: 13px;
+  color: #aaa;
+}
+
+.pdf-page-info {
+  margin-left: auto;
+  font-size: 13px;
+  color: #888;
+}
+
+/* Body */
+.pdf-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Sidebar */
+.pdf-sidebar {
+  width: 166px;
+  flex-shrink: 0;
+  background: #1a4a8a;
+  overflow-y: auto;
+  padding: 10px 16px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: min-content;
+  align-content: start;
+  gap: 10px;
+}
+
+.pdf-sidebar-handle {
+  flex-shrink: 0;
+  width: 6px;
+  cursor: col-resize;
+  background: transparent;
+  transition: background 0.15s;
+  position: relative;
+}
+
+.pdf-sidebar-handle:hover {
+  background: transparent;
+}
+
+.pdf-sidebar-handle-tab {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 26px;
+  height: 54px;
+  background: rgb(0, 153, 204);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: col-resize;
+  color: #fff;
+  transition: background 0.15s;
+  z-index: 1;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+
+.pdf-sidebar-handle:hover .pdf-sidebar-handle-tab,
+.pdf-sidebar-handle-tab:hover {
+  background: #0a52a0;
+}
+
+.pdf-sidebar::-webkit-scrollbar { width: 17px; }
+.pdf-sidebar::-webkit-scrollbar-track { background: #ddd; border-radius: 99px; }
+.pdf-sidebar::-webkit-scrollbar-thumb { background: #0F6ACB; border-radius: 99px; border: 2px solid #ddd; }
+
+.pdf-thumb {
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+  align-self: start;
+  min-width: 0;
+  min-height: 0;
+}
+
+.pdf-thumb:hover  { border-color: #888; }
+.pdf-thumb.active { border-color: #4a9eff; }
+
+.pdf-thumb img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pdf-thumb-label {
+  display: block;
+  text-align: center;
+  font-size: 13px;
+  color: #fff;
+  padding: 2px 0 3px;
+  background: #1a4a8a;
+}
+
+/* Main view */
+.pdf-main {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 8px;
+  background: #012457;
+  min-width: 0;
+  position: relative;
+}
+
+.pdf-main::-webkit-scrollbar { width: 17px; height: 17px; }
+.pdf-main::-webkit-scrollbar-track { background: #ddd; border-radius: 99px; }
+.pdf-main::-webkit-scrollbar-thumb { background: #0F6ACB; border-radius: 99px; border: 2px solid #ddd; }
+
+.pdf-canvas-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.pdf-canvas {
+  display: block;
+}
+
+.pdf-highlight-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.pdf-search-highlight {
+  position: absolute;
+  background: none;
+  border-radius: 2px;
+  outline: 3px solid red;
+  box-sizing: border-box;
+}
+
+.pdf-search-highlight.active {
+  outline: 4px solid red;
+}
+
+.pdf-placeholder {
+  color: #fff;
+  font-size: 15px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Zoom controls */
+.zoom-controls {
+  position: absolute;
+  bottom: 26px;
+  right: 44px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.zoom-controls button {
+  background: rgb(0, 153, 204);
+  border: none;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  transition: background 0.15s;
+}
+
+.zoom-controls button:hover {
+  background: #0a52a0;
+}
+
+.zoom-controls button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.zoom-controls button:disabled:hover {
+  background: rgb(0, 153, 204);
+}
+
+/* Search panel */
+.pdf-search-panel {
+  position: absolute;
+  top: 22px;
+  right: 30px;
+  z-index: 10;
+}
+
+.pdf-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #1a1a2e;
+  border: 3px solid #4a9eff;
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.pdf-search-bar input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 24px;
+  width: 220px;
+  padding: 8px 6px;
+}
+
+.pdf-search-bar input::placeholder {
+  color: #888;
+}
+
+.pdf-search-count {
+  font-size: 16px;
+  color: #aaa;
+  white-space: nowrap;
+  min-width: 60px;
+  text-align: center;
+}
+
+.pdf-search-bar button {
+  background: transparent;
+  border: none;
+  color: #ccc;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 4px;
+  padding: 0;
+}
+
+.pdf-search-bar button:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.pdf-search-bar button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.pdf-search-bar button:disabled:hover {
+  background: transparent;
+}
+
+.pdf-search-bar .phonetic-toggle {
+  font-size: 24px;
+  width: 44px;
+  height: 44px;
+  font-weight: normal;
+  text-decoration: underline;
+}
+
+.pdf-search-bar button.phonetic-active {
+  background: rgba(74, 158, 255, 0.3);
+  color: #4a9eff;
+  outline: 2px solid #4a9eff;
+  border-radius: 4px;
+}
+
+.phonetic-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+  margin-top: 6px;
+  background: #1a1a2e;
+  border: 3px solid #4a9eff;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.phonetic-btn {
+  background: #2a2a4e;
+  border: 1px solid #4a9eff44;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 18px;
+  padding: 8px 4px;
+  cursor: pointer;
+  text-align: center;
+  font-family: inherit;
+  min-width: 42px;
+}
+
+.phonetic-btn:hover {
+  background: #4a9eff44;
+  border-color: #4a9eff;
+}
+
+.phonetic-spacer {
+  min-width: 42px;
+}

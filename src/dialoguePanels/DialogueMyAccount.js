@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import CSSModules from 'react-css-modules';
-import styles from '../styles';
+import { cx } from '../styles';
 
 // import { cancelMode, setUserName } from "./actions";
 
@@ -31,7 +30,7 @@ const DialogueMyAccount = () => {
 	//--------------------------------------------------------------
     const Buttons = (
         <>
-            <button styleName="primary narrow" onClick={()=>dispatch(cancelMode())}>Done</button>
+            <button className={cx("primary narrow")} onClick={()=>dispatch(cancelMode())}>Done</button>
         </>
     )
 
@@ -41,26 +40,26 @@ const DialogueMyAccount = () => {
 	return (
         <DraggablePanel type="fullscreen" buttons={Buttons}>
             <div>
-                <div styleName="dark-background">
+                <div className={cx("dark-background")}>
                     <h3>Status</h3>
                     <div>Admin user</div>
                 </div>
-                
-                <div styleName="dark-background">
+
+                <div className={cx("dark-background")}>
                     <h3>Users</h3>
-                    <p>This account has 3 associated sub accounts.</p> 
-                    <button styleName="primary" onClick={onSubmit}>Show primary users</button>
+                    <p>This account has 3 associated sub accounts.</p>
+                    <button className={cx("primary")} onClick={onSubmit}>Show primary users</button>
                     {/* <UserList/> */}
                     {/* <button className="menu-button first" onClick={onSubmit}>Show secondary users</button>
                     <UserList/> */}
-                    
+
                     {/* To add more accounts please contact NDP3 */}
                 </div>
 
-                <div styleName="dark-background">
-                    <h3>Transfer licence</h3> 
-                    <p>Click below to unregister the license from this device. Once unregistered you can re-register the same licence on a different device.</p> 
-                    <button styleName="primary" onClick={onUnlink}>{view.userName ? "Unregister" : "Register"} Device</button>
+                <div className={cx("dark-background")}>
+                    <h3>Transfer licence</h3>
+                    <p>Click below to unregister the license from this device. Once unregistered you can re-register the same licence on a different device.</p>
+                    <button className={cx("primary")} onClick={onUnlink}>{view.userName ? "Unregister" : "Register"} Device</button>
                     <p>Speech Builder will not run without an active licence.</p>
                 </div>
 
@@ -71,7 +70,7 @@ const DialogueMyAccount = () => {
 	);
 }
 
-export default CSSModules(DialogueMyAccount, styles, {allowMultiple:true});
+export default DialogueMyAccount;
 
 
 function UserList({dispatch}) {

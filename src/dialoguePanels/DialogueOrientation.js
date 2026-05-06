@@ -1,7 +1,5 @@
 import { useDispatch } from 'react-redux'
-import CSSModules from 'react-css-modules';
-import styles from '../styles';
-import useDefaultTemplate from "../hooks/useDefaultTemplate"; 
+import useDefaultTemplate from "../hooks/useDefaultTemplate";
 
 import { 
 	cancelMode
@@ -48,4 +46,4 @@ const DialogueOrientation = () => {
 	);
 }
 
-export default CSSModules(DialogueOrientation, styles, {allowMultiple:true});
+export default DialogueOrientation;

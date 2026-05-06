@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react"; // Add useRef import
 import { useSelector, useDispatch } from 'react-redux'
-import CSSModules from 'react-css-modules';
-import styles from '../styles';
+import { cx } from '../styles';
 import { eMode, eDirection } from "../constants";
 import { colors, withOpacity, opacity, brandColors } from "../styles/tokens/colors";
 import useCanvasFileLoader from "../hooks/useCanvasFileLoader"; 
@@ -304,21 +303,21 @@ const Canvas = () => {
 	const canvasInnerStyle = { transform: `scale(${zoom}) translate(${panx}px, ${pany}px)` };
 	
 	return (
-		<div 	styleName="page" 
-				onTouchMove={onTouchMove} 
-				onMouseMove={onMouseMove} 
-				onMouseUp={onUp} 
-				onTouchEnd={onUp}>	
+		<div 	className={cx("page")}
+				onTouchMove={onTouchMove}
+				onMouseMove={onMouseMove}
+				onMouseUp={onUp}
+				onTouchEnd={onUp}>
 
-			<div 	id="canvas" 
-					styleName={`canvas ${orientation}`} 
+			<div 	id="canvas"
+					className={cx(`canvas ${orientation}`)}
 					style={canvasStyle}
 					ref={canvasRef}
 			>
 				<div id="canvas-inner" style={canvasInnerStyle}>
 					{template &&
-						<div id='template' 
-							styleName='template'
+						<div id='template'
+							className={cx('template')}
 							style={templateStyle} // NEEDS STYLE width/height for LANDSCAPE print
 							onMouseDown={evt => onImageClick(evt, 0, eMode.EDIT_TEMPLATE)}
 							onTouchStart={evt => onImageTouch(evt, 0, eMode.EDIT_TEMPLATE)}
@@ -378,25 +377,23 @@ const Canvas = () => {
 
 			{/* controls */}
 			{!view.fullScreen &&
-			<div styleName={view.mode === eMode.SAVE_PROJECT ? "saving" : null}>
-				{/* <div onClick={onUnlock} style={{marginLeft:"-100px"}} styleName="canvas-icon template-lock"><img src={`./imgs/gui/icon-lock-${view.templateLock ? "open" : "closed"}.svg`} alt=""/></div> */}
-				{/* <div onMouseDown={onUnlock} style={{marginLeft:"-100px"}} styleName="canvas-icon template-lock"><img src={`./imgs/gui/icon-lock-${view.templateLock ? "open" : "closed"}.svg`} alt=""/></div> */}
-				<div onMouseDown={evt => onPan(eDirection.UP)} styleName="canvas-icon pan up"/>
-				<div onMouseDown={evt => onPan(eDirection.DOWN)} styleName="canvas-icon pan down"/>
-				<div onMouseDown={evt => onPan(eDirection.LEFT)} styleName="canvas-icon pan left"/>
-				<div onMouseDown={evt => onPan(eDirection.RIGHT)} styleName="canvas-icon pan right"/>
-				<div onMouseDown={evt => onPan(eDirection.IN)} styleName="canvas-icon zoom in">+</div>
-				<div onMouseDown={evt => onPan(eDirection.OUT)} styleName="canvas-icon zoom out">-</div>
-				<div onMouseDown={evt => onPan(eDirection.RESET)} styleName="canvas-icon reset"/>
+			<div className={cx(view.mode === eMode.SAVE_PROJECT ? "saving" : null)}>
+				<div onMouseDown={evt => onPan(eDirection.UP)} className={cx("canvas-icon pan up")}/>
+				<div onMouseDown={evt => onPan(eDirection.DOWN)} className={cx("canvas-icon pan down")}/>
+				<div onMouseDown={evt => onPan(eDirection.LEFT)} className={cx("canvas-icon pan left")}/>
+				<div onMouseDown={evt => onPan(eDirection.RIGHT)} className={cx("canvas-icon pan right")}/>
+				<div onMouseDown={evt => onPan(eDirection.IN)} className={cx("canvas-icon zoom in")}>+</div>
+				<div onMouseDown={evt => onPan(eDirection.OUT)} className={cx("canvas-icon zoom out")}>-</div>
+				<div onMouseDown={evt => onPan(eDirection.RESET)} className={cx("canvas-icon reset")}/>
 			</div>
 			}
-			{/* 
+			{/*
 			----------------------------------------------------
-			BOXVIEW ONLY - so it appears outside of canvas area 
-			---------------------------------------------------- 
+			BOXVIEW ONLY - so it appears outside of canvas area
+			----------------------------------------------------
 			 */}
 
-			<div styleName={`canvas-controls ${orientation}`} style={{ opacity:"0.2", pointerEvents: "none", transform: `scale(${canvasScale})`, left:`${canvasLeft}px`}}>			
+			<div className={cx(`canvas-controls ${orientation}`)} style={{ opacity:"0.2", pointerEvents: "none", transform: `scale(${canvasScale})`, left:`${canvasLeft}px`}}>
 				<div style={{transform:`scale(${zoom}) translate(${panx}px, ${pany}px)`}}>
 					{images.map((item, index) => {
 						const id = `image-viewonly-${index}`;
@@ -418,4 +415,4 @@ const Canvas = () => {
 	);
 }
 
-export default CSSModules(Canvas, styles, {allowMultiple:true});
+export default Canvas;

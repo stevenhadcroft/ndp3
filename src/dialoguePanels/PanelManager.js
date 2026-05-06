@@ -12,54 +12,38 @@ import DialogueMyAccount from "./DialogueMyAccount";
 import DialogueUser from "./DialogueUser";
 import DialogueUpdateProgress from "./DialogueUpdateProgress";
 
-import CSSModules from 'react-css-modules';
-import styles from '../styles';
-// import DialogueEnterLicense from "./DialogueEnterLicense";
+import { cx } from '../styles';
+
+const PANELS = {
+    [eMode.CONFIRM_NEW]:      { component: DialogueConfirmNew,     tinted: true  },
+    [eMode.SET_ORIENTATION]:  { component: DialogueOrientation,    tinted: true  },
+    [eMode.SAVE_PROJECT]:     { component: DialogueProject,        tinted: true,  props: { mode: 'save' } },
+    [eMode.SAVE_BEFORE_NEW]:  { component: DialogueProject,        tinted: false, props: { mode: 'save' } },
+    [eMode.OPEN_PROJECT]:     { component: DialogueProject,        tinted: true,  props: { mode: 'open' } },
+    [eMode.USER_SIGN_IN]:     { component: DialogueUser,           tinted: false, props: { mode: 'sign-in' } },
+    [eMode.USER_REGISTER]:    { component: DialogueUser,           tinted: false, props: { mode: 'sign-register' } },
+    [eMode.USER_OPTIONS]:     { component: DialogueUser,           tinted: false, props: { mode: 'options' } },
+    [eMode.EDIT_TEXT]:        { component: DialogueText,           tinted: false },
+    [eMode.ADD_IMAGE]:        { component: DialogueAddImage,       tinted: true  },
+    [eMode.CHOOSE_TEMPLATE]:  { component: DialogueChooseTemplate, tinted: true  },
+    [eMode.COLOUR_IMAGE]:     { component: DialogueAddColour,      tinted: false },
+    [eMode.COLOUR_TEXT]:      { component: DialogueAddColour,      tinted: false },
+    [eMode.MY_ACCOUNT]:       { component: DialogueMyAccount,      tinted: false },
+    [eMode.APP_UPDATING]:     { component: DialogueUpdateProgress, tinted: false },
+};
 
 const App = () => {
-	const view = useSelector(state => state.view);
-	return (
-		<>
-            {(
-                view.mode === eMode.SET_ORIENTATION
-                || view.mode === eMode.CONFIRM_NEW
-                || view.mode === eMode.OPEN_PROJECT
-                || view.mode === eMode.SAVE_PROJECT
-                || view.mode === eMode.ADD_IMAGE
-                || view.mode === eMode.CHOOSE_TEMPLATE
-            ) &&
-                <div styleName="background-tint"/>
-            }
+    const view = useSelector(state => state.view);
+    const panel = PANELS[view.mode];
+    const Panel = panel?.component;
 
-            {view.mode === eMode.CONFIRM_NEW && <DialogueConfirmNew />}
-            {view.mode === eMode.SET_ORIENTATION && <DialogueOrientation />}
-            {(view.mode === eMode.SAVE_PROJECT || view.mode === eMode.SAVE_BEFORE_NEW) &&
-                <DialogueProject mode='save' />
-            }
-            {view.mode === eMode.USER_SIGN_IN && <DialogueUser mode="sign-in" />}
-            {view.mode === eMode.USER_REGISTER && <DialogueUser mode="sign-register" />}
-            {view.mode === eMode.USER_OPTIONS && <DialogueUser mode="options" />}
-            {view.mode === eMode.OPEN_PROJECT && <DialogueProject mode="open" />}
-            {view.mode === eMode.EDIT_TEXT && <DialogueText />}
-            {view.mode === eMode.ADD_IMAGE && <DialogueAddImage />}
-            {view.mode === eMode.CHOOSE_TEMPLATE && <DialogueChooseTemplate />}
-            {view.mode === eMode.COLOUR_IMAGE && <DialogueAddColour />}
-            {view.mode === eMode.COLOUR_TEXT && <DialogueAddColour />}
-            {view.mode === eMode.MY_ACCOUNT && <DialogueMyAccount />}
-            {view.mode === eMode.APP_UPDATING && <DialogueUpdateProgress />}
+    return (
+        <>
+            {panel?.tinted && <div className={cx("background-tint")} />}
+            {Panel && <Panel {...(panel.props || {})} />}
             {view.showPhonetics && <DialogueAddPhonetics />}
-
-            {/* <DialogueUpdateProgress /> */}
-
-            {/* {view.mode === eMode.SET_ORIENTATION && <DialogueOrientation/>} */}
-           
-		</>
-	);
+        </>
+    );
 }
 
-
-export default CSSModules(App, styles, {allowMultiple:true});
-
-
-
-// export default App;
+export default App;

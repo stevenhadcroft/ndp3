@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import CSSModules from 'react-css-modules';
-import styles from '../styles';
+import { cx } from '../styles';
 import { eMode, FONTLIST } from "../constants";
 
 // import { 
@@ -74,20 +73,17 @@ const DialogueText = () => {
 	//--------------------------------------------------------------
     const Buttons = (
         <>
-            <button styleName="primary narrow" onClick={()=>dispatch(cancelMode())}>Done</button>
+            <button className={cx("primary narrow")} onClick={()=>dispatch(cancelMode())}>Done</button>
         </>
     )
 
 
     const JustifyButton = ({justify}) => {
+        const isSelected = currentText.justify === justify;
         return (
-                <button styleName="icon" style={{width:"40px", height:"40px"}} onClick={() => dispatch(updateTextData({key:'justify', value:justify}))}>
+                <button className={cx("icon")} onClick={() => dispatch(updateTextData({key:'justify', value:justify}))}>
                     <img src={`./imgs/gui/justify-${justify}.svg`} alt=""
-                        style={{
-                            marginTop: "5px",
-                            transform: "scale(1, 1.5)",
-                            filter: `brightness(0.5) invert(${currentText.justify === justify ? 1 : 0.7})`
-                        }}
+                        className={cx(`text-justify-icon ${isSelected ? "selected" : ""}`)}
                         />
                 </button>
         )
@@ -99,32 +95,31 @@ const DialogueText = () => {
 	return (
 		<DraggablePanel id='dialogue-add-text' title='Edit Text' buttons={Buttons}>
             <div>
-                <div style={{display:"flex"}}>
-                    <select onChange={onChooseFont} styleName="with-phonetic">
-                        {/* <option>Choose Font</option> */}
-                        {FONTLIST.map(fontName => <option selected={fontName === currentText.fontFamily}>{fontName}</option>)}
+                <div className={cx("text-row")}>
+                    <select onChange={onChooseFont} value={currentText.fontFamily || ""} className={cx("with-phonetic")}>
+                        {FONTLIST.map(fontName => <option key={fontName} value={fontName}>{fontName}</option>)}
                     </select>
 
-                    <button styleName="add-phonetic large" onClick={onShowPhonetic} />
+                    <button className={cx("add-phonetic large")} onClick={onShowPhonetic} />
 
-                    <div style={{marginLeft:"12px"}}>
+                    <div className={cx("text-justify-group")}>
                         <JustifyButton justify="left"/>
                         <JustifyButton justify="center"/>
                         <JustifyButton justify="right"/>
                     </div>
                 </div>
-                    
-                <div style={{display:"flex", margin:"20px 0 10px 0"}}>
-                    <span style={{flex:"2", marginRight:"5px"}}>
+
+                <div className={cx("text-row spaced")}>
+                    <span className={cx("text-range-wrapper")}>
                         <input type="range" value={currentText.fontSize} onChange={evt=>dispatch(updateTextData({key:'fontSize', value:evt.target.value}))}/>
                     </span>
-                    <button styleName="icon" onClick={()=>dispatch(updateTextData({key:'bold', value:!currentText.bold}))}>
-                        <span style={{fontSize:"30px", fontWeight:"bold", color:currentText.bold ? "#fff" : "#999"}}>B</span>
+                    <button className={cx("icon")} onClick={()=>dispatch(updateTextData({key:'bold', value:!currentText.bold}))}>
+                        <span className={cx(`text-style-glyph ${currentText.bold ? "active" : ""}`)}>B</span>
                     </button>
-                    <button styleName="icon" onClick={()=>dispatch(updateTextData({key:'italic', value:!currentText.italic}))}>
-                        <span style={{fontSize:"30px", fontWeight:"bold", fontStyle:"italic", color:currentText.italic ? "#fff" : "#999"}}>I</span>
+                    <button className={cx("icon")} onClick={()=>dispatch(updateTextData({key:'italic', value:!currentText.italic}))}>
+                        <span className={cx(`text-style-glyph italic ${currentText.italic ? "active" : ""}`)}>I</span>
                     </button>
-                    <button styleName="icon" onClick={()=>dispatch(setMode(eMode.COLOUR_TEXT))}>
+                    <button className={cx("icon")} onClick={()=>dispatch(setMode(eMode.COLOUR_TEXT))}>
                         <img src="./imgs/gui/Bitmap_1.png" alt=""/>
                     </button>
                 </div>
@@ -143,6 +138,6 @@ const DialogueText = () => {
 	);
 }
 
-export default CSSModules(DialogueText, styles, {allowMultiple:true});
+export default DialogueText;
 
 

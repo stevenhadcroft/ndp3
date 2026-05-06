@@ -99,7 +99,7 @@
 }
 
 /* add text */
-textarea {
+.panel textarea {
   display: inline-block;
   width: calc(100% - 20px);
   height: 80px;
@@ -162,7 +162,7 @@ textarea {
   color: var(--color-text-inverse);
   width: 100%;
   text-align: center;
-};
+}
 
 
 .panel .close-btn {
@@ -178,14 +178,59 @@ textarea {
   margin-bottom: 15px;
 }
 
-textarea,
-input[type="text"],
-input[type="password"],
-select {
+.panel textarea,
+.panel input[type="text"],
+.panel input[type="password"],
+.panel select {
   padding: 8px 10px;
   font-size: 18px;
   border-radius: 6px;
   border: 0;
+}
+
+/* --------------------------
+dialogue - text editor
+-------------------------- */
+
+.text-row {
+  display: flex;
+}
+
+.text-row.spaced {
+  margin: 20px 0 10px 0;
+}
+
+.text-justify-group {
+  margin-left: 12px;
+}
+
+.text-justify-icon {
+  margin-top: 5px;
+  transform: scale(1, 1.5);
+  filter: brightness(0.5) invert(0.7);
+}
+
+.text-justify-icon.selected {
+  filter: brightness(0.5) invert(1);
+}
+
+.text-range-wrapper {
+  flex: 2;
+  margin-right: 5px;
+}
+
+.text-style-glyph {
+  font-size: 30px;
+  font-weight: bold;
+  color: #999;
+}
+
+.text-style-glyph.italic {
+  font-style: italic;
+}
+
+.text-style-glyph.active {
+  color: var(--color-text-inverse);
 }
 
 /* --------------------------

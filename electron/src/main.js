@@ -23,6 +23,8 @@ for (let file of chechFiles) {
         fsSync.writeFileSync(file[0], file[1], () => { })
     }
 }
+
+
 //-----------------------------------------------
 
 // Configure logging
@@ -81,6 +83,17 @@ autoUpdater.on('download-progress', (progressObj) => {
       total: progressObj.total,
       bytesPerSecond: progressObj.bytesPerSecond,
       version: updateInfo ? updateInfo.version : null // Include version
+  });
+});
+
+autoUpdater.on('error', (err) => {
+  log.error('Update error:', err);
+  dialog.showMessageBox({
+    type: 'error',
+    buttons: ['OK'],
+    title: 'Update Failed',
+    message: 'An error occurred during the update',
+    detail: err.message || 'Unknown error'
   });
 });
 

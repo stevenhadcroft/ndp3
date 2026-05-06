@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux'
-import CSSModules from 'react-css-modules';
-import styles from '../styles';
+import { cx } from '../styles';
 import { getHighestZdepth } from "../utils";
 
 import {
@@ -75,28 +74,27 @@ let Search = () => {
 	// const onContains = () => dispatch(setSearch({logic:eSearchLogic.CONTAINS}));
 
 	return (
-		<div className="search-bar" styleName="margin-bb margin-ll">
+		<div className={cx("search-bar margin-bb margin-ll")}>
 			<span style={{ display: "inline-block", marginBottom: '10px', marginRight: '50px' }}>
-				<span styleName="margin-r">Search</span>
-				<button styleName={`filter ${view.searchFilter === eSearchFilter.PICTURE ? "active" : ""}`} onClick={() => onFilter(eSearchFilter.PICTURE)}>Pictures</button>
-				<button styleName={`filter ${view.searchFilter === eSearchFilter.SOUND ? "active" : ""}`} onClick={() => onFilter(eSearchFilter.SOUND)}>Letter sounds</button>
-				<button styleName={`filter ${view.searchFilter === eSearchFilter.PHONETIC ? "active" : ""}`} onClick={() => onFilter(eSearchFilter.PHONETIC)}>Phonetics</button>
+				<span className={cx("margin-r")}>Search</span>
+				<button className={cx(`filter ${view.searchFilter === eSearchFilter.PICTURE ? "active" : ""}`)} onClick={() => onFilter(eSearchFilter.PICTURE)}>Pictures</button>
+				<button className={cx(`filter ${view.searchFilter === eSearchFilter.SOUND ? "active" : ""}`)} onClick={() => onFilter(eSearchFilter.SOUND)}>Letter sounds</button>
+				<button className={cx(`filter ${view.searchFilter === eSearchFilter.PHONETIC ? "active" : ""}`)} onClick={() => onFilter(eSearchFilter.PHONETIC)}>Phonetics</button>
 			</span>
 
 			<span style={{ display: "inline-block" }}>
-				<span styleName="search-setting">
-					<button styleName={searchLogic === eSearchLogic.BEGINS ? "selected" : ""} onClick={onBegins}>Begins</button>
+				<span className={cx("search-setting")}>
+					<button className={cx(searchLogic === eSearchLogic.BEGINS ? "selected" : "")} onClick={onBegins}>Begins</button>
 					<span style={{ margin: "0 -3px" }}>/</span>
-					<button styleName={searchLogic === eSearchLogic.CONTAINS ? "selected" : ""} onClick={onContains}>Contains</button>
+					<button className={cx(searchLogic === eSearchLogic.CONTAINS ? "selected" : "")} onClick={onContains}>Contains</button>
 				</span>
-				<input type="text" placeholder="type text" styleName="with-phonetic" value={searchInput} onChange={onSearchInput} />
-				<button styleName="add-phonetic" style={{ top: "3px" }} onClick={onShowPhonetic} />
-				<button styleName="search" onClick={onSearch}>Search</button>
+				<input type="text" placeholder="type text" className={cx("with-phonetic")} value={searchInput} onChange={onSearchInput} />
+				<button className={cx("add-phonetic")} style={{ top: "3px" }} onClick={onShowPhonetic} />
+				<button className={cx("search")} onClick={onSearch}>Search</button>
 			</span>
 		</div>
 	)
 }
-Search = CSSModules(Search, styles, { allowMultiple: true });
 
 
 //--------------------------------------------------------------
@@ -113,8 +111,8 @@ let CategoryChooser = () => {
 	};
 
 	return (
-		<div styleName="margin-b margin-ll">
-			<span styleName="margin-r">Show</span>
+		<div className={cx("margin-b margin-ll")}>
+			<span className={cx("margin-r")}>Show</span>
 			<select onChange={onChooseCategory}>
 				{Constants.IMAGE_CATEGORIES.map((category, index) => {
 					const selected = view.searchCategory === Constants.IMAGE_CATEGORIES[index].title;
@@ -124,7 +122,6 @@ let CategoryChooser = () => {
 		</div>
 	)
 }
-CategoryChooser = CSSModules(CategoryChooser, styles, { allowMultiple: true });
 
 
 //--------------------------------------------------------------
@@ -149,7 +146,7 @@ let ImageList = () => {
 			// <LazyLoad height={Constants.POT_SIZE} once>
 			<div>
 				<img key={index}
-					styleName={`cell ${index === selectedIndex ? 'selected' : ''}`}
+					className={cx(`cell ${index === selectedIndex ? 'selected' : ''}`)}
 					src={item.url}
 					data-index={index}
 					data-imagelibraryindex={item.imageLibraryIndex}
@@ -161,13 +158,12 @@ let ImageList = () => {
 					}}
 					/>
 				{/* {!loaded[index] && <Spinner />} */}
-				<div styleName="cell-label">{item.viewTitle}</div>
+				<div className={cx("cell-label")}>{item.viewTitle}</div>
 			</div>
 			// </LazyLoad>
 		)
 		)
 }
-ImageList = CSSModules(ImageList, styles, { allowMultiple: true });
 
 
 //--------------------------------------------------------------
@@ -208,8 +204,8 @@ const DialogueAddImage = () => {
 	//--------------------------------------------------------------
 	const Buttons = (
 		<>
-			<button styleName="primary narrow" onClick={() => dispatch(cancelMode())}>Back to main</button>
-			<button styleName="primary narrow" onClick={() => onLoadClicked(localSelectedIndex)}>Use selected</button>
+			<button className={cx("primary narrow")} onClick={() => dispatch(cancelMode())}>Back to main</button>
+			<button className={cx("primary narrow")} onClick={() => onLoadClicked(localSelectedIndex)}>Use selected</button>
 		</>
 	)
 
@@ -220,11 +216,11 @@ const DialogueAddImage = () => {
 		<DraggablePanel id="add-image" title="Add Image" type="fullscreen" buttons={Buttons}>
 			<CategoryChooser />
 			<Search />
-			<div styleName="dialogue-inner" style={{ height: "calc(100% - 205px)" }}>
+			<div className={cx("dialogue-inner")} style={{ height: "calc(100% - 205px)" }}>
 				<ImageList />
 			</div>
 		</DraggablePanel>
 	);
 }
 
-export default CSSModules(DialogueAddImage, styles, { allowMultiple: true });
+export default DialogueAddImage;

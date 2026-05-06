@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { eMode } from "../constants";
-import CSSModules from "react-css-modules";
+import { makeCx } from "../styles";
 import buttonStyles from "../styles/buttons.module.css";
 import menuStyles from "../styles/menu.module.css";
 import uiStyles from "../styles/ui.module.css";
@@ -17,29 +17,12 @@ import {
 import {unlinkMachine} from '../services/localLicenseMananger';
 
 const styleModules = { ...buttonStyles, ...menuStyles, ...uiStyles };
+const cx = makeCx(styleModules);
 
 const Header = (props) => {
   const view = useSelector((state) => state.view);
   const dispatch = useDispatch();
-  // const mode = view.mode;
   const [version, setVersion] = useState('');
-
-  // const onSetMode = (m) => dispatch(setMode(m));
-
-  // const onNewProject = (orientation) => {
-  //   window.orientation = orientation; // TODO IMPROVE
-  //   if (window.undoHistory && window.undoHistory.length > 0) {
-  //     dispatch(setMode(eMode.NEW_PROJECT));
-  //   } else {
-  //     dispatch(newProject());
-  //   }
-  //   dispatch(setMenuOpen(false));
-  // };
-
-  // const onMenuClose = () => {
-  //   dispatch(setMenuOpen(false));
-  //   // ()=>onSetMode(null)
-  // };
 
   const onSignOut = () => {
     dispatch(showLoader(false));
@@ -74,20 +57,20 @@ const Header = (props) => {
     fetchVersion();
   }, []);
 
-  let Buttons = () => {
+  const Buttons = () => {
     return (
-      <div styleName="menu-container" style={{ width: "100%" }}>
+      <div className={cx("menu-container")} style={{ width: "100%" }}>
 
         {view.userIsAuth &&
         <div style={{ padding: "0 10px" }}>
-          <button styleName="menu-row" onClick={onSignOut}>
+          <button className={cx("menu-row")} onClick={onSignOut}>
             <img src={`./imgs/gui/sign-out.png`}/> Sign out
           </button>
         </div>
         }
 
         <div style={{ padding: "0 10px" }}>
-          <button styleName="menu-row" onClick={onCloseApp}>
+          <button className={cx("menu-row")} onClick={onCloseApp}>
             <img src={`./imgs/gui/quit-app.png`}/> Quit NDP3 Speech Builder
           </button>
         </div>
@@ -95,37 +78,32 @@ const Header = (props) => {
         <div style={{ position:"absolute", padding:"20px", bottom:"80px", fontSize: "12px" }}>
           Version {version}
         </div>
-        
+
       </div>
     );
   };
-  Buttons = CSSModules(Buttons, styleModules, { allowMultiple: true });
 
   const imgsrc = view.showMenuPopup ? "./imgs/gui/close.png" : "./imgs/gui/menu.png";
   const headstr = view.showMenuPopup ? <span style={{marginLeft:"-16px"}}>Close menu</span> : <><strong>NDP3</strong><sup>&reg;</sup> Speech Builder</>;
   return (
     <header>
 
-      {!view.fullScreen && 
-      <div styleName="menu-header">
-        <button styleName="menutab" onClick={onMenuOpen}><img src={imgsrc} alt=""/></button>
-        <button styleName="menutab" >
-          <span styleName="title">{headstr}</span>
+      {!view.fullScreen &&
+      <div className={cx("menu-header")}>
+        <button className={cx("menutab")} onClick={onMenuOpen}><img src={imgsrc} alt=""/></button>
+        <button className={cx("menutab")} >
+          <span className={cx("title")}>{headstr}</span>
         </button>
       </div>
       }
 
       {/* -------- POPUP -------- */}
-      <div styleName={`bg-panel ${view.showMenuPopup ? "open" : "closed"}`}>
-        <div styleName="popup-header"></div>
+      <div className={cx(`bg-panel ${view.showMenuPopup ? "open" : "closed"}`)}>
+        <div className={cx("popup-header")}></div>
         <Buttons />
-        {/* <button styleName="icon small" onClick={onMenuClose} style={{ top: "10px", left: "5px", position: "absolute" }}>
-          <img src="./imgs/gui/close_dark.png" alt="" />
-        </button> */}
       </div>
-      {/* )} */}
     </header>
   );
 };
 
-export default CSSModules(Header, styleModules, { allowMultiple: true });
+export default Header;

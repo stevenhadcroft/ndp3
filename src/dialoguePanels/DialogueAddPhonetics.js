@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useDispatch } from 'react-redux'
-import CSSModules from 'react-css-modules';
-import styles from '../styles';
+import { cx } from '../styles';
 import { Constants } from "../constants";
 import DraggablePanel from "./DraggablePanel";
 
-import { 
+import {
     showPhonetics,
     addPhonetic
 } from "../features/viewSlice";
@@ -16,7 +15,7 @@ const DialogueAddPhonetics = () => {
     // HOOKS ---------------------------------------------------
     const dispatch = useDispatch();
     const [selectedIndex, setSelectedIndex] = useState();
-    
+
     // HANDLERS ---------------------------------------------------
     const onClick = (index) => {
         setSelectedIndex(index);
@@ -34,7 +33,7 @@ const DialogueAddPhonetics = () => {
 	//--------------------------------------------------------------
 	const Buttons = (
         <>
-            <button styleName="primary narrow" onClick={onClose}>Done</button>
+            <button className={cx("primary narrow")} onClick={onClose}>Done</button>
         </>
     )
 
@@ -43,11 +42,11 @@ const DialogueAddPhonetics = () => {
 	//--------------------------------------------------------------
     return (
         <DraggablePanel id='add-phonetic' title='Add Phonetic' colour={"rgb(255 94 0)"} buttons={Buttons}>
-            <div styleName="dialogue-inner" style={{position:"relative", width:"540px"}}>
+            <div className={cx("dialogue-inner")} style={{position:"relative", width:"540px"}}>
                 {Constants.PHONETICS.map((item, index) => {
-                    return <div     key={index} 
-                                    styleName={`phonetic-pot ${index === selectedIndex ? 'selected' : ''}`}
-                                    style={{visibility:item.symbol ? "visible" : "hidden"}} 
+                    return <div     key={index}
+                                    className={cx(`phonetic-pot ${index === selectedIndex ? 'selected' : ''}`)}
+                                    style={{visibility:item.symbol ? "visible" : "hidden"}}
                                     onClick = {() => onClick(index)}
                             >{item.symbol}</div>
                 })}
@@ -57,4 +56,4 @@ const DialogueAddPhonetics = () => {
 }
 
 
-export default CSSModules(DialogueAddPhonetics, styles, {allowMultiple:true});
+export default DialogueAddPhonetics;

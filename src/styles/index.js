@@ -7,13 +7,23 @@ import colour from './colour.module.css';
 import toolbarStyles from './toolbar.module.css';
 
 
-export default {
-    ...buttons, 
-    ...dialogue, 
-    ...layout, 
-    ...ui, 
-    ...canvas, 
-    ...colour, 
+const styles = {
+    ...buttons,
+    ...dialogue,
+    ...layout,
+    ...ui,
+    ...canvas,
+    ...colour,
     ...toolbarStyles
 };
 
+export default styles;
+
+// Build a `cx` helper bound to a specific module map. Unknown tokens pass
+// through so global classes still work.
+export const makeCx = (modules) => (str) => {
+    if (!str) return '';
+    return String(str).split(/\s+/).filter(Boolean).map(s => modules[s] || s).join(' ');
+};
+
+export const cx = makeCx(styles);

@@ -1,6 +1,4 @@
 import { useRef } from "react";
-import CSSModules from 'react-css-modules';
-import styles from '../styles';
 import DraggablePanel from "./DraggablePanel";
 
 const DialogueEnterLicense = () => {
@@ -34,4 +32,4 @@ const DialogueEnterLicense = () => {
 	);
 }
 
-export default CSSModules(DialogueEnterLicense, styles, {allowMultiple:true});
+export default DialogueEnterLicense;

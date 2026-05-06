@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux'
-import CSSModules from 'react-css-modules';
-import styles from '../styles';
+import { cx } from '../styles';
 import { Constants } from "../constants";
 
 import { 
@@ -51,25 +50,24 @@ const DialogueChooseTemplate = () => {
     //--------------------------------------------------------------
 	// Search
 	//--------------------------------------------------------------
-	let Search = () => (
-        <div styleName="margin-bb margin-ll">
-            <span styleName="margin-r">Show</span>
+	const Search = () => (
+        <div className={cx("margin-bb margin-ll")}>
+            <span className={cx("margin-r")}>Show</span>
             {Constants.WORKSHEET_CATEGORIES.map(category => {
                 const _stylename = `filter ${(!view.templateFilters && category.title === "All") || (view.templateFilters && view.templateFilters[category.title]) ? "active" : ""}`;
-                return <button styleName={_stylename} onClick={()=>onFilterClicked(category.title)}>{category.title}</button>
+                return <button className={cx(_stylename)} onClick={()=>onFilterClicked(category.title)}>{category.title}</button>
             })}
         </div>
     )
-    Search = CSSModules(Search, styles, {allowMultiple:true});
 
     //--------------------------------------------------------------
 	// Image List
 	//--------------------------------------------------------------
-	let ImageList = () => (
+	const ImageList = () => (
         <>
             {window.WORKSHEET_FILES.map((item, index) => {
                 //filter
-                let show = true;                    
+                let show = true;
                 if (view.templateFilters && !view.templateFilters["All"]){ // a filter is active?
                     for (let filter in view.templateFilters){
                         const filterId = Constants.WORKSHEET_CATEGORIES.find(item => item.title === filter).id;
@@ -82,12 +80,12 @@ const DialogueChooseTemplate = () => {
                         <div key={index} >
                             {/* <LazyLoad height={Constants.POT_SIZE} once> */}
                             {/* </LazyLoad> */}
-                                <img   key={index} 
-                                        styleName={`cell tall ${index === selectedIndex ? 'selected' : ''}`}
-                                        src={item.url} 
+                                <img   key={index}
+                                        className={cx(`cell tall ${index === selectedIndex ? 'selected' : ''}`)}
+                                        src={item.url}
                                         onClick={e => setSelectedIndex(index)}
                                 />
-                                <div styleName="cell-label">{item.itemRoot.getAttribute("Wtitle")}</div>
+                                <div className={cx("cell-label")}>{item.itemRoot.getAttribute("Wtitle")}</div>
                         </div>
                     )
                 } else {
@@ -96,7 +94,6 @@ const DialogueChooseTemplate = () => {
             })}
         </>
     )
-    ImageList = CSSModules(ImageList, styles, {allowMultiple:true});
 
 
     //--------------------------------------------------------------
@@ -104,8 +101,8 @@ const DialogueChooseTemplate = () => {
 	//--------------------------------------------------------------
     const Buttons = (
         <>
-            <button styleName="primary narrow" onClick={()=>dispatch(cancelMode())}>Back to main</button>
-            <button styleName="primary narrow" onClick={()=>onChooseTemplate(selectedIndex)}>Use selected</button>
+            <button className={cx("primary narrow")} onClick={()=>dispatch(cancelMode())}>Back to main</button>
+            <button className={cx("primary narrow")} onClick={()=>onChooseTemplate(selectedIndex)}>Use selected</button>
         </>
     )
 
@@ -115,13 +112,13 @@ const DialogueChooseTemplate = () => {
 	return (
 		<DraggablePanel id='choose-template' title="Choose Template" type="fullscreen" buttons={Buttons}>
             <Search/>
-            <div styleName="dialogue-inner" style={{height:"calc(100% - 142px)"}}>
+            <div className={cx("dialogue-inner")} style={{height:"calc(100% - 142px)"}}>
                 <ImageList/>
             </div>
 		</DraggablePanel>
 	);
 }
 
-export default CSSModules(DialogueChooseTemplate, styles, {allowMultiple:true});
+export default DialogueChooseTemplate;
 
 

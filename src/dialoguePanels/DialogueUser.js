@@ -1,7 +1,6 @@
 import { useRef } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import CSSModules from 'react-css-modules';
-import styles from '../styles';
+import { cx } from '../styles';
 import { eMode } from "../constants";
 import Swal from 'sweetalert2';
 
@@ -190,7 +189,7 @@ const DialogueUser = () => {
 
     const Buttons = (
         <>
-            <button styleName="primary narrow" onClick={() => { }}>Done</button>
+            <button className={cx("primary narrow")} onClick={() => { }}>Done</button>
         </>
     )
 
@@ -206,9 +205,9 @@ const DialogueUser = () => {
     const Options = () =>
         <DraggablePanel central={true} id='sign-in' title="Options">   {/* buttons={Buttons} */}
             <div style={{ textAlign: 'center'}}>
-                <button styleName="primary narrow" onClick={() => { dispatch(setMode(eMode.USER_SIGN_IN)) }}>Sign In</button>
+                <button className={cx("primary narrow")} onClick={() => { dispatch(setMode(eMode.USER_SIGN_IN)) }}>Sign In</button>
                 <div style={{ height: "20px" }} />
-                <button styleName="primary narrow" onClick={() => { dispatch(setMode(eMode.USER_REGISTER)) }}>Register</button>
+                <button className={cx("primary narrow")} onClick={() => { dispatch(setMode(eMode.USER_REGISTER)) }}>Register</button>
                 <div style={{ height: "20px" }} />
                 {/* <div style={{ height: "50px" }} /> */}
                 {/* <button styleName="link" onClick={()=>dispatch(setMode(eMode.USER_OPTIONS))}>Forgotten License Key</button> */}
@@ -233,8 +232,8 @@ const DialogueUser = () => {
                 <div style={{ height: "50px" }} />
 
                 <div style={center}>
-                    <button styleName="primary narrow red" onClick={()=>dispatch(setMode(eMode.USER_OPTIONS))}>Cancel</button>
-                    <button styleName="primary narrow" onClick={onSignIn}>Submit</button>
+                    <button className={cx("primary narrow red")} onClick={()=>dispatch(setMode(eMode.USER_OPTIONS))}>Cancel</button>
+                    <button className={cx("primary narrow")} onClick={onSignIn}>Submit</button>
                 </div>
 
                 <div style={{ height: "20px" }} />
@@ -293,8 +292,8 @@ const DialogueUser = () => {
                 <div style={{ height: "50px" }} />
 
                 <div style={center}>
-                    <button styleName="primary narrow red" onClick={()=>dispatch(setMode(eMode.USER_OPTIONS))}>Cancel</button>
-                    <button styleName="primary narrow" onClick={onRegister}>Submit</button>
+                    <button className={cx("primary narrow red")} onClick={()=>dispatch(setMode(eMode.USER_OPTIONS))}>Cancel</button>
+                    <button className={cx("primary narrow")} onClick={onRegister}>Submit</button>
                 </div>
                 
             </div>
@@ -326,4 +325,4 @@ const DialogueUser = () => {
     );
 }
 
-export default CSSModules(DialogueUser, styles, { allowMultiple: true });
+export default DialogueUser;

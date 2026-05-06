@@ -1,121 +1,133 @@
-import React, { useEffect } from "react";
-import CSSModules from 'react-css-modules';
-import styles from '../styles';
+import React, { useEffect, useRef, useState } from "react";
+import { cx } from '../styles';
 import { Constants } from "../constants";
 
-// https://www.w3schools.com/howto/howto_js_draggable.asp
+const DRAG_PERSIST_KEY = (id) => `${Constants.LOCAL_DATA_CONFIG}dragPanel:${id}`;
 
-function dragElement(elmnt) {
-
-	let pos1 = 0,
-		pos2 = 0,
-		pos3 = 0,
-		pos4 = 0;
-	if (!elmnt) return false;
-
-
-	function dragMouseDown(e) {
-		// alert(1)
-		e = e || window.event;
-		e.preventDefault();
-		// get the mouse cursor position at startup:
-		pos3 = e.clientX;
-		pos4 = e.clientY;
-		document.onmouseup = closeDragElement;
-		// call a function whenever the cursor moves:
-		document.onmousemove = elementDrag;
-	}
-
-	const dragTouchStart = (e, index, nextMode) => {
-		var evt = (typeof e.originalEvent === 'undefined') ? e : e.originalEvent;
-		var touch = evt.touches[0] || evt.changedTouches[0];
-		pos3 = touch.pageX;
-		pos4 = touch.pageY;
-		document.ontouchmove = elementMove;
-		document.ontouchend = closeDragElement;
-	}
-
-
-	if (document.getElementById(elmnt.id + "-header")) {
-		// if present, the header is where you move the DIV from:
-		document.getElementById(elmnt.id + "-header").onmousedown = dragMouseDown;
-		document.getElementById(elmnt.id + "-header").ontouchstart = dragTouchStart;
-	} else {
-		// otherwise, move the DIV from anywhere inside the DIV:
-		elmnt.onmousedown = dragMouseDown;
-		elmnt.ontouchstart = dragTouchStart;
-	}
-
-
-
-	function elementDrag(e) {
-		e = e || window.event;
-		e.preventDefault();
-		// calculate the new cursor position:
-		pos1 = pos3 - e.clientX;
-		pos2 = pos4 - e.clientY;
-		pos3 = e.clientX;
-		pos4 = e.clientY;
-		// set the element's new position:
-		elmnt.style.top = elmnt.offsetTop - pos2 + "px";
-		elmnt.style.left = elmnt.offsetLeft - pos1 + "px";
-
-		//store locally
-		localStorage.setItem(Constants.LOCAL_DATA_CONFIG + "dragPanelPosX" + elmnt.id, elmnt.offsetLeft - pos1);
-		localStorage.setItem(Constants.LOCAL_DATA_CONFIG + "dragPanelPosY" + elmnt.id, elmnt.offsetTop - pos2);
-	}
-
-
-
-	function elementMove(e) { /// DO
-		var evt = (typeof e.originalEvent === 'undefined') ? e : e.originalEvent;
-		var touch = evt.touches[0] || evt.changedTouches[0];
-		// calculate the new cursor position:
-		pos1 = pos3 - touch.pageX;
-		pos2 = pos4 - touch.pageY;
-		pos3 = touch.pageX;
-		pos4 = touch.pageY;
-		// set the element's new position:
-		elmnt.style.top = elmnt.offsetTop - pos2 + "px";
-		elmnt.style.left = elmnt.offsetLeft - pos1 + "px";
-
-		//store locally
-		localStorage.setItem(Constants.LOCAL_DATA_CONFIG + "dragPanelPosX" + elmnt.id, elmnt.offsetLeft - pos1);
-		localStorage.setItem(Constants.LOCAL_DATA_CONFIG + "dragPanelPosY" + elmnt.id, elmnt.offsetTop - pos2);
-	}
-
-
-	function closeDragElement() {
-		// stop moving when mouse button is released:
-		document.onmouseup = null;
-		document.ontouchend = null;
-		document.onmousemove = null;
-		document.ontouchmove = null;
-	}
+function readSavedPos(id) {
+	try {
+		const raw = localStorage.getItem(DRAG_PERSIST_KEY(id));
+		if (raw) {
+			const { x, y } = JSON.parse(raw);
+			if (typeof x === "number" && typeof y === "number") return { x, y };
+		}
+		const legacyX = localStorage.getItem(`${Constants.LOCAL_DATA_CONFIG}dragPanelPosX${id}`);
+		const legacyY = localStorage.getItem(`${Constants.LOCAL_DATA_CONFIG}dragPanelPosY${id}`);
+		if (legacyX != null && legacyY != null) {
+			return { x: parseFloat(legacyX), y: parseFloat(legacyY) };
+		}
+	} catch { /* corrupt JSON or storage disabled — fall through */ }
+	return null;
 }
 
-// function DraggablePanel(props) {
+function clampToViewport(x, y, width, height) {
+	const margin = 20;
+	const maxX = Math.max(margin, window.innerWidth - width - margin);
+	const maxY = Math.max(margin, window.innerHeight - height - margin);
+	return {
+		x: Math.min(Math.max(x, margin), maxX),
+		y: Math.min(Math.max(y, margin), maxY),
+	};
+}
+
 function DraggablePanel({ id, title, colour, type, children, buttons, central }) {
-	const x = (window.innerWidth) / 2 - 150;
-	const y = 50; //(window.innerHeight) / 2;
-	const winx = localStorage.getItem(Constants.LOCAL_DATA_CONFIG + "dragPanelPosX" + id) || x;
-	const winy = localStorage.getItem(Constants.LOCAL_DATA_CONFIG + "dragPanelPosY" + id) || y;
+	const panelRef = useRef(null);
+	const headerRef = useRef(null);
+
+	const [pos, setPos] = useState(() => {
+		const saved = readSavedPos(id);
+		if (saved) return saved;
+		return { x: window.innerWidth / 2 - 150, y: 50 };
+	});
 
 	useEffect(() => {
-		dragElement(document.getElementById(id))
-	}, []);
+		if (central) return undefined;
+		const panel = panelRef.current;
+		const handle = headerRef.current || panel;
+		if (!panel || !handle) return undefined;
+
+		let dragging = false;
+		let startX = 0;
+		let startY = 0;
+		let originX = 0;
+		let originY = 0;
+		let lastPos = pos;
+
+		const onPointerDown = (e) => {
+			if (e.button !== undefined && e.button !== 0) return;
+			if (e.target.closest("button, input, select, textarea, a")) return;
+			dragging = true;
+			startX = e.clientX;
+			startY = e.clientY;
+			originX = panel.offsetLeft;
+			originY = panel.offsetTop;
+			handle.setPointerCapture?.(e.pointerId);
+			e.preventDefault();
+		};
+
+		const onPointerMove = (e) => {
+			if (!dragging) return;
+			const next = clampToViewport(
+				originX + (e.clientX - startX),
+				originY + (e.clientY - startY),
+				panel.offsetWidth,
+				panel.offsetHeight,
+			);
+			panel.style.left = `${next.x}px`;
+			panel.style.top = `${next.y}px`;
+			lastPos = next;
+		};
+
+		const onPointerUp = (e) => {
+			if (!dragging) return;
+			dragging = false;
+			handle.releasePointerCapture?.(e.pointerId);
+			try {
+				localStorage.setItem(DRAG_PERSIST_KEY(id), JSON.stringify(lastPos));
+			} catch { /* quota or disabled storage — ignore */ }
+			setPos(lastPos);
+		};
+
+		handle.addEventListener("pointerdown", onPointerDown);
+		window.addEventListener("pointermove", onPointerMove);
+		window.addEventListener("pointerup", onPointerUp);
+		window.addEventListener("pointercancel", onPointerUp);
+
+		return () => {
+			handle.removeEventListener("pointerdown", onPointerDown);
+			window.removeEventListener("pointermove", onPointerMove);
+			window.removeEventListener("pointerup", onPointerUp);
+			window.removeEventListener("pointercancel", onPointerUp);
+		};
+	}, [id, central]);
+
+	useEffect(() => {
+		if (central) return undefined;
+		const onResize = () => {
+			const panel = panelRef.current;
+			if (!panel) return;
+			setPos((prev) => {
+				const next = clampToViewport(prev.x, prev.y, panel.offsetWidth, panel.offsetHeight);
+				return next.x === prev.x && next.y === prev.y ? prev : next;
+			});
+		};
+		window.addEventListener("resize", onResize);
+		return () => window.removeEventListener("resize", onResize);
+	}, [central]);
+
+	const positionStyle = central
+		? { left: "50%", top: "50%", transform: "translate(-50%, calc(-50% - 30px))" }
+		: { left: `${pos.x}px`, top: `${pos.y}px` };
 
 	return (
-		<div id={id}
-			styleName={`panel ${type || ""}`}
-			style={
-				central
-					? { left: "50%", top: "50%", transform: "translate(-50%, calc(-50% - 30px))", backgroundColor: colour || null }
-					: { left: `${winx}px`, top: `${winy}px`, backgroundColor: colour || null }
-			}
+		<div
+			id={id}
+			ref={panelRef}
+			className={cx(`panel ${type || ""}`)}
+			style={{ ...positionStyle, backgroundColor: colour || null }}
 		>
-			<div id={`${id}-header`} styleName="dialogue-header">
-				<span styleName="title" style={{ flex: "1" }}>{title}</span>
+			<div id={`${id}-header`} ref={headerRef} className={cx("dialogue-header")}>
+				<span className={cx("title")} style={{ flex: "1" }}>{title}</span>
 				{buttons}
 			</div>
 			{children}
@@ -123,4 +135,4 @@ function DraggablePanel({ id, title, colour, type, children, buttons, central })
 	);
 }
 
-export default CSSModules(DraggablePanel, styles, { allowMultiple: true });
+export default DraggablePanel;

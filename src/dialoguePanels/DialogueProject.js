@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import CSSModules from 'react-css-modules';
 import { eMode } from "../constants";
-import styles from '../styles';
+import { cx } from '../styles';
 import DraggablePanel from "./DraggablePanel";
 import Swal from 'sweetalert2';
 import {
@@ -20,15 +19,7 @@ import {
 import { cloneDeep, makeSVGgrabbable, makeSVGgrabbableReset } from "../utils";
 import html2canvas from "html2canvas";
 
-// Import both file managers
-import * as electronFileManager from '../services/projectFileManangerElectron';
-import * as dbFileManager from '../services/projectFileManangerDB';
-
-// Detect if running in Electron and use appropriate file manager
-const isElectron = typeof window !== 'undefined' && window.electronAPI;
-const fileManager = isElectron ? electronFileManager : dbFileManager;
-
-const {
+import {
     getProjectList,
     getProject,
     storeProject,
@@ -36,7 +27,7 @@ const {
     createDir,
     deleteDir,
     getDirs,
-} = fileManager;
+} from '../services/projectFileMananger';
 
 function DialogueProject({ mode }) {
 
@@ -259,9 +250,9 @@ function DialogueProject({ mode }) {
     //--------------------------------------------------------------
     const Buttons = (
         <>
-            <button styleName="primary narrow red" onClick={() => setConfirmDelete(true)}>Delete</button>
-            <button styleName="primary narrow" onClick={onCancelClick}>Cancel</button>
-            <button styleName="primary narrow" onClick={onCTAClick}>{mode === "open" ? "Open" : "Save"}</button>
+            <button className={cx("primary narrow red")} onClick={() => setConfirmDelete(true)}>Delete</button>
+            <button className={cx("primary narrow")} onClick={onCancelClick}>Cancel</button>
+            <button className={cx("primary narrow")} onClick={onCTAClick}>{mode === "open" ? "Open" : "Save"}</button>
         </>
     )
 
@@ -271,13 +262,13 @@ function DialogueProject({ mode }) {
     return (
         <DraggablePanel id='dialogue-project' title={title} type="fullscreen" buttons={Buttons}>
 
-            <div styleName="margin-bb margin-ll">
-                <span styleName="margin-r">Project Name</span>
-                <input type="text" styleName="with-phonetic" ref={inputRef} />
-                <button styleName="add-phonetic large" style={{ position: "reletive", top: "3px" }} onClick={() => dispatch(showPhonetics(true))} />
+            <div className={cx("margin-bb margin-ll")}>
+                <span className={cx("margin-r")}>Project Name</span>
+                <input type="text" className={cx("with-phonetic")} ref={inputRef} />
+                <button className={cx("add-phonetic large")} style={{ position: "reletive", top: "3px" }} onClick={() => dispatch(showPhonetics(true))} />
 
                 {!view.currentDir &&
-                    <button style={{marginLeft:"30px"}} styleName="tertiary" onClick={setConfirmName}>Create folder
+                    <button style={{marginLeft:"30px"}} className={cx("tertiary")} onClick={setConfirmName}>Create folder
                         <img width="30px" style={{ marginLeft: "15px", marginBottom: "-13px" }} src={'./imgs/directory.png'} />
                     </button>
                 }
@@ -285,7 +276,7 @@ function DialogueProject({ mode }) {
                 {view.currentDir &&
                     <>
                         <span style={{marginLeft:"30px"}}><span style={{fontWeight:"400"}}>Current folder</span> : {view.currentDir}</span>
-                        <button style={{marginLeft:"30px"}} styleName="tertiary" onClick={onLeaveFolder} >Leave folder
+                        <button style={{marginLeft:"30px"}} className={cx("tertiary")} onClick={onLeaveFolder} >Leave folder
                             <img width="30px" style={{ marginLeft: "15px", marginBottom: "-13px" }} src={'./imgs/directory.png'} />
                         </button>
                     </>
@@ -294,13 +285,13 @@ function DialogueProject({ mode }) {
 
             {confirmDelete &&
                 <>
-                    <div styleName="dialogue-inner align-center" style={{ display: "block" }}>
+                    <div className={cx("dialogue-inner align-center")} style={{ display: "block" }}>
                         <br /><br /><br /><br />
                         <div style={{ margin: "20px 0" }}>{`Are you sure you want to delete this ${selectedDirectoryId !== -1 ? "folder and all of its contents?" : "this project?"}`}</div>
                         <br /><br />
                         <div>
-                            <button styleName="primary narrow" onClick={() => setConfirmDelete(false)}>Cancel</button>
-                            <button styleName="primary narrow red" onClick={onDeleteClick}>Delete</button>
+                            <button className={cx("primary narrow")} onClick={() => setConfirmDelete(false)}>Cancel</button>
+                            <button className={cx("primary narrow red")} onClick={onDeleteClick}>Delete</button>
                         </div>
                     </div>
                 </>
@@ -308,24 +299,24 @@ function DialogueProject({ mode }) {
 
             {confirmName &&
                 <>
-                    <div styleName="dialogue-inner align-center" style={{ display: "block" }}>
+                    <div className={cx("dialogue-inner align-center")} style={{ display: "block" }}>
                         {/* <br /><br /><br /><br /> */}
 
                         <div style={{marginTop:"5%"}}>
                             <div style={{ margin: "20px 0" }}>Please enter folder name?</div>
                             <input type="text" style={{ width: "300px" }} ref={inputRefCreateFolder} />
                         </div>
-                        
+
                         <div style={{marginTop:"5%"}}>
-                            <button styleName="primary narrow" onClick={() => setConfirmName(false)}>Cancel</button>
-                            <button styleName="primary narrow" onClick={onCreateDirClick}>Submit</button>
+                            <button className={cx("primary narrow")} onClick={() => setConfirmName(false)}>Cancel</button>
+                            <button className={cx("primary narrow")} onClick={onCreateDirClick}>Submit</button>
                         </div>
                     </div>
                 </>
             }
 
             {!(confirmDelete || confirmName) &&
-                <div styleName="dialogue-inner">
+                <div className={cx("dialogue-inner")}>
                     {/* -------  directories -------  */}
                     {dirData && dirData.map((dir, index) => {
                         const selected = index === selectedDirectoryId ? 'selected' : '';
@@ -335,12 +326,11 @@ function DialogueProject({ mode }) {
                                 <div key={index} style={{position:"relative"}}>
                                     <img key={index}
                                         alt=""
-                                        styleName={`cell transparent tall ${selected}`}
+                                        className={cx(`cell transparent tall ${selected}`)}
                                         style={{ background: 'transparent' }}
                                         src={'./imgs/directory.png'}
                                         onClick={() => onDirectoryClick(dir, index)} />
-                                    <div styleName="cell-title">{(dir && dir.dirname) || "(no name)"}</div>
-                                    {/* <input type="text" styleName="title"/> */}
+                                    <div className={cx("cell-title")}>{(dir && dir.dirname) || "(no name)"}</div>
 
                                 </div>
                             )
@@ -362,10 +352,10 @@ function DialogueProject({ mode }) {
                                 <div key={index} style={{position:"relative"}}>
                                     <img key={index}
                                         alt=""
-                                        styleName={`cell ${orientation} ${selected}`}
-                                        src={file && file.thumbnail} // base64 data 
+                                        className={cx(`cell ${orientation} ${selected}`)}
+                                        src={file && file.thumbnail} // base64 data
                                         onClick={() => onProjectClick(file, index)} />
-                                    <div styleName="cell-title">{(file && file.name) || "(no name)"}</div>
+                                    <div className={cx("cell-title")}>{(file && file.name) || "(no name)"}</div>
                                 </div>
                             )
                         } else {
@@ -378,7 +368,7 @@ function DialogueProject({ mode }) {
     );
 }
 
-export default CSSModules(DialogueProject, styles, { allowMultiple: true });
+export default DialogueProject;
 
 
 

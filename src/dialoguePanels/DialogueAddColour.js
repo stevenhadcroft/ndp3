@@ -1,9 +1,8 @@
 import { Fragment } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import CSSModules from 'react-css-modules';
 import { HexColorPicker } from "react-colorful";
 import { SketchPicker, SwatchesPicker } from 'react-color';
-import styles from '../styles';
+import { cx } from '../styles';
 import { eMode } from "../constants";
 import DraggablePanel from "./DraggablePanel";
 
@@ -49,7 +48,7 @@ const DialogueAddColour = () => {
 	//--------------------------------------------------------------
     const Buttons = (
         <Fragment>
-            <button styleName="primary narrow" onClick={onClose}>Done</button>
+            <button className={cx("primary narrow")} onClick={onClose}>Done</button>
         </Fragment>
     )
 
@@ -66,4 +65,4 @@ const DialogueAddColour = () => {
 	);
 }
 
-export default CSSModules(DialogueAddColour, styles, {allowMultiple:true});
+export default DialogueAddColour;

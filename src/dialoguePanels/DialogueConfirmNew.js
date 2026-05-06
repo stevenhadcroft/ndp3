@@ -1,12 +1,11 @@
 import { useDispatch } from 'react-redux'
 import { eMode } from "../constants";
-import CSSModules from 'react-css-modules';
-import styles from '../styles';
+import { cx } from '../styles';
 import DraggablePanel from "./DraggablePanel";
 
-import { 
-    cancelMode, 
-	setMode, 
+import {
+    cancelMode,
+	setMode,
 } from "../features/viewSlice";
 
 
@@ -23,25 +22,25 @@ const DialogueConfirmNew = () => {
     const onSave = () => {
         dispatch(setMode(eMode.SAVE_BEFORE_NEW));
     }
-    
+
     const onDontSave = () => {
         // dispatch(newProject());
         dispatch(setMode(eMode.SET_ORIENTATION));
     }
-    
+
     //--------------------------------------------------------------
 	// Main
 	//--------------------------------------------------------------
     return (
         <DraggablePanel type="modal">
             <div style={{marginBottom:"20px"}}>Do you want to save the current project?</div>
-            <div styleName="dialogue-inner no-scroll" >
-                <button styleName="primary narrow" onClick={onClose}>Cancel</button>
-                <button styleName="primary narrow" onClick={onDontSave}>Don't Save</button>
-                <button styleName="primary narrow" onClick={onSave}>Save</button>
+            <div className={cx("dialogue-inner no-scroll")} >
+                <button className={cx("primary narrow")} onClick={onClose}>Cancel</button>
+                <button className={cx("primary narrow")} onClick={onDontSave}>Don't Save</button>
+                <button className={cx("primary narrow")} onClick={onSave}>Save</button>
             </div>
         </DraggablePanel>
 	);
 }
 
-export default CSSModules(DialogueConfirmNew, styles, {allowMultiple:true});
+export default DialogueConfirmNew;

@@ -3,7 +3,7 @@ import { Fragment, useState} from "react";
 import { eMode } from "../constants";
 import { useSelector, useDispatch } from 'react-redux';
 
-import CSSModules from 'react-css-modules';
+import { makeCx } from '../styles';
 import buttonStyles from '../styles/buttons.module.css';
 import toolbarStyles from '../styles/toolbar.module.css';
 import uiStyles from '../styles/ui.module.css';
@@ -29,6 +29,7 @@ import {
 import { print } from "../print";
 
 const styleModules = {...buttonStyles, ...toolbarStyles, ...uiStyles};
+const cx = makeCx(styleModules);
 
 let TO;
 
@@ -66,10 +67,6 @@ const MenuLeft = (props) => {
 			dispatch(setMode(eMode.CONFIRM_NEW));
 		}
 	};
-
-	// const onMenuOpen = () => {
-	// 	dispatch(setMenuOpen(true));
-	// };
 	
 	const onMenuClose = () => {
 		dispatch(setMenuOpen(false));
@@ -92,16 +89,10 @@ const MenuLeft = (props) => {
 		}
 	};
 	const onFullScreen = () => {
-		// dispatch(fullScreen(true));
 		document.documentElement.requestFullscreen();
-		// document.addEventListener('fullscreenchange', ()=>{
-		// 	if (!document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement){
-		// 		dispatch(fullScreen(false));
-		// 	}
-		// }, false);
 	};
 
-	let Button = ({label, img, onClick}) => {
+	const Button = ({label, img, onClick}) => {
 		const [show, setShow] = useState(false);
 		const onMouseOver = ()=>{
 			clearTimeout(TO);
@@ -115,9 +106,8 @@ const MenuLeft = (props) => {
 		}
 		return (
 			<div>
-				{show && <div styleName="left-menu-label">{label}</div>}
-				{/* <div styleName="left-menu-label">{img}</div> */}
-				<button styleName={`left-menu`} 
+				{show && <div className={cx("left-menu-label")}>{label}</div>}
+				<button className={cx("left-menu")}
 						onClick={onClick}
 						onMouseOver={onMouseOver}
 						onMouseOut={onMouseOut}
@@ -127,13 +117,12 @@ const MenuLeft = (props) => {
 			</div>
 		)
 	};
-	Button = CSSModules(Button, styleModules, {allowMultiple:true});
 
-	let Buttons = () => {
+	const Buttons = () => {
 		return (
 			<>
 				{!document.fullscreenElement &&
-				<div styleName="menu-container">
+				<div className={cx("menu-container")}>
 					<div style={{height:"16px"}}/>
 					<Button label="New Project" img="new" onClick={onNewProject} />
 					<Button label="Open Project" img="open" onClick={()=>onSetMode(eMode.OPEN_PROJECT)} />
@@ -154,16 +143,14 @@ const MenuLeft = (props) => {
 		)
 	};
 
-	Buttons = CSSModules(Buttons, styleModules, {allowMultiple:true});
-
 	return (
 		<Fragment>
 			<Buttons/>
 		</Fragment>
-		
+
 	);
 }
 
-export default CSSModules(MenuLeft, styleModules, {allowMultiple:true});
+export default MenuLeft;
 
 

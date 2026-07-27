@@ -11,6 +11,7 @@ import DialogueOrientation from "./DialogueOrientation";
 import DialogueMyAccount from "./DialogueMyAccount";
 import DialogueUser from "./DialogueUser";
 import DialogueUpdateProgress from "./DialogueUpdateProgress";
+import DialoguePdfViewer from "./DialoguePdfViewer";
 
 import { cx } from '../styles';
 
@@ -30,6 +31,10 @@ const PANELS = {
     [eMode.COLOUR_TEXT]:      { component: DialogueAddColour,      tinted: false },
     [eMode.MY_ACCOUNT]:       { component: DialogueMyAccount,      tinted: false },
     [eMode.APP_UPDATING]:     { component: DialogueUpdateProgress, tinted: false },
+    [eMode.PDF_VIEWER_THERAPY_MANUAL]:     { component: DialoguePdfViewer, tinted: false, props: { file: 'Therapy manual',                     title: 'Therapy Manual' } },
+    [eMode.PDF_VIEWER_SPEECH_ASSESSMENT]:  { component: DialoguePdfViewer, tinted: false, props: { file: 'Assessment flip-book 1',             title: 'Speech Assessment' } },
+    [eMode.PDF_VIEWER_THERAPY_WORKSHEETS]: { component: DialoguePdfViewer, tinted: false, props: { file: 'Therapy resources worksheets full',  title: 'Therapy Worksheets' } },
+    [eMode.PDF_VIEWER_ARTICULOGRAMS]:      { component: DialoguePdfViewer, tinted: false, props: { file: 'Articulogram cards',                 title: 'Articulograms' } },
 };
 
 const App = () => {

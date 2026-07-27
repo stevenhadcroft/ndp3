@@ -20,17 +20,22 @@ function readSavedPos(id) {
 	return null;
 }
 
+// Allow panels to move outside the viewport, but keep a strip of the header
+// reachable so the user can always drag them back.
+const MIN_VISIBLE = 40;
+
 function clampToViewport(x, y, width, height) {
-	const margin = 20;
-	const maxX = Math.max(margin, window.innerWidth - width - margin);
-	const maxY = Math.max(margin, window.innerHeight - height - margin);
+	const minX = MIN_VISIBLE - width;
+	const maxX = window.innerWidth - MIN_VISIBLE;
+	const minY = 0;
+	const maxY = window.innerHeight - MIN_VISIBLE;
 	return {
-		x: Math.min(Math.max(x, margin), maxX),
-		y: Math.min(Math.max(y, margin), maxY),
+		x: Math.min(Math.max(x, minX), maxX),
+		y: Math.min(Math.max(y, minY), maxY),
 	};
 }
 
-function DraggablePanel({ id, title, colour, type, children, buttons, central }) {
+function DraggablePanel({ id, title, type, children, buttons, central, hideHeader }) {
 	const panelRef = useRef(null);
 	const headerRef = useRef(null);
 
@@ -118,18 +123,20 @@ function DraggablePanel({ id, title, colour, type, children, buttons, central })
 	const positionStyle = central
 		? { left: "50%", top: "50%", transform: "translate(-50%, calc(-50% - 30px))" }
 		: { left: `${pos.x}px`, top: `${pos.y}px` };
-
+// 064679
 	return (
 		<div
 			id={id}
 			ref={panelRef}
 			className={cx(`panel ${type || ""}`)}
-			style={{ ...positionStyle, backgroundColor: colour || null }}
+			style={{ ...positionStyle }}
 		>
-			<div id={`${id}-header`} ref={headerRef} className={cx("dialogue-header")}>
-				<span className={cx("title")} style={{ flex: "1" }}>{title}</span>
-				{buttons}
-			</div>
+			{!hideHeader &&
+				<div id={`${id}-header`} ref={headerRef} className={cx("dialogue-header")}>
+					<span className={cx("title")} style={{ flex: "1" }}>{title}</span>
+					{buttons}
+				</div>
+			}
 			{children}
 		</div>
 	);

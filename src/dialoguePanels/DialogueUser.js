@@ -14,15 +14,15 @@ import {
     setTextData, 
 } from "../features/canvasSlice";
 
-import { 
-    setMode, 
-    setGeneric
+import {
+    setMode,
+    setUserIsAuth,
 } from "../features/viewSlice";
 
 import DraggablePanel from "./DraggablePanel";
 import { getUser, createUser } from "../services/userMananger";
 import {linkMachine, unlinkMachine} from '../services/localLicenseMananger';
-import {validateKey} from '../utils';
+import {validateKey, generateKey} from '../utils';
 
 
 const DialogueUser = () => {
@@ -49,8 +49,29 @@ const DialogueUser = () => {
         const key = inputRefSignInPassword.current.value;
         // Z4Z4M7
 
-        //-----check key
-        if (!validateKey(key)){
+        if (!email){
+            Swal.fire({
+                title: 'Error!',
+                text: 'Please complete all details',
+                icon: 'error',
+                confirmButtonText: 'Continue'
+            })
+            return;
+        }
+
+        //-----dev bypass: skip key validation and the login API entirely
+        if (key === 'Cliff-Richard-Rocks'){
+            dispatch(setImageData([]));
+            dispatch(setTextData([]));
+            dispatch(setTemplateData([]));
+            dispatch(setMode(eMode.USER_ACTIVE))
+            dispatch(setUserIsAuth(true))
+            linkMachine();
+            return;
+        }
+
+        //-----check key (must match email)
+        if (!(await validateKey(key, email))){
             Swal.fire({
                 title: 'Error!',
                 text: 'Key not valid',
@@ -60,18 +81,20 @@ const DialogueUser = () => {
             return;
         }
 
-        if (!email){
+        // moved from using password to key
+        const data = { email, password: '' };
+        let response;
+        try {
+            response = await getUser(data);
+        } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'Please complete all details',
+                text: error.message,
                 icon: 'error',
                 confirmButtonText: 'Continue'
             })
+            return;
         }
-
-        // moved from using password to key
-        const data = { email, password: '' };
-        let response = await getUser(data)
 
         if (response.complete === 1 && response.approval === "approved") {
 
@@ -80,7 +103,7 @@ const DialogueUser = () => {
             dispatch(setTextData([]));
             dispatch(setTemplateData([]));
             dispatch(setMode(eMode.USER_ACTIVE))
-            dispatch(setGeneric({key:"userIsAuth", value:true}))
+            dispatch(setUserIsAuth(true))
             linkMachine();
             
         } else if (response.complete === 1 && response.approval !== "approved") {
@@ -105,7 +128,7 @@ const DialogueUser = () => {
         }
     }
 
-    const onRegister = (col) => {
+    const onRegister = async (col) => {
 
         // const key = inputRefRegisterKey.current.value;
         const key = inputRefRegisterPassword.current.value;
@@ -114,8 +137,18 @@ const DialogueUser = () => {
         const password = inputRefRegisterPassword.current.value;
         const passwordConfirm = inputRefRegisterPassword2.current.value;
 
-        //-----check key
-        if (!validateKey(key)){
+        if (!key || !name || !email || !password){
+            Swal.fire({
+                title: 'Error!',
+                text: 'Please complete all details',
+                icon: 'error',
+                confirmButtonText: 'Continue'
+              })
+              return false;
+        }
+
+        //-----check key (must match email)
+        if (!(await validateKey(key, email))){
             Swal.fire({
                 title: 'Error!',
                 text: 'Key not valid',
@@ -133,16 +166,6 @@ const DialogueUser = () => {
                 confirmButtonText: 'Continue'
               })
             return;
-        }
-
-        if (!key || !name || !email || !password){
-            Swal.fire({
-                title: 'Error!',
-                text: 'Please complete all details',
-                icon: 'error',
-                confirmButtonText: 'Continue'
-              })
-              return false;
         }
 
         const data = { key, name, email, password};
@@ -171,17 +194,15 @@ const DialogueUser = () => {
                       })
                 }
             })
+            .catch((error) => {
+                Swal.fire({
+                    title: 'Error!',
+                    text: error.message,
+                    icon: 'error',
+                    confirmButtonText: 'Continue'
+                })
+            })
     }
-
-    // const onClose = () => {
-    //     dispatch(setBrushColour(null));
-    //     if (view.mode === eMode.COLOUR_TEXT) {
-    //         // go back to edit text mode - where we came from
-    //         dispatch(setMode(eMode.EDIT_TEXT));
-    //     } else {
-    //         dispatch(cancelMode());
-    //     }
-    // }
 
     //--------------------------------------------------------------
     // Buttons Component
@@ -194,7 +215,7 @@ const DialogueUser = () => {
     )
 
     const Container = ({ children }) =>
-        <div style={{ position: "absolute", top: "50px", left: "0", width: "100%", height: "100%", background: "#48759e" }}>
+        <div style={{ position: "absolute", top: "50px", left: "0", width: "100%", height: "100%", background: "var(--color-background-app)" }}>
             {children}
         </div>
 
@@ -209,9 +230,8 @@ const DialogueUser = () => {
                 <div style={{ height: "20px" }} />
                 <button className={cx("primary narrow")} onClick={() => { dispatch(setMode(eMode.USER_REGISTER)) }}>Register</button>
                 <div style={{ height: "20px" }} />
-                {/* <div style={{ height: "50px" }} /> */}
-                {/* <button styleName="link" onClick={()=>dispatch(setMode(eMode.USER_OPTIONS))}>Forgotten License Key</button> */}
             </div>
+            {/* {generateKey()} */}
         </DraggablePanel>
 
     //--------------------------------------------------------------
@@ -232,16 +252,11 @@ const DialogueUser = () => {
                 <div style={{ height: "50px" }} />
 
                 <div style={center}>
-                    <button className={cx("primary narrow red")} onClick={()=>dispatch(setMode(eMode.USER_OPTIONS))}>Cancel</button>
+                    <button className={cx("secondary narrow")} onClick={()=>dispatch(setMode(eMode.USER_OPTIONS))}>Cancel</button>
                     <button className={cx("primary narrow")} onClick={onSignIn}>Submit</button>
                 </div>
 
-                <div style={{ height: "20px" }} />
-
-                {/* <div style={center}>
-                    <button styleName="secondary narrow red" onClick={()=>dispatch(setMode(eMode.USER_OPTIONS))}>Forgotten License Key</button>
-                </div> */}
-                
+                <div style={{ height: "20px" }} /> 
 
             </div>
         </DraggablePanel>
@@ -292,7 +307,7 @@ const DialogueUser = () => {
                 <div style={{ height: "50px" }} />
 
                 <div style={center}>
-                    <button className={cx("primary narrow red")} onClick={()=>dispatch(setMode(eMode.USER_OPTIONS))}>Cancel</button>
+                    <button className={cx("secondary narrow")} onClick={()=>dispatch(setMode(eMode.USER_OPTIONS))}>Cancel</button>
                     <button className={cx("primary narrow")} onClick={onRegister}>Submit</button>
                 </div>
                 

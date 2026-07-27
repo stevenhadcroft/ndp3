@@ -37,6 +37,23 @@ header .title {
   }
 }
 
+.project-name {
+  position: absolute;
+  left: calc(50% + 30px);
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+  color: var(--color-white);
+  opacity: 0.85;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.project-name.modified {
+  font-weight: bold;
+  font-style: italic;
+}
+
 .menutab {
   position: absolute;
   left: 10px;

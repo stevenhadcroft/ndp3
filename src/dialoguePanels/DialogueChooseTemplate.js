@@ -16,22 +16,22 @@ import {
 import { loadTemplate } from "../loaders";
 import DraggablePanel from "./DraggablePanel";
 
-// import LazyLoad from 'react-lazyload';
-
-// const LazyLoad = ({children}) => {
-// 	<>{children}</>
-// }
-
 const DialogueChooseTemplate = () => {
     
     // HOOKS ---------------------------------------------------
     const dispatch = useDispatch();
     const view = useSelector(state => state.view);
     const [selectedIndex, setSelectedIndex] = useState();
-	
+    const [error, setError] = useState("");
+
 
     // HANDLERS ---------------------------------------------------
     const onChooseTemplate = (index) => {
+        if (index === undefined || index === null || !window.WORKSHEET_FILES[index]) {
+            setError("Please select a template first.");
+            return;
+        }
+        setError("");
         const url = window.WORKSHEET_FILES[index].url;
 		const newTemplate = { type:"image", size: 300, url};
 		dispatch(setTemplateData(newTemplate));
@@ -51,7 +51,7 @@ const DialogueChooseTemplate = () => {
 	// Search
 	//--------------------------------------------------------------
 	const Search = () => (
-        <div className={cx("margin-bb margin-ll")}>
+        <div className={cx("margin-bb")}>
             <span className={cx("margin-r")}>Show</span>
             {Constants.WORKSHEET_CATEGORIES.map(category => {
                 const _stylename = `filter ${(!view.templateFilters && category.title === "All") || (view.templateFilters && view.templateFilters[category.title]) ? "active" : ""}`;
@@ -101,7 +101,7 @@ const DialogueChooseTemplate = () => {
 	//--------------------------------------------------------------
     const Buttons = (
         <>
-            <button className={cx("primary narrow")} onClick={()=>dispatch(cancelMode())}>Back to main</button>
+            <button className={cx("secondary narrow")} onClick={()=>dispatch(cancelMode())}>Cancel</button>
             <button className={cx("primary narrow")} onClick={()=>onChooseTemplate(selectedIndex)}>Use selected</button>
         </>
     )
@@ -112,7 +112,10 @@ const DialogueChooseTemplate = () => {
 	return (
 		<DraggablePanel id='choose-template' title="Choose Template" type="fullscreen" buttons={Buttons}>
             <Search/>
-            <div className={cx("dialogue-inner")} style={{height:"calc(100% - 142px)"}}>
+            {error &&
+                <div style={{ color: "#ff5252", fontWeight: 600, padding: "0 20px 10px" }}>{error}</div>
+            }
+            <div className={cx("dialogue-inner")}>
                 <ImageList/>
             </div>
 		</DraggablePanel>

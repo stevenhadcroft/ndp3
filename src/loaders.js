@@ -6,8 +6,6 @@ export const loadImage = (url, index, callback1, newImage, callback2) => {
 		evt.setAttribute("height", "100%");
 		evt.setAttribute("viewBox", "0 0 500 500");
 		
-		// console.log('loadImage LOADED imageData ', newImage);
-
 		// DO COLOURS
 		setTimeout(()=>{
 			for (let key in newImage){
@@ -26,12 +24,6 @@ export const loadImage = (url, index, callback1, newImage, callback2) => {
 			
 			if (callback2) callback2();
 
-			// const el = document.getElementById("image-"+index);
-			// if (el){
-			// 	const svgmarkup = el.innerHTML;
-			// 	dispatch(updateImageData(index, 'svg', svgmarkup));
-			// }
-
 		}, 50);
 
 		// importng the XML means duplicate IDs which results in React getting muddled
@@ -49,18 +41,6 @@ export const loadTemplate = (url, imageData, callback) => {
 		evt.setAttribute("width", "100%");
 		evt.setAttribute("height", "100%");
 		
-		// PROB NOT NEEDED
-		// var els = evt.querySelectorAll("g");
-		// for (let i = 0; i < els.length; ++i) {
-		// 	let id = els[i].id;
-		// 	if (id.substr(0, 4) === "fill") {
-		// 		const el = evt.getElementById(id);
-		// 		const path = el.querySelector("path");
-		// 		if (path && imageData[id]) {
-		// 			path.setAttribute("fill", imageData[id]);
-		// 		}
-		// 	}
-		// } 
 		setTimeout(()=>{
 			for (let key in imageData){
 				const colour = imageData[key];

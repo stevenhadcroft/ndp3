@@ -1,28 +1,3 @@
-// const { ipcRenderer } = require('electron');
-
-
-// export const loadImageData = (path) => {
-// 	return new Promise((resolve, reject) => {
-// 		var xhr = new XMLHttpRequest();
-// 		xhr.onload = function(e) {
-// 			try {
-// 				if (xhr.readyState == 4 && xhr.status == 200) {
-// 					resolve(xhr.responseXML.documentElement);
-// 				}
-// 			} catch (e) {
-// 				console.log(e);
-// 			}
-// 		};
-// 		xhr.open("GET", path, true);
-// 		xhr.overrideMimeType("text/xml");
-// 		xhr.responseType = "document";
-// 		xhr.send();
-// 	});
-// 	// reject(err)
-// }
-
-
-
 const clone = (item) => {
     if (!item) { return item; } // null, undefined values check
 
@@ -76,27 +51,6 @@ const clone = (item) => {
 
 export const cloneDeep = clone;
 
-/*
-export const cloneDeepOLD = (entity, cache = new WeakMap()) => {
-    const referenceTypes = ["Array", "Object", "Map", "Set", "WeakMap", "WeakSet"];
-    const entityType = Object.prototype.toString.call(entity);
-    if (!new RegExp(referenceTypes.join("|")).test(entityType)) return entity;
-    if (cache.has(entity)) {
-        return cache.get(entity);
-    }
-    const c = new entity.constructor();
-
-    if (entity instanceof Map || entity instanceof WeakMap) {
-        entity.forEach((value, key) => c.set(cloneDeep(key), cloneDeep(value)));
-    }
-    if (entity instanceof Set || entity instanceof WeakSet) {
-        entity.forEach(value => c.add(cloneDeep(value)));
-    }
-    cache.set(entity, c);
-    return Object.assign(c, ...Object.keys(entity).map(prop => ({ [prop]: cloneDeep(entity[prop], cache) })));
-};
-*/
-
 export const makeSVGgrabbable = (view) => {
     // make svgs grabbable
     // but setting these w/h distorts the svg of rotated
@@ -120,25 +74,85 @@ export const makeSVGgrabbableReset = () => {
     });
 }
 
-export const validateKey = (key) => {
-    // ---------------
-    // total gotta be 80
-    // ---------------
-    let value = 0;
-    for (let i in key) {
-        if (key[i] >= "A" && key[i] <= "Z") {
-            const n = key[i].charCodeAt(0) - 64;
-            value += n;
-        }
-        if (key[i] >= "0" && key[i] <= "9") {
-            const n = Math.floor(key[i]);
-            value += n;
+// Email-bound key:
+//   key = base32( HMAC-SHA256(SECRET, normalize(email))[0..5] )
+//   8 base32 chars, grouped as XXXX-XXXX (40-bit MAC)
+// Deterministic — the same email always produces the same key.
+// Note: SECRET lives in client code, so this is obfuscation-grade — a
+// determined attacker with the bundle can still forge keys. For real
+// unforgeability, sign keys server-side.
+const KEY_SECRET = "ndp3-key-v1-7a2c9f3e8d4b6105";
+const BASE32 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+
+const normalizeEmail = (email) => String(email || "").trim().toLowerCase();
+
+const base32Encode = (bytes) => {
+    let bits = 0, value = 0, out = "";
+    for (const b of bytes) {
+        value = (value << 8) | b;
+        bits += 8;
+        while (bits >= 5) {
+            out += BASE32[(value >> (bits - 5)) & 31];
+            bits -= 5;
         }
     }
-    console.log(value);
-    return value === 80 ? true : false;
-    // return value === 80 ? true : false;
-}
+    if (bits > 0) out += BASE32[(value << (5 - bits)) & 31];
+    return out;
+};
+
+const base32Decode = (str) => {
+    const bytes = [];
+    let bits = 0, value = 0;
+    for (const ch of str.toUpperCase()) {
+        const idx = BASE32.indexOf(ch);
+        if (idx < 0) continue;
+        value = (value << 5) | idx;
+        bits += 5;
+        if (bits >= 8) {
+            bytes.push((value >> (bits - 8)) & 0xff);
+            bits -= 8;
+        }
+    }
+    return new Uint8Array(bytes);
+};
+
+const hmacSha256 = async (secret, data) => {
+    const enc = new TextEncoder();
+    const k = await crypto.subtle.importKey(
+        "raw", enc.encode(secret),
+        { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
+    );
+    return new Uint8Array(await crypto.subtle.sign("HMAC", k, data));
+};
+
+const constantTimeEqual = (a, b) => {
+    if (a.length !== b.length) return false;
+    let diff = 0;
+    for (let i = 0; i < a.length; i++) diff |= a[i] ^ b[i];
+    return diff === 0;
+};
+
+const computeKeyMac = async (email) => {
+    const data = new TextEncoder().encode(normalizeEmail(email));
+    return (await hmacSha256(KEY_SECRET, data)).slice(0, 5);
+};
+
+export const generateKey = async (email) => {
+    if (!normalizeEmail(email)) throw new Error("email required");
+    const encoded = base32Encode(await computeKeyMac(email));
+    return `${encoded.slice(0, 4)}-${encoded.slice(4, 8)}`;
+};
+
+export const validateKey = async (key, email) => {
+    if (typeof key !== "string" || !normalizeEmail(email)) return false;
+    const clean = key.replace(/[^A-Za-z2-7]/g, "");
+    if (clean.length < 8) return false;
+    const bytes = base32Decode(clean).slice(0, 5);
+    if (bytes.length < 5) return false;
+    const expected = await computeKeyMac(email);
+    return constantTimeEqual(bytes, expected);
+};
+
 
 
 export const getHighestZdepth = (arr) => {

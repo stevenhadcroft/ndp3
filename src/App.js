@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import useNudgeKeyboardHandler from "./hooks/useNudgeKeyboardHandler";
 import useDefaultTemplate from "./hooks/useDefaultTemplate"; 
 import useCanvasResize from "./hooks/useResizeCanvas";
-import { setMode, setAppUpdateStatus, setGeneric } from "./features/viewSlice";
+import { setMode, setAppUpdateStatus, setUserIsAuth } from "./features/viewSlice";
 import { eMode } from "./constants";
 import { checkLocalLicense } from './services/localLicenseMananger';
 import Canvas from "./components/Canvas";
@@ -23,15 +23,14 @@ const App = () => {
 	
 	// Progress bar handling
 	useEffect(() => {
-		// dispatch(setMode(eMode.APP_UPDATING));
-		// dispatch(setAppUpdateStatus({percent:50}))
 		if (window && window.electronAPI) {
 			window.electronAPI.onUpdateProgress((event, progress) => {
 				dispatch(setMode(eMode.APP_UPDATING));
 				dispatch(setAppUpdateStatus({ percent: progress.percent }));
-				// `Downloading: ${Math.round(progress.percent)}%
-				// (${formatBytes(progress.transferred)} / ${formatBytes(progress.total)})
-				// Speed: ${formatBytes(progress.bytesPerSecond)}/s`;
+			});
+			window.electronAPI.onUpdateError(() => {
+				dispatch(setAppUpdateStatus({}));
+				dispatch(setMode(null));
 			});
 		}
 	}, []);
@@ -40,7 +39,7 @@ const App = () => {
 		async function fetchData() {
 			await loadImageDirectoryData();
 			const licence = await checkLocalLicense();
-			dispatch(setGeneric({key:"userIsAuth", value:licence}))
+			dispatch(setUserIsAuth(licence))
 			if (!licence) {
 				dispatch(setMode(eMode.USER_OPTIONS));
 			}

@@ -49,11 +49,6 @@ const DialogueMyAccount = () => {
                     <h3>Users</h3>
                     <p>This account has 3 associated sub accounts.</p>
                     <button className={cx("primary")} onClick={onSubmit}>Show primary users</button>
-                    {/* <UserList/> */}
-                    {/* <button className="menu-button first" onClick={onSubmit}>Show secondary users</button>
-                    <UserList/> */}
-
-                    {/* To add more accounts please contact NDP3 */}
                 </div>
 
                 <div className={cx("dark-background")}>

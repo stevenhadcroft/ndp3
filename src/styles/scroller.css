@@ -1,103 +1,16 @@
-/* https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/ */
-/* 
-input[type="range"] {
-  -webkit-appearance: none;
-  margin: 18px 0;
-  width: 100%;
-}
-input[type="range"]:focus {
-  outline: none;
-}
-input[type="range"]::-webkit-slider-runnable-track {
-  width: 100%;
-  height: 4px;
-  cursor: pointer;
-  border-radius: 1.3px;
-}
-input[type="range"]::-webkit-slider-thumb {
-  height: 35px;
-  width: 35px;
-  border-radius: 99px;
-  background: #44be06;
-  cursor: pointer;
-  -webkit-appearance: none;
-  margin-top: -14px;
-}
-input[type="range"]::-moz-range-track {
-  width: 100%;
-  height: 4px;
-  cursor: pointer;
-  border-radius: 1.3px;
-}
-input[type="range"]::-moz-range-thumb {
-  height: 35px;
-  width: 35px;
-  border-radius: 99px;
-  background: #44be06;
-  cursor: pointer;
-}
-input[type="range"]::-ms-track {
-  width: 100%;
-  height: 4px;
-  cursor: pointer;
-  background: transparent;
-  border-color: transparent;
-  border-width: 8px 0; 
-  color: transparent;
-}
-input[type="range"]::-ms-fill-lower {
-  border-radius: 2.6px;
-}
-input[type="range"]::-ms-fill-upper {
-  border-radius: 2.6px;
-}
-input[type="range"]::-ms-thumb {
-  height: 35px;
-  width: 35px;
-  border-radius: 99px;
-  background: #44be06;
-  cursor: pointer;
-}
-
 ::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 7px;
+  width: 24px;
 }
 
+::-webkit-scrollbar-track {
+  background: #ddd; 
+  border-radius: 99px;
+}
+  
 ::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  background-color: rgba(0, 0, 0, 0.5);
-  box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+  background: #0F6ACB;  
+  border-radius: 99px;
+  border:2px solid #ddd;
+  height: 26px;
 }
- */
 
-
-  /* width */
-  ::-webkit-scrollbar {
-    width: 24px;
-    /* padding:2px; */
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
-    /* box-shadow: inset 0 0 5px grey;  */
-    /* border-radius: 5px; */
-    background: #ddd; 
-    border-radius: 99px;
-    /* border:2px solid #ddd; */
-  }
-   
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #0F6ACB;  
-    border-radius: 99px;
-    border:2px solid #ddd;
-    height: 26px;
-  }
-  
-  /* Handle on hover */
-  /* ::-webkit-scrollbar-thumb:hover {
-    background: #0F6ACB; 
-  } */
-  
-  

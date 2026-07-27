@@ -22,11 +22,7 @@ canvas
   height: 768px;
 }
 
-
 .canvas {
-  /* border-radius: 10px; */
-  /* clip-path: inset(0px 0px 0px 0px); */
-  /* background-color: #ffffff; */
   box-shadow: 2px 4px 3px var(--color-shadow-light);
   border: var(--color-border-dark) solid 1px;
   border:none;
@@ -58,42 +54,13 @@ canvas
   position: absolute;
   z-index: 9999;
   cursor: pointer;
-  /* background-color: #fff; */
-  /* background-color: #45a5ff;  */
-  /* background-color: #43a1f9;  */
   background-color: var(--color-background-canvas-icon);
-  /* #aaa; */
   transform:scale(0.8);
 }
 .canvas-icon > img {
   width: 40px;
   height: 40px;
 }
-.duplicate {
-  left: 30px;
-  bottom: 25px;
-  /* transform: scale(2); */
-  background-color: transparent;
-}
-.template-lock {
-  left: 30px;
-  top: 30px;
-  transform: scale(2.5);
-  background-color: transparent;
-}
-.undo {
-  right: 90px;
-  top: 30px;
-  transform: scale(1.2);
-  background-color: transparent;
-}
-.redo {
-  right: 30px;
-  top: 30px;
-  transform: scale(1.2);
-  background-color: transparent;
-}
-
 .pan.up {
   right: 110px;
   bottom: 120px;
@@ -111,13 +78,11 @@ canvas
   bottom: 60px;
 }
 .zoom.in {
-  /* color:#012457; */
   color: var(--color-text-inverse);
   right: 15px;
   bottom: 62px;
 }
 .zoom.out {
-  /* color:#012457; */
   color: var(--color-text-inverse);
   right: 220px;
   bottom: 64px;

@@ -25,8 +25,6 @@ import {
 
 import { loadImage } from "../loaders";
 import DraggablePanel from "./DraggablePanel";
-// import { Spinner } from "../components/UIkit/Spinner";
-// import LazyLoad from 'react-lazyload';
 
 export const Spinner = () => {
 	return (
@@ -35,11 +33,6 @@ export const Spinner = () => {
 		</div>
 	);
 };
-
-
-// const LazyLoad = ({children}) => {
-// 	<>{children}</>
-// }
 
 //--------------------------------------------------------------
 // Search Component
@@ -56,7 +49,6 @@ let Search = () => {
 
 	// if phonetic changes then add
 	useEffect(() => {
-		// if (!view.phoneticToAdd) return; 
 		if (view.phoneticToAdd) {
 			setSearchInput(searchInput + view.phoneticToAdd);
 			dispatch(addPhonetic(null)); // clear out
@@ -74,7 +66,7 @@ let Search = () => {
 	// const onContains = () => dispatch(setSearch({logic:eSearchLogic.CONTAINS}));
 
 	return (
-		<div className={cx("search-bar margin-bb margin-ll")}>
+		<div className={cx("search-bar margin-bb")}>
 			<span style={{ display: "inline-block", marginBottom: '10px', marginRight: '50px' }}>
 				<span className={cx("margin-r")}>Search</span>
 				<button className={cx(`filter ${view.searchFilter === eSearchFilter.PICTURE ? "active" : ""}`)} onClick={() => onFilter(eSearchFilter.PICTURE)}>Pictures</button>
@@ -133,9 +125,7 @@ let ImageList = () => {
 	const view = useSelector(state => state.view);
 	const [selectedIndex, setSelectedIndex] = useState();
 	const [loaded, setLoaded] = useState([]);
-	// const [loaded, setLoaded] = useState([]);
-	// const dispatch = useDispatch();
-
+	
 	const onImageClicked = (evt) => {
 		setSelectedIndex(Math.floor(evt.target.dataset.index));
 		localSelectedIndex = Math.floor(evt.target.dataset.imagelibraryindex);
@@ -143,7 +133,6 @@ let ImageList = () => {
 
 	return (
 		view.imageLibrary || []).map((item, index) => (
-			// <LazyLoad height={Constants.POT_SIZE} once>
 			<div>
 				<img key={index}
 					className={cx(`cell ${index === selectedIndex ? 'selected' : ''}`)}
@@ -173,9 +162,15 @@ const DialogueAddImage = () => {
 	// HOOKS ---------------------------------------------------
 	const dispatch = useDispatch();
 	const canvas = useSelector(state => state.canvas);
+	const [error, setError] = useState("");
 
 	// HANDLERS ---------------------------------------------------
 	const onLoadClicked = (ind) => {
+		if (ind === undefined || ind === null || !window.IMAGE_FILES[ind]) {
+			setError("Please select an image first.");
+			return;
+		}
+		setError("");
 		dispatch(showLoader(true));
 		const url = window.IMAGE_FILES[ind].url;
 		const filename = window.IMAGE_FILES[ind].filename;
@@ -204,7 +199,7 @@ const DialogueAddImage = () => {
 	//--------------------------------------------------------------
 	const Buttons = (
 		<>
-			<button className={cx("primary narrow")} onClick={() => dispatch(cancelMode())}>Back to main</button>
+			<button className={cx("secondary narrow")} onClick={() => dispatch(cancelMode())}>Cancel</button>
 			<button className={cx("primary narrow")} onClick={() => onLoadClicked(localSelectedIndex)}>Use selected</button>
 		</>
 	)
@@ -216,7 +211,10 @@ const DialogueAddImage = () => {
 		<DraggablePanel id="add-image" title="Add Image" type="fullscreen" buttons={Buttons}>
 			<CategoryChooser />
 			<Search />
-			<div className={cx("dialogue-inner")} style={{ height: "calc(100% - 205px)" }}>
+			{error &&
+				<div style={{ color: "#ff5252", fontWeight: 600, padding: "0 20px 10px" }}>{error}</div>
+			}
+			<div className={cx("dialogue-inner")}>
 				<ImageList />
 			</div>
 		</DraggablePanel>

@@ -3,7 +3,6 @@ import dialogue from './dialogue.module.css';
 import layout from './layout.module.css';
 import ui from './ui.module.css';
 import canvas from './canvas.module.css';
-import colour from './colour.module.css';
 import toolbarStyles from './toolbar.module.css';
 
 
@@ -13,7 +12,6 @@ const styles = {
     ...layout,
     ...ui,
     ...canvas,
-    ...colour,
     ...toolbarStyles
 };
 

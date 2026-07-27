@@ -1,12 +1,13 @@
 import { useDispatch } from 'react-redux'
 import useDefaultTemplate from "../hooks/useDefaultTemplate";
+import { cx } from '../styles';
 
-import { 
-	cancelMode
+import {
+    cancelMode
 } from "../features/viewSlice";
 
-import { 
-	resetCanvas,
+import {
+    resetCanvas,
     setOrientation
 } from "../features/canvasSlice";
 
@@ -25,25 +26,42 @@ const DialogueOrientation = () => {
         dispatch(resetCanvas());
         dispatch(setOrientation(orientation));
         loadDefaultTemplate();
-      };
-    
-    //--------------------------------------------------------------
-	// Main
-	//--------------------------------------------------------------
-    return (
-        <DraggablePanel type="modal">
-            <div style={{marginBottom:"20px"}}>Do you want your new project to be landscape or portrait?</div>
-            
-            <button onClick={()=>onNewProject("portrait")}>
-                <img src="./imgs/gui/new-portrait-2.png" style={{width:"100px", height:"auto", marginLeft:"5px"}}/>
-                {/* Portrait */}
-            </button>
+    };
 
-            <button onClick={()=>onNewProject("landscape")}>
-                 <img src="./imgs/gui/new-landscape-2.png"  style={{width:"100px", height:"auto", marginLeft:"40px"}}/>
-            </button>
+    const onCancelClick = () => {
+        dispatch(cancelMode());
+    }
+
+    //--------------------------------------------------------------
+    // Buttons
+    //--------------------------------------------------------------
+    const Buttons = (
+        <>
+            <button className={cx("secondary narrow")} onClick={onCancelClick}>Cancel</button>
+        </>
+    )
+
+    //--------------------------------------------------------------
+    // Main
+    //--------------------------------------------------------------
+    return (
+        <DraggablePanel id='dialogue-orientation' title="New Project" type="modal" buttons={Buttons}>
+            <div>Choose your orientation</div>
+            <div className={cx("dialogue-inner center")}>
+                <div className={cx("orientation-row margin-ttt margin-bb")}>
+                    <button className={cx("orientation-button")} onClick={() => onNewProject("portrait")}>
+                        <img className={cx("orientation-image")} src="./imgs/gui/new-portrait-3.png" />
+                        <h3>Portrait</h3>
+                    </button>
+
+                    <button className={cx("orientation-button")} onClick={() => onNewProject("landscape")}>
+                        <img className={cx("orientation-image")} src="./imgs/gui/new-landscape-3.png" />
+                        <h3>Landscape</h3>
+                    </button>
+                </div>
+            </div>
         </DraggablePanel>
-	);
+    );
 }
 
 export default DialogueOrientation;

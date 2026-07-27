@@ -57,10 +57,7 @@ const DialogueAddColour = () => {
 	//--------------------------------------------------------------
     return (
         <DraggablePanel id='add-colour' title="Add Colour" buttons={Buttons}>
-            {/* <div style={{position:"relative", width:"400px", overflow:"hidden"}}> */}
-                {/* <HexColorPicker color={"#fff000"} onChange={setColour} /> */}
-                <SwatchesPicker width="530px" height="295px" onChangeComplete={ color => setColour(color.hex) }/>
-            {/* </div> */}
+            <SwatchesPicker width="530px" height="295px" onChangeComplete={ color => setColour(color.hex) }/>
         </DraggablePanel>
 	);
 }

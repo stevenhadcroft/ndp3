@@ -22,6 +22,9 @@ const viewSlice = createSlice({
     setGeneric: (state, action) => {
       state[action.payload.key] = action.payload.value;
     },
+    setUserIsAuth: (state, action) => {
+      state.userIsAuth = action.payload;
+    },
     setDragIndex: (state, action) => {
       state.dragIndex = action.payload;
     },
@@ -150,7 +153,8 @@ export const {
   setSearch,
   showLoader,
   setDir,
-  setAppUpdateStatus
+  setAppUpdateStatus,
+  setUserIsAuth,
   // fullScreen,
 } = viewSlice.actions;
 

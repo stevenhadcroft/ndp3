@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from 'react-redux'
 import { cx } from '../styles';
-import { Constants } from "../constants";
+import { PHONETICS_GRID } from "../constants";
 import DraggablePanel from "./DraggablePanel";
 
 import {
@@ -14,14 +14,12 @@ const DialogueAddPhonetics = () => {
 
     // HOOKS ---------------------------------------------------
     const dispatch = useDispatch();
-    const [selectedIndex, setSelectedIndex] = useState();
+    const [selectedSymbol, setSelectedSymbol] = useState();
 
     // HANDLERS ---------------------------------------------------
-    const onClick = (index) => {
-        setSelectedIndex(index);
-        const phonetic = Constants.PHONETICS[index].symbol;
-        // alert(phonetic)
-        dispatch(addPhonetic(phonetic));
+    const onClick = (symbol) => {
+        setSelectedSymbol(symbol);
+        dispatch(addPhonetic(symbol));
     }
 
     const onClose = () => {
@@ -41,15 +39,19 @@ const DialogueAddPhonetics = () => {
 	// Main
 	//--------------------------------------------------------------
     return (
-        <DraggablePanel id='add-phonetic' title='Add Phonetic' colour={"rgb(255 94 0)"} buttons={Buttons}>
+        <DraggablePanel id='add-phonetic' title='Add Phonetic' buttons={Buttons}>
             <div className={cx("dialogue-inner")} style={{position:"relative", width:"540px"}}>
-                {Constants.PHONETICS.map((item, index) => {
-                    return <div     key={index}
-                                    className={cx(`phonetic-pot ${index === selectedIndex ? 'selected' : ''}`)}
-                                    style={{visibility:item.symbol ? "visible" : "hidden"}}
-                                    onClick = {() => onClick(index)}
-                            >{item.symbol}</div>
-                })}
+                {PHONETICS_GRID.map((row, rowIndex) => (
+                    <div key={rowIndex}>
+                        {row.map((cell, colIndex) => (
+                            <div key={colIndex}
+                                 className={cx(`phonetic-pot ${cell?.symbol && cell.symbol === selectedSymbol ? 'selected' : ''}`)}
+                                 style={{visibility: cell?.symbol ? "visible" : "hidden"}}
+                                 onClick={() => cell?.symbol && onClick(cell.symbol)}
+                            >{cell?.symbol}</div>
+                        ))}
+                    </div>
+                ))}
             </div>
         </DraggablePanel>
 	);

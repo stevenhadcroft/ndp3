@@ -10,7 +10,7 @@ const DialogueUpdateProgress = () => {
 	// Main
 	//--------------------------------------------------------------
     return (
-        <DraggablePanel type="modal-update">
+        <DraggablePanel type="modal modal-update">
             <div className={cx("update-progress-header")}>
                 Downloading update {appUpdateStatus && appUpdateStatus.version ? `v${appUpdateStatus.version}` : ''}
             </div>

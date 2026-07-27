@@ -3,10 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { cx } from '../styles';
 import { eMode, FONTLIST } from "../constants";
 
-// import { 
-//     setGeneric
-// } from "../actions";
-
 import { 
     setMode, 
     cancelMode,
@@ -27,10 +23,6 @@ const DialogueText = () => {
     const view = useSelector(state => state.view);
     const canvas = useSelector(state => state.canvas);
     
-    // useEffect(()=>{
-    //     dispatch(setGeneric({key:"textfieldFocussed", value:false})); // reset allow key nudge
-    // }, [])
-
     // if phonetic changes then add
     useEffect(()=>{
         if (!view.phoneticToAdd) return;
@@ -57,8 +49,7 @@ const DialogueText = () => {
         if (str === 'Enter text'){
             dispatch(updateTextData({key:'text', value:''}))
         }
-		// dispatch(setGeneric({key:"textfieldFocussed", value:true}))
-    }; 
+	}; 
     
     const onBlur = evt => {
     	// dispatch(setGeneric({key:"textfieldFocussed", value:false}))

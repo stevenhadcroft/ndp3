@@ -15,6 +15,9 @@ import {
     resetCanvas,
     setOrientation,
     fileLoadUpdate,
+    setProjectName,
+    markSaved,
+    markLoadStart,
 } from "../features/canvasSlice";
 import { cloneDeep, makeSVGgrabbable, makeSVGgrabbableReset } from "../utils";
 import html2canvas from "html2canvas";
@@ -43,8 +46,10 @@ function DialogueProject({ mode }) {
     const [file, setFile] = useState({});
     const [confirmDelete, setConfirmDelete] = useState();
     const [confirmName, setConfirmName] = useState();
+    const [confirmOverwrite, setConfirmOverwrite] = useState();
     const [listData, setListData] = useState([]);
     const [dirData, setDirData] = useState([]);
+    const [deleteError, setDeleteError] = useState("");
     
     useEffect(() => {
         refreshList();
@@ -106,16 +111,26 @@ function DialogueProject({ mode }) {
 
     // HANDLERS ---------------------------------------------------
     const onProjectClick = (file, index) => {
-        setFile(file); 
+        setFile(file);
         setSelectedId(index);
         setSelectedDirectoryId(-1);
+        setDeleteError("");
         inputRef.current.value = file.name;
     }
     const onDirectoryClick = (dir, index) => {
         setFile(dir); // NOT SURE THIS IS GOOD!?!?!?!
         setSelectedDirectoryId(index);
         setSelectedId(-1);
+        setDeleteError("");
         inputRef.current.value = dir.dirname;
+    }
+    const onDeleteRequest = () => {
+        if (selectedId === -1 && selectedDirectoryId === -1) {
+            setDeleteError("Please select a project or folder to delete.");
+            return;
+        }
+        setDeleteError("");
+        setConfirmDelete(true);
     }
     const onDeleteClick = () => {
         dispatch(showLoader(true));
@@ -139,11 +154,11 @@ function DialogueProject({ mode }) {
         dispatch(cancelMode());
     }
     const onCTAClick = () => {
-        setFile(Object.assign(file || {}, { name: inputRef.current.value }));
+        setFile(Object.assign({}, file || {}, { name: inputRef.current.value }));
         if (mode === 'open' || (selectedDirectoryId !== -1)) {
             if (selectedId !== -1) {
-                
-                if (window.LOCAL){ 
+
+                if (window.LOCAL){
                     openProject(file);
                 } else {
                     dispatch(showLoader(true));
@@ -151,6 +166,7 @@ function DialogueProject({ mode }) {
                     getProject(file).then(data => { // ONLINE GOTTA LOAD IT
                         console.log('getProject() data ', data);
                         const parsed = JSON.parse(data);
+                        parsed.name = file.name; // carry name through to openProject
                         openProject(parsed);
                         dispatch(showLoader(false));
                     });
@@ -162,8 +178,25 @@ function DialogueProject({ mode }) {
                 refreshList(file.dirname);
             }
         } else if (mode === 'save') {
-            saveProject(file);
+            const typedName = (inputRef.current.value || "").trim();
+            if (!typedName) {
+                setDeleteError("Please enter a project name before saving.");
+                return;
+            }
+            setDeleteError("");
+            const existing = listData.find(p => p.name === typedName);
+            if (existing) {
+                setConfirmOverwrite(existing);
+                return;
+            }
+            saveProject(Object.assign({}, file, { name: typedName }));
         }
+    }
+
+    const onOverwriteConfirm = () => {
+        const target = Object.assign({}, confirmOverwrite, { name: inputRef.current.value });
+        setConfirmOverwrite(null);
+        saveProject(target);
     }
 
     const onCreateDirClick = () => {
@@ -187,8 +220,10 @@ function DialogueProject({ mode }) {
         if (data) {
             dispatch(cancelMode());
             dispatch(resetCanvas());
+            dispatch(markLoadStart());
             dispatch(setOrientation(data.orientation));
-            dispatch(fileLoadUpdate(data));    
+            dispatch(setProjectName(file.name));
+            dispatch(fileLoadUpdate(data));
         } else {
             alert('ERROR : no file data')
         }
@@ -216,17 +251,17 @@ function DialogueProject({ mode }) {
                 storeProject({
                     name:file.name,
                     projectid:Math.floor(file.id),
-                    description:"", 
-                    thumbnail, 
-                    data:projectData, 
-                    dirname:view.currentDir, 
+                    description:"",
+                    thumbnail,
+                    data:projectData,
+                    dirname:view.currentDir,
                     orientation:canvas.orientation
                 })
-                    
-                // makeSVGgrabbableReset();
+
                 if (view.mode === eMode.SAVE_BEFORE_NEW) {
-                    // dispatch(newProject());
                     dispatch(resetCanvas());
+                } else {
+                    dispatch(markSaved(file.name));
                 }
 
                 dispatch(cancelMode());
@@ -250,8 +285,7 @@ function DialogueProject({ mode }) {
     //--------------------------------------------------------------
     const Buttons = (
         <>
-            <button className={cx("primary narrow red")} onClick={() => setConfirmDelete(true)}>Delete</button>
-            <button className={cx("primary narrow")} onClick={onCancelClick}>Cancel</button>
+            <button className={cx("secondary narrow")} onClick={onCancelClick}>Cancel</button>
             <button className={cx("primary narrow")} onClick={onCTAClick}>{mode === "open" ? "Open" : "Save"}</button>
         </>
     )
@@ -262,60 +296,93 @@ function DialogueProject({ mode }) {
     return (
         <DraggablePanel id='dialogue-project' title={title} type="fullscreen" buttons={Buttons}>
 
-            <div className={cx("margin-bb margin-ll")}>
+            <div className={cx("margin-bb margin-ll")} style={{ display: "flex", alignItems: "center" }}>
                 <span className={cx("margin-r")}>Project Name</span>
                 <input type="text" className={cx("with-phonetic")} ref={inputRef} />
-                <button className={cx("add-phonetic large")} style={{ position: "reletive", top: "3px" }} onClick={() => dispatch(showPhonetics(true))} />
+                <button className={cx("add-phonetic large")} onClick={() => dispatch(showPhonetics(true))} />
 
                 {!view.currentDir &&
-                    <button style={{marginLeft:"30px"}} className={cx("tertiary")} onClick={setConfirmName}>Create folder
-                        <img width="30px" style={{ marginLeft: "15px", marginBottom: "-13px" }} src={'./imgs/directory.png'} />
+                    <button style={{marginLeft:"30px"}} className={cx("tertiary")} onClick={setConfirmName}>
+                        <img width="20px" style={{ marginRight: "8px" }} src={'./imgs/directory.png'} />
+                        Create folder
                     </button>
                 }
 
                 {view.currentDir &&
                     <>
                         <span style={{marginLeft:"30px"}}><span style={{fontWeight:"400"}}>Current folder</span> : {view.currentDir}</span>
-                        <button style={{marginLeft:"30px"}} className={cx("tertiary")} onClick={onLeaveFolder} >Leave folder
-                            <img width="30px" style={{ marginLeft: "15px", marginBottom: "-13px" }} src={'./imgs/directory.png'} />
+                        <button style={{marginLeft:"30px"}} className={cx("tertiary")} onClick={onLeaveFolder} >
+                            <img width="20px" style={{ marginRight: "8px" }} src={'./imgs/directory.png'} />
+                            Leave folder
                         </button>
                     </>
                 }
+
+                <button className={cx("primary narrow red")} style={{ marginLeft: "auto" }} onClick={onDeleteRequest}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: "8px", marginBottom: "-3px" }}>
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                        <path d="M10 11v6" />
+                        <path d="M14 11v6" />
+                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                    </svg>
+                    {selectedDirectoryId !== -1 ? "Delete folder and contents" : "Delete project"}
+                </button>
             </div>
 
             {confirmDelete &&
                 <>
                     <div className={cx("dialogue-inner align-center")} style={{ display: "block" }}>
-                        <br /><br /><br /><br />
-                        <div style={{ margin: "20px 0" }}>{`Are you sure you want to delete this ${selectedDirectoryId !== -1 ? "folder and all of its contents?" : "this project?"}`}</div>
-                        <br /><br />
-                        <div>
-                            <button className={cx("primary narrow")} onClick={() => setConfirmDelete(false)}>Cancel</button>
-                            <button className={cx("primary narrow red")} onClick={onDeleteClick}>Delete</button>
+                        <div className={cx("margin-ttt")}>
+                            <div>
+                                {`Are you sure you want to delete this ${selectedDirectoryId !== -1 ? "folder and all of its contents?" : "project?"}`}
+                            </div>
+                            <br /><br />
+                            <div>
+                                <button className={cx("secondary narrow")} onClick={() => setConfirmDelete(false)}>Cancel</button>
+                                <button className={cx("primary narrow")} onClick={onDeleteClick}>Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            }
+
+            {confirmOverwrite &&
+                <>
+                    <div className={cx("dialogue-inner align-center")} style={{ display: "block" }}>
+                        <div className={cx("margin-ttt")}>
+                            <div>Are you sure you want to save over this project?</div>
+                            <br /><br />
+                            <div>
+                                <button className={cx("secondary narrow")} onClick={() => setConfirmOverwrite(null)}>Cancel</button>
+                                <button className={cx("primary narrow")} onClick={onOverwriteConfirm}>Save and Replace</button>
+                            </div>
                         </div>
                     </div>
                 </>
             }
 
             {confirmName &&
-                <>
-                    <div className={cx("dialogue-inner align-center")} style={{ display: "block" }}>
-                        {/* <br /><br /><br /><br /> */}
-
-                        <div style={{marginTop:"5%"}}>
-                            <div style={{ margin: "20px 0" }}>Please enter folder name?</div>
-                            <input type="text" style={{ width: "300px" }} ref={inputRefCreateFolder} />
+                <div className={cx("dialogue-inner align-center")} style={{ display: "block" }}>
+                    <div className={cx("create-folder-form")}>
+                        <div className={cx("field-stack")}>
+                            <div className={cx("field-label")}>Please enter folder name?</div>
+                            <input type="text" ref={inputRefCreateFolder} />
                         </div>
 
-                        <div style={{marginTop:"5%"}}>
-                            <button className={cx("primary narrow")} onClick={() => setConfirmName(false)}>Cancel</button>
+                        <div className={cx("margin-ttt")}>
+                            <button className={cx("secondary narrow")} onClick={() => setConfirmName(false)}>Cancel</button>
                             <button className={cx("primary narrow")} onClick={onCreateDirClick}>Submit</button>
                         </div>
                     </div>
-                </>
+                </div>
             }
 
-            {!(confirmDelete || confirmName) &&
+            {!(confirmDelete || confirmName || confirmOverwrite) && deleteError &&
+                <div style={{ color: "#ff5252", fontWeight: 600, padding: "0 20px 10px" }}>{deleteError}</div>
+            }
+
+            {!(confirmDelete || confirmName || confirmOverwrite) &&
                 <div className={cx("dialogue-inner")}>
                     {/* -------  directories -------  */}
                     {dirData && dirData.map((dir, index) => {

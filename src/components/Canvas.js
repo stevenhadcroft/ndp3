@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react"; // Add useRef import
 import { useSelector, useDispatch } from 'react-redux'
 import { cx } from '../styles';
 import { eMode, eDirection } from "../constants";
-import { colors, withOpacity, opacity, brandColors } from "../styles/tokens/colors";
 import useCanvasFileLoader from "../hooks/useCanvasFileLoader"; 
 import TransformWidget from "./TransformWidget";
 import { BrushSVG } from "./BrushSVG";
@@ -269,7 +268,7 @@ const Canvas = () => {
 			left: `${item.x - item.size / 2}px`,
 			top: `${item.y - item.size / 2}px`,
 			transform: `rotate(${item.angle}deg)`,
-			border: selectedIndex === index && mode === eMode.EDIT_IMAGE && !brushColour ? `solid 3px ${colors.ui.canvasControl}` : `solid 3px ${withOpacity(colors.ui.canvasControl, '00')}`,
+			border: selectedIndex === index && mode === eMode.EDIT_IMAGE && !brushColour ? `solid 3px var(--color-ui-canvas-control)` : `solid 3px transparent`,
 			width: `${item.size}px`,
 			height: `${item.size}px`,
 		}
@@ -281,7 +280,7 @@ const Canvas = () => {
 			left: `${item.x - item.size / 2}px`,
 			top: `${item.y - item.size / 3 / 2}px`,
 			transform: `rotate(${item.angle}deg)`,
-			border: selectedIndex === index && mode === eMode.EDIT_TEXT && !brushColour ? `solid 3px ${colors.ui.canvasControl}` : `solid 3px ${withOpacity(colors.ui.canvasControl, '00')}`,
+			border: selectedIndex === index && mode === eMode.EDIT_TEXT && !brushColour ? `solid 3px var(--color-ui-canvas-control)` : `solid 3px transparent`,
 			width: `${item.size}px`,
 			height: `${item.size / 4}px`,
 
@@ -296,10 +295,10 @@ const Canvas = () => {
 	const templateStyle = orientation === "landscape" ? {
 		width: `${768}px`,
 		height: `${1100}px`,
-		background: brandColors.white,
+		background: "var(--color-white)",
 		transform: "translate(166px, -166px) rotate(90deg)"
 	} : null;
-	const canvasStyle = { transform: `scale(${canvasScale})`, left: `${canvasLeft}px`, top: canvasTop, clipPath: "none", background: withOpacity(brandColors.white, opacity.light)} // 
+	const canvasStyle = { transform: `scale(${canvasScale})`, left: `${canvasLeft}px`, top: canvasTop, clipPath: "none", background: "var(--color-background-white-subtle)"}
 	const canvasInnerStyle = { transform: `scale(${zoom}) translate(${panx}px, ${pany}px)` };
 	
 	return (

@@ -10,7 +10,6 @@ window.REFRESH_CREDS = () => {
 }
 window.REFRESH_CREDS();
 
-
 const db = new Dexie("NDP3ProjectFiles_"+Constants.LOCAL_DATA_FILES_ID);
 db.version(1).stores({ 
     projects: "++id,name,description,thumbnail,data,dirname",

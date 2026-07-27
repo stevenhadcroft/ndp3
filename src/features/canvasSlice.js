@@ -12,6 +12,8 @@ const cloneState = (state) => {
 
 const pushHistory = (state) => {
   if (window.undoHistory) window.undoHistory.push(cloneState(state));
+  // Skip while a project is loading — loader-driven mutations shouldn't dirty the doc.
+  if (!state.loading) state.modified = true;
 }
 
 const canvasSlice = createSlice({
@@ -20,10 +22,13 @@ const canvasSlice = createSlice({
   initialState: {
     images: [],
     texts: [],
+    projectName: null,
+    modified: false,
+    loading: false,
   },
 
   reducers: {
-    
+
     fileLoadUpdate: (state, action) => {
       // don't reset here becauase we want to keep the current stat
       state.fileLoadUpdate = {data:action.payload};
@@ -40,7 +45,27 @@ const canvasSlice = createSlice({
       state.texts = [];
       state.template = null;
       state.selectedIndex = null;
+      state.projectName = null;
+      state.modified = false;
       window.undoHistory = [];
+    },
+
+    setProjectName: (state, action) => {
+      state.projectName = action.payload;
+    },
+
+    markSaved: (state, action) => {
+      if (action.payload) state.projectName = action.payload;
+      state.modified = false;
+    },
+
+    markLoadStart: (state) => {
+      state.loading = true;
+    },
+
+    markLoadFinished: (state) => {
+      state.loading = false;
+      state.modified = false;
     },
     
     setOrientation: (state, action) => {
@@ -192,7 +217,11 @@ export const {
   duplicateText,
   setTextData,
   updateTextData,
-  fileLoadUpdate
+  fileLoadUpdate,
+  setProjectName,
+  markSaved,
+  markLoadStart,
+  markLoadFinished,
 } = canvasSlice.actions;
 
 export default canvasSlice.reducer;

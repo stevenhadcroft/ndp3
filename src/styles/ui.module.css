@@ -15,11 +15,6 @@
     height: 40px;
 }
 
-.icon.small>img {
-    width: 20px;
-    height: 20px;
-}
-
 .react-colorful {
     width: 450px !important;
     height: 300px !important;
@@ -40,14 +35,6 @@
     height: 100%;
     background-color: var(--color-ui-progress-bar);
     transition: width 0.3s ease-in-out;
-}
-
-.update-progress-stats {
-    display: flex;
-    justify-content: space-between;
-    color: var(--color-white);
-    font-size: 14px;
-    margin-top: 10px;
 }
 
 .update-progress-header {

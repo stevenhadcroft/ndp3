@@ -2,6 +2,12 @@ button {
   cursor: pointer;
   background: transparent;
   border: none;
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease, box-shadow 120ms ease;
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 0.5;
 }
 
 button.primary,
@@ -24,6 +30,14 @@ button.secondary {
   /* box-shadow: 2px 4px 3px #00000022; */
 }
 
+.primary:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-button-primary) 50%, var(--color-button-primary-active));
+}
+
+.primary:active:not(:disabled) {
+  background-color: var(--color-button-primary-active);
+}
+
 .secondary {
   background: transparent;
   border: solid 2px var(--color-button-primary);
@@ -31,63 +45,67 @@ button.secondary {
   /* box-shadow: 2px 4px 3px #00000022; */
 }
 
+.secondary:hover:not(:disabled) {
+  background-color: color-mix(in srgb, transparent 50%, var(--color-button-secondary-active));
+}
+
+.secondary:active:not(:disabled) {
+  background-color: var(--color-button-secondary-active);
+}
+
 .tertiary {
     background: transparent;
     background-size: contain;
     border: 0;
-    padding: 1px 25px 12px 25px;
+    height: 50px;
+    padding: 0 25px;
     border-radius: 99px;
     margin: 8px 30px;
     font-size: 16px;
     font-weight: 600;
-    color: var(--color-button-primary-text);
-    /* text-transform: uppercase; */
-    border: solid 2px var(--color-button-tertiary);
+    color: var(--color-button-tertiary);
+    text-decoration: underline;
+    display: inline-flex;
+    align-items: center;
 }
 
-.link {
-  font-size: 16px;
-  background: transparent;
-  color: var(--color-button-link);
-  text-decoration: underline;
+.tertiary:hover:not(:disabled) {
+  background-color: color-mix(in srgb, transparent 50%, var(--color-button-tertiary-active));
 }
 
-button .small {
-  height: 50px;
+.tertiary:active:not(:disabled) {
+  background-color: var(--color-button-tertiary-active);
 }
 
-.primary.narrow {
+.primary.narrow,
+.secondary.narrow {
   width: 180px;
 }
 
-.primary.green
-.left-menu.green {
-  background-color: var(--color-button-green-bg);
-}
-
-.primary.bluetrans,
-.left-menu.bluetrans {
-  margin-top: 50px;
-}
-
+/*
+// red outline version
 .primary.red {
   background-color: var(--color-button-red-bg);
   background: transparent;
   border: 2px var(--color-button-red-border) solid !important;
-  color: var(--color-button-red-text);
+  color: var(--color-white);
+  box-shadow: none;
+} */
+
+.primary.red {
+  /* background-color: #ffffff11; */
+  background-color: transparent;
+  color: var(--color-button-red-border);
+  text-decoration: underline;
   box-shadow: none;
 }
 
-.primary.green {
-  background-color: var(--color-button-green-bg);
-  color: var(--color-button-green-text);
+.primary.red:hover:not(:disabled) {
+  background-color: color-mix(in srgb, transparent 50%, var(--color-button-secondary-active));
 }
 
-/* --- FILTER --------------------------- */
-.close-x {
- color:#fff;
- font-size: 20px;
- /* font-weight: bold; */
+.primary.red:active:not(:disabled) {
+  background-color: var(--color-button-secondary-active);
 }
 
 /* --- FILTER --------------------------- */
@@ -121,13 +139,6 @@ button .small {
 
 .add-phonetic::before {
   content: "ð";
-}
-
-.add-phone.large {
-  position: relative;
-  top: 1px;
-  right: 14px;
-  font-size: 31px;
 }
 
 .phonetic-pot {

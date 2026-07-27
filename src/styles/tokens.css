@@ -8,8 +8,8 @@
   /* Brand Colors - Blues */
   --color-blue-primary: #2c83d4;
   --color-blue-bright: #0099CC;
-  --color-blue-dark: #0F6ACB;
-  --color-blue-navy: #012457;
+  --color-blue-dark: #015698;
+  --color-blue-navy: #193c71; /* /only used for app background, can be darker */
   --color-blue-slate: #295b88;
   --color-blue-medium: #48759e;
 
@@ -47,17 +47,21 @@
 
   /* Buttons */
   --color-button-primary: var(--color-blue-primary);
+  --color-button-primary-active: var(--color-blue-dark);
   --color-button-primary-text: var(--color-white);
   --color-button-secondary: transparent;
+  --color-button-secondary-active: var(--color-background-white-subtle);
   --color-button-secondary-text: var(--color-white);
   --color-button-tertiary: var(--color-orange-light);
+  --color-button-tertiary-active: var(--color-background-white-subtle);
   --color-button-tertiary-text: var(--color-white);
-  --color-button-green-bg: var(--color-blue-dark);
   --color-button-green-text: var(--color-white);
   --color-button-green-ui-bg: var(--color-green-material);
   --color-button-red-bg: var(--color-red-primary);
+  --color-button-red-bg-active: var(--color-red-dark);
   --color-button-red-border: var(--color-orange-dark);
   --color-button-red-text: var(--color-orange-dark);
+  --color-button-link-active: var(--color-blue-bright);
 
   /* States */
   --color-state-success: var(--color-green-material);
@@ -71,9 +75,9 @@
   /* Backgrounds */
   --color-background-app: var(--color-blue-navy);
   --color-background-canvas: var(--color-white);
-  --color-background-canvas-icon: rgb(0, 153, 204);
+  --color-background-canvas-icon: var(--color-blue-bright);
   --color-background-panel: var(--color-blue-slate);
-  --color-background-dialogue: var(--color-blue-slate);
+  --color-background-dialogue: var(--color-blue-dark);
   --color-background-menu: var(--color-white);
   --color-background-toolbar: var(--color-blue-primary);
   --color-background-overlay: var(--color-black);
@@ -106,7 +110,7 @@
   --color-ui-phonetic: var(--color-orange-primary);
   --color-ui-phonetic-pot: var(--color-white);
   --color-ui-phonetic-pot-text: var(--color-gray-600);
-  --color-ui-menu-header: var(--color-blue-primary);
+  --color-ui-menu-header: var(--color-blue-dark);
   --color-ui-toolbar-label: var(--color-blue-primary);
   --color-ui-scrollbar-track: var(--color-gray-100);
   --color-ui-scrollbar-handle: var(--color-blue-dark);
@@ -115,7 +119,6 @@
   /* Common Transparent Colors */
   --color-overlay-dark: #000000CC;
   --color-overlay-medium: #00000044;
-  --color-overlay-subtle: #00000022;
   --color-overlay-very-subtle: #00000011;
   --color-background-white-semi: #ffffffaa;
   --color-background-white-soft: #ffffff33;

@@ -25,24 +25,24 @@ module.exports = {
       InternalName: 'NDP3SpeechBuilder'
     },
 
-    osxSign: {
-      identity: 'Developer ID Application: Steven Hadcroft (B4AWA83RK2)',
-      hardenedRuntime: true,
-      entitlements: "entitlements.plist",
-      "entitlements-inherit": "entitlements.plist",
-      "gatekeeper-assess": false
-    },
+    // osxSign: {
+    //   identity: 'Developer ID Application: Steven Hadcroft (B4AWA83RK2)',
+    //   hardenedRuntime: true,
+    //   entitlements: "entitlements.plist",
+    //   "entitlements-inherit": "entitlements.plist",
+    //   "gatekeeper-assess": false
+    // },
 
     
-    osxNotarize: {
-      tool: 'notarytool',
-      appleId: process.env.APPLE_ID,
-      appleIdPassword: process.env.APPLE_PASSWORD,
-      teamId: process.env.APPLE_TEAM_ID,
-      appBundleId: 'com.ndp3.app',
-      timeout: 3600000, // 1 hour in milliseconds
-      retries: 3
-    }
+    // osxNotarize: {
+    //   tool: 'notarytool',
+    //   appleId: process.env.APPLE_ID,
+    //   appleIdPassword: process.env.APPLE_PASSWORD,
+    //   teamId: process.env.APPLE_TEAM_ID,
+    //   appBundleId: 'com.ndp3.app',
+    //   timeout: 3600000, // 1 hour in milliseconds
+    //   retries: 3
+    // }
 
     // Important: Add this to ensure signing happens
     // signBundle: true,

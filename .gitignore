@@ -11,7 +11,7 @@
 # production
 /build
 
-# /public/pde-viewer
+/public/pde-viewer
 
 # misc
 .DS_Store

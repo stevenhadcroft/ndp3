@@ -37,6 +37,8 @@ if (require('electron-squirrel-startup')) {
 }
 
 // Configure auto-updates
+autoUpdater.autoDownload = false;
+
 autoUpdater.setFeedURL({
   provider: 'github',
   owner: 'stevenhadcroft',
@@ -49,6 +51,13 @@ setInterval(() => {
 }, 60 * 60 * 1000);
 
 let updateInfo = {}; // Store update info
+let downloadInProgress = false;
+
+const sendToRenderer = (channel, payload) => {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send(channel, payload);
+  }
+};
 
 // Update event handlers
 autoUpdater.on('update-available', (info) => {
@@ -66,6 +75,7 @@ autoUpdater.on('update-available', (info) => {
   dialog.showMessageBox(dialogOpts).then(({ response }) => {
     if (response === 0) {
       // User clicked Download
+      downloadInProgress = true;
       autoUpdater.downloadUpdate();
     }
   });
@@ -73,36 +83,39 @@ autoUpdater.on('update-available', (info) => {
 
 // Add progress handler
 autoUpdater.on('download-progress', (progressObj) => {
-  let logMessage = `Download speed: ${progressObj.bytesPerSecond}`;
-  logMessage += ` - Downloaded ${progressObj.percent}%`;
-  logMessage += ` (${progressObj.transferred}/${progressObj.total})`;
-  
-  mainWindow.webContents.send('download-progress', {
-      percent: progressObj.percent,
-      transferred: progressObj.transferred,
-      total: progressObj.total,
-      bytesPerSecond: progressObj.bytesPerSecond,
-      version: updateInfo ? updateInfo.version : null // Include version
+  sendToRenderer('download-progress', {
+    percent: progressObj.percent,
+    transferred: progressObj.transferred,
+    total: progressObj.total,
+    bytesPerSecond: progressObj.bytesPerSecond,
+    version: updateInfo ? updateInfo.version : null
   });
 });
 
 autoUpdater.on('error', (err) => {
   log.error('Update error:', err);
-  dialog.showMessageBox({
-    type: 'error',
-    buttons: ['OK'],
-    title: 'Update Failed',
-    message: 'An error occurred during the update',
-    detail: err.message || 'Unknown error'
-  });
+
+  // Tell renderer to clear the progress UI if a download was running
+  if (downloadInProgress) {
+    sendToRenderer('update-error', { message: err.message || 'Unknown error' });
+    dialog.showMessageBox({
+      type: 'error',
+      buttons: ['OK'],
+      title: 'Update Failed',
+      message: 'An error occurred during the update',
+      detail: err.message || 'Unknown error'
+    });
+  }
+  downloadInProgress = false;
 });
 
 // IMPORTANT - kick starts install if already downloaded
 autoUpdater.on('update-downloaded', (info) => {
   log.info('Update downloaded:', info);
+  downloadInProgress = false;
   const dialogOpts = {
     type: 'info',
-    buttons: ['Install Now', 'Later'],
+    buttons: ['Install Now'], // , 'Later'
     title: 'Update Ready',
     message: `Version ${info.version} is ready to install`,
     detail: 'The application will restart to apply the update.'
@@ -245,6 +258,7 @@ function setupIPC() {
   ipcMain.removeHandler('create-dir');
   ipcMain.removeHandler('get-dirs');
   ipcMain.removeHandler('delete-dir');
+  ipcMain.removeHandler('read-pdf-file');
 
   ipcMain.handle('call-print', async (event, htmlContent) => {
     try {
@@ -262,6 +276,22 @@ function setupIPC() {
   
   ipcMain.handle('get-version', () => {
     return app.getVersion();
+  });
+
+  // The pdf-viewer iframe runs its own bundle loaded via file://, where the
+  // browser's fetch()/XHR can't reliably read local files (especially from
+  // a nested frame). Reading the bytes here via Node's fs and relaying them
+  // to the renderer sidesteps that entirely.
+  ipcMain.handle('read-pdf-file', async (event, filename) => {
+    try {
+      const safeName = path.basename(filename);
+      const filepath = path.join(__dirname, 'pdf-viewer', 'docs', safeName);
+      const data = await fs.readFile(filepath);
+      return { success: true, data: new Uint8Array(data) };
+    } catch (error) {
+      log.error('Error reading PDF file:', error);
+      return { success: false, error: error.message };
+    }
   });
 
   //-------------------------------------

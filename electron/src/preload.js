@@ -7,8 +7,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   callPrintFunction: (htmlContent) => ipcRenderer.invoke('call-print', htmlContent),
   closeApp: () => ipcRenderer.send('close-app'),
   getVersion: () => ipcRenderer.invoke('get-version'),
+  readPdfFile: (filename) => ipcRenderer.invoke('read-pdf-file', filename),
   // onUpdateAvailable: (callback) => ipcRenderer.on('update-available', callback),
   onUpdateProgress: (callback) => ipcRenderer.on('download-progress', callback),
+  onUpdateError: (callback) => ipcRenderer.on('update-error', callback),
   // onUpdateDownloaded: (callback) => ipcRenderer.on('update-downloaded', callback),
   // downloadUpdate: () => ipcRenderer.invoke('download-update')
 

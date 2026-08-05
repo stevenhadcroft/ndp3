@@ -13,6 +13,10 @@ out
 dist-ssr
 *.local
 
+src/pdf-viewer/docs/*
+
+.env
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

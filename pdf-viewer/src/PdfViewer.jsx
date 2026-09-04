@@ -54,7 +54,7 @@ const SIDEBAR_MIN    = 60
 const SIDEBAR_MAX    = 580
 const SIDEBAR_DEFAULT = 166
 
-export default function PdfViewer({ url, title, onClose, docOptions, onSelectDoc, isElectron }) {
+export default function PdfViewer({ url, title, onMenu, docOptions, onSelectDoc, isElectron }) {
   const [pdfDoc, setPdfDoc]           = useState(null)
   const [, setNumPages]               = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
@@ -65,6 +65,18 @@ export default function PdfViewer({ url, title, onClose, docOptions, onSelectDoc
     const saved = localStorage.getItem('pdf-sidebar-width')
     return saved ? Number(saved) : SIDEBAR_DEFAULT
   })
+
+  const [sidebarOpen, setSidebarOpen]     = useState(() => {
+    return localStorage.getItem('pdf-sidebar-open') !== '0'
+  })
+
+  const toggleSidebar = () => {
+    setSidebarOpen(open => {
+      const next = !open
+      localStorage.setItem('pdf-sidebar-open', next ? '1' : '0')
+      return next
+    })
+  }
 
   const [searchOpen, setSearchOpen]       = useState(false)
   const [searchTerm, setSearchTerm]       = useState('')
@@ -133,9 +145,15 @@ export default function PdfViewer({ url, title, onClose, docOptions, onSelectDoc
     return () => { cancelled = true }
   }, [pdfDoc])
 
+  // Phonetic mode only "sounds like" a plain English word (a-z). With IPA
+  // symbols from the phonetic keyboard it's a literal look-up of those glyphs,
+  // and a single symbol (e.g. "ɳ") is a valid search.
+  const soundsLikeSearch = phoneticMode && /^[a-z]+$/i.test(searchTerm.trim())
+  const minSearchLen = phoneticMode && !soundsLikeSearch ? 1 : 2
+
   // Search logic
   useEffect(() => {
-    if (!searchTerm || searchTerm.length < 2 || pageTexts.length === 0) {
+    if (!searchTerm || searchTerm.length < minSearchLen || pageTexts.length === 0) {
       setSearchResults([])
       setActiveMatch(0)
       return
@@ -143,7 +161,7 @@ export default function PdfViewer({ url, title, onClose, docOptions, onSelectDoc
     const term = searchTerm.toLowerCase()
     const results = []
 
-    if (phoneticMode) {
+    if (soundsLikeSearch) {
       const termCode = metaphone(searchTerm)
       if (!termCode) { setSearchResults([]); setActiveMatch(0); return }
 
@@ -165,6 +183,8 @@ export default function PdfViewer({ url, title, onClose, docOptions, onSelectDoc
         }
       }
     } else {
+      // Literal, case-insensitive substring — used by normal search and by
+      // phonetic search when the term contains IPA symbols.
       for (const pageData of pageTexts) {
         const pageMatches = []
         for (const item of pageData.items) {
@@ -183,7 +203,7 @@ export default function PdfViewer({ url, title, onClose, docOptions, onSelectDoc
 
     setSearchResults(results)
     setActiveMatch(0)
-  }, [searchTerm, pageTexts, phoneticMode])
+  }, [searchTerm, pageTexts, phoneticMode, soundsLikeSearch, minSearchLen])
 
   // Flatten results for navigation
   const flatMatches = searchResults.flatMap(r =>
@@ -298,6 +318,11 @@ export default function PdfViewer({ url, title, onClose, docOptions, onSelectDoc
   useEffect(() => {
     renderPage(pdfDoc, currentPage, zoom)
   }, [pdfDoc, currentPage, zoom, renderPage])
+
+  // Re-fit the page when the thumbnail panel is shown/hidden (main area resizes)
+  useEffect(() => {
+    renderPage(pdfDoc, currentPageRef.current, zoomRef.current)
+  }, [sidebarOpen, pdfDoc, renderPage])
 
   // Re-render on window resize
   useEffect(() => {
@@ -432,7 +457,14 @@ export default function PdfViewer({ url, title, onClose, docOptions, onSelectDoc
 
   const handlePrint = () => printPdf(url)
 
+  const numPages = pdfDoc?.numPages ?? 0
+  const goPrevPage = () => setCurrentPage(p => Math.max(1, p - 1))
+  const goNextPage = () => setCurrentPage(p => Math.min(numPages, p + 1))
+
   const sidebarCols = sidebarW >= 446 ? 4 : sidebarW >= 330 ? 3 : sidebarW >= 215 ? 2 : 1
+
+  // Left offset that keeps a floating control just right of the thumbnail panel
+  const stageInset = (sidebarOpen ? sidebarW + 6 : 0) + 12
 
   const handleSidebarKeyDown = (e) => {
     if (!pdfDoc) return
@@ -448,6 +480,11 @@ export default function PdfViewer({ url, title, onClose, docOptions, onSelectDoc
   return (
     <div className="pdf-viewer">
       <div className="pdf-toolbar">
+        {onMenu && (
+          <button className="pdf-toolbar-menu" title="Menu" onClick={onMenu}>
+            <img src="./imgs/gui/menu.png" alt="Menu" />
+          </button>
+        )}
         <span className="pdf-brand"><strong>NDP3</strong><sup>&reg;</sup> Digital</span>
         {title && <span className="pdf-title">{title}</span>}
         {docOptions && docOptions.length > 1 && (
@@ -462,42 +499,45 @@ export default function PdfViewer({ url, title, onClose, docOptions, onSelectDoc
             ))}
           </select>
         )}
-        <button className="pdf-toolbar-close" onClick={onClose}>Close</button>
       </div>
       <div className="pdf-body">
-        <div className="pdf-sidebar" style={{ width: sidebarW }} tabIndex={0} onKeyDown={handleSidebarKeyDown}>
-          <div className="pdf-sidebar-inner" style={{ gridTemplateColumns: `repeat(${sidebarCols}, 1fr)` }}>
-            {thumbnails.map(({ pageNum, dataUrl }) => (
-              <div
-                key={pageNum}
-                ref={pageNum === currentPage ? activeThumbRef : null}
-                className={`pdf-thumb${pageNum === currentPage ? ' active' : ''}`}
-                onClick={() => setCurrentPage(pageNum)}
-              >
-                <img src={dataUrl} alt={`Page ${pageNum}`} />
-                <span className="pdf-thumb-label">{pageNum}</span>
+        {sidebarOpen && (
+          <>
+            <div className="pdf-sidebar" style={{ width: sidebarW }} tabIndex={0} onKeyDown={handleSidebarKeyDown}>
+              <div className="pdf-sidebar-inner" style={{ gridTemplateColumns: `repeat(${sidebarCols}, 1fr)` }}>
+                {thumbnails.map(({ pageNum, dataUrl }) => (
+                  <div
+                    key={pageNum}
+                    ref={pageNum === currentPage ? activeThumbRef : null}
+                    className={`pdf-thumb${pageNum === currentPage ? ' active' : ''}`}
+                    onClick={() => setCurrentPage(pageNum)}
+                  >
+                    <img src={dataUrl} alt={`Page ${pageNum}`} />
+                    <span className="pdf-thumb-label">{pageNum}</span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
-        <div className="pdf-sidebar-handle" onMouseDown={startSidebarDrag}>
-          <div className="pdf-sidebar-handle-tab" onMouseDown={startSidebarDrag}>
-            <svg width="10" height="26" viewBox="0 0 14 36" fill="currentColor">
-              <circle cx="4" cy="3" r="1.5"/>
-              <circle cx="10" cy="3" r="1.5"/>
-              <circle cx="4" cy="9" r="1.5"/>
-              <circle cx="10" cy="9" r="1.5"/>
-              <circle cx="4" cy="15" r="1.5"/>
-              <circle cx="10" cy="15" r="1.5"/>
-              <circle cx="4" cy="21" r="1.5"/>
-              <circle cx="10" cy="21" r="1.5"/>
-              <circle cx="4" cy="27" r="1.5"/>
-              <circle cx="10" cy="27" r="1.5"/>
-              <circle cx="4" cy="33" r="1.5"/>
-              <circle cx="10" cy="33" r="1.5"/>
-            </svg>
-          </div>
-        </div>
+            </div>
+            <div className="pdf-sidebar-handle" onMouseDown={startSidebarDrag}>
+              <div className="pdf-sidebar-handle-tab" onMouseDown={startSidebarDrag}>
+                <svg width="10" height="26" viewBox="0 0 14 36" fill="currentColor">
+                  <circle cx="4" cy="3" r="1.5"/>
+                  <circle cx="10" cy="3" r="1.5"/>
+                  <circle cx="4" cy="9" r="1.5"/>
+                  <circle cx="10" cy="9" r="1.5"/>
+                  <circle cx="4" cy="15" r="1.5"/>
+                  <circle cx="10" cy="15" r="1.5"/>
+                  <circle cx="4" cy="21" r="1.5"/>
+                  <circle cx="10" cy="21" r="1.5"/>
+                  <circle cx="4" cy="27" r="1.5"/>
+                  <circle cx="10" cy="27" r="1.5"/>
+                  <circle cx="4" cy="33" r="1.5"/>
+                  <circle cx="10" cy="33" r="1.5"/>
+                </svg>
+              </div>
+            </div>
+          </>
+        )}
 
         <div className="pdf-main" ref={mainAreaRef}>
           {!pdfDoc && <p className="pdf-placeholder">Loading…</p>}
@@ -506,6 +546,33 @@ export default function PdfViewer({ url, title, onClose, docOptions, onSelectDoc
             <div ref={highlightRef} className="pdf-highlight-overlay" />
           </div>
         </div>
+      </div>
+
+      <button
+        className={`pdf-panel-toggle ${sidebarOpen ? 'is-active' : ''}`}
+        style={{ left: stageInset }}
+        title={sidebarOpen ? 'Hide page thumbnails' : 'Show page thumbnails'}
+        aria-pressed={sidebarOpen}
+        onClick={toggleSidebar}
+      >
+        <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="4" width="18" height="16" rx="2"/>
+          <line x1="9" y1="4" x2="9" y2="20"/>
+        </svg>
+      </button>
+
+      <div className="pdf-page-nav" style={{ left: stageInset }}>
+        <button title="Previous page" onClick={goPrevPage} disabled={!pdfDoc || currentPage <= 1}>
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+        </button>
+        <span className="pdf-page-nav-count">{pdfDoc ? `${currentPage} / ${numPages}` : '–'}</span>
+        <button title="Next page" onClick={goNextPage} disabled={!pdfDoc || currentPage >= numPages}>
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
       </div>
 
       {searchOpen && (
@@ -529,7 +596,7 @@ export default function PdfViewer({ url, title, onClose, docOptions, onSelectDoc
               }}
             />
             <span className="pdf-search-count">
-              {totalMatches > 0 ? `${activeMatch + 1} / ${totalMatches}` : searchTerm.length >= 2 ? 'No results' : ''}
+              {totalMatches > 0 ? `${activeMatch + 1} / ${totalMatches}` : searchTerm.length >= minSearchLen ? 'No results' : ''}
             </span>
             <button
               title="Phonetic keyboard"

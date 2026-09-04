@@ -83,6 +83,13 @@ header .title {
   margin-top: -8px;
 }
 
+/* 90% of the standard 50px menu icon */
+.menu-row img.menu-row-icon-90 {
+  width: 45px;
+  height: 45px;
+  margin: -6px 8px 0 3px;
+}
+
 
 
 /* ----------- PANEL -----------  */
@@ -93,9 +100,20 @@ header .title {
   width: 360px;
   position: absolute;
   top:50px;
-  z-index: 9999;
+  /* Above dialogue panels (.panel = 9999) so the menu can open over the
+     full-page PDF viewer as well as the main app. */
+  z-index: 10000;
   box-shadow: 5px 5px 5px 5px var(--color-shadow-light);
   transition: 0.3s;
+}
+
+.bg-panel-backdrop {
+  position: fixed;
+  inset: 0;
+  /* Same layer as .bg-panel (both 10000, above .panel = 9999); the panel
+     wins by coming later in the DOM. Covers the PDF viewer iframe too. */
+  z-index: 10000;
+  background: transparent;
 }
 
 .open {
@@ -140,6 +158,49 @@ header .title {
 
 .menu-row:hover {
   background: var(--color-background-white-soft);
+}
+
+/* Active PDF viewer — marked as the current view, not dimmed */
+.menu-row.active {
+  background: var(--color-background-white-soft);
+  border-left: 4px solid var(--color-state-selected);
+  padding-left: 2px;
+  font-weight: 700;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Subtle footer link — opens the "File storage" dialogue */
+.menu-storage-link {
+  position: absolute;
+  left: 20px;
+  bottom: 112px;
+  padding: 6px 0;
+  background: none;
+  border: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  opacity: 0.5;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.menu-storage-link:hover {
+  opacity: 0.9;
+}
+
+.menu-row-badge {
+  float: right;
+  padding: 0px 10px;
+  border-radius: 99px;
+  background: var(--color-state-selected);
+  color: var(--color-white);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 /* 

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, screen } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, screen, shell } = require('electron');
 const path = require('node:path');
 const { autoUpdater } = require('electron-updater');
 const log = require('electron-log');
@@ -255,6 +255,8 @@ function setupIPC() {
   ipcMain.removeHandler('delete-project');
   ipcMain.removeHandler('list-projects');
   ipcMain.removeHandler('get-user-data-path');
+  ipcMain.removeHandler('get-projects-path');
+  ipcMain.removeHandler('open-projects-folder');
   ipcMain.removeHandler('create-dir');
   ipcMain.removeHandler('get-dirs');
   ipcMain.removeHandler('delete-dir');
@@ -306,6 +308,14 @@ function setupIPC() {
   
   // Existing handlers
   ipcMain.handle('get-user-data-path', () => app.getPath('userData'));
+
+  // Where project .json files (and their folders) are stored on disk
+  ipcMain.handle('get-projects-path', () => projectsDir);
+  ipcMain.handle('open-projects-folder', async () => {
+    await fs.mkdir(projectsDir, { recursive: true }).catch(() => {});
+    const error = await shell.openPath(projectsDir);
+    return { success: !error, error: error || undefined };
+  });
   
   // Project handlers
   ipcMain.handle('save-project', async (event, data) => {

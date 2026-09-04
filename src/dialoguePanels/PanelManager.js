@@ -12,6 +12,7 @@ import DialogueMyAccount from "./DialogueMyAccount";
 import DialogueUser from "./DialogueUser";
 import DialogueUpdateProgress from "./DialogueUpdateProgress";
 import DialoguePdfViewer from "./DialoguePdfViewer";
+import DialogueFileStorage from "./DialogueFileStorage";
 
 import { cx } from '../styles';
 
@@ -35,6 +36,7 @@ const PANELS = {
     [eMode.PDF_VIEWER_SPEECH_ASSESSMENT]:  { component: DialoguePdfViewer, tinted: false, props: { file: 'Assessment flip-book 1',             title: 'Speech Assessment' } },
     [eMode.PDF_VIEWER_THERAPY_WORKSHEETS]: { component: DialoguePdfViewer, tinted: false, props: { file: 'Therapy resources worksheets full',  title: 'Therapy Worksheets' } },
     [eMode.PDF_VIEWER_ARTICULOGRAMS]:      { component: DialoguePdfViewer, tinted: false, props: { file: 'Articulogram cards',                 title: 'Articulograms' } },
+    [eMode.FILE_STORAGE]:     { component: DialogueFileStorage,    tinted: true  },
 };
 
 const App = () => {

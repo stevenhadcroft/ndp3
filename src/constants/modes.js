@@ -49,4 +49,5 @@ export const eMode = {
     PDF_VIEWER_ARTICULOGRAMS: "mode-pdf-viewer-articulograms",
 
     APP_UPDATING: "mode-app-updating",
+    FILE_STORAGE: "mode-file-storage",
 };

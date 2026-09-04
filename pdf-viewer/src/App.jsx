@@ -61,8 +61,8 @@ function resolveDoc() {
 const title = params.get('title') ?? ''
 const isElectron = params.get('electron') === '1'
 
-function closeViewer() {
-  window.parent.postMessage({ type: 'ndp3-pdf-viewer-close' }, window.location.origin)
+function openMenu() {
+  window.parent.postMessage({ type: 'ndp3-pdf-viewer-open-menu' }, window.location.origin)
 }
 
 export default function App() {
@@ -73,7 +73,7 @@ export default function App() {
     <PdfViewer
       url={url}
       title={title}
-      onClose={closeViewer}
+      onMenu={openMenu}
       docOptions={group}
       onSelectDoc={setUrl}
       isElectron={isElectron}

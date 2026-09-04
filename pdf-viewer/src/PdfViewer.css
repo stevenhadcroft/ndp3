@@ -27,6 +27,20 @@
   overflow: hidden;
 }
 
+/* Keep every toolbar item on one centred line. Tight, equal line-heights so
+   each item's box is just its glyphs, then align-items:center lines them up;
+   the <sup> gets line-height:0 so it can't inflate the brand's line box. */
+.pdf-toolbar > * {
+  align-self: center;
+  line-height: 1;
+}
+
+.pdf-toolbar sup {
+  font-size: 0.6em;
+  line-height: 0;
+  vertical-align: 0.35em;
+}
+
 .pdf-brand {
   color: #fff;
   font-size: 20px;
@@ -48,21 +62,59 @@
   color: #888;
 }
 
-.pdf-toolbar-close {
-  margin-left: auto;
+.pdf-toolbar-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin-left: -6px;
+  /* +12px flex gap ≈ the 29px burger→title gap in the SB app header */
+  margin-right: 12px;
+  padding: 0;
   background: transparent;
-  border: 2px solid rgb(0, 153, 204);
-  color: #fff;
-  padding: 8px 20px;
-  border-radius: 99px;
-  font-size: 14px;
-  font-weight: 600;
+  border: 0;
+  border-radius: 8px;
   cursor: pointer;
   transition: background 0.15s;
 }
 
-.pdf-toolbar-close:hover {
-  background: rgba(0, 153, 204, 0.25);
+/* Same burger asset as the Speech Builder app header (.menutab img) */
+.pdf-toolbar-menu img {
+  width: 25px;
+  height: 25px;
+}
+
+.pdf-toolbar-menu:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* Show/hide the thumbnail panel — floats at the top-left of the stage,
+   just right of the thumbnail panel (left offset set inline from sidebarW) */
+.pdf-panel-toggle {
+  position: absolute;
+  top: 66px;
+  z-index: 5;
+}
+
+/* Page prev/next — bottom-left of the stage, mirrors .zoom-controls */
+.pdf-page-nav {
+  position: absolute;
+  bottom: 26px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pdf-page-nav-count {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 7px 12px;
+  border-radius: 99px;
+  white-space: nowrap;
 }
 
 /* Body */
@@ -246,7 +298,9 @@
 }
 
 .toolbar-controls button,
-.zoom-controls button {
+.zoom-controls button,
+.pdf-page-nav button,
+.pdf-panel-toggle {
   background: rgb(0, 153, 204);
   border: none;
   color: #fff;
@@ -263,18 +317,26 @@
 }
 
 .toolbar-controls button:hover,
-.zoom-controls button:hover {
+.zoom-controls button:hover,
+.pdf-page-nav button:hover,
+.pdf-panel-toggle:hover {
+  background: #0a52a0;
+}
+
+.pdf-panel-toggle.is-active {
   background: #0a52a0;
 }
 
 .toolbar-controls button:disabled,
-.zoom-controls button:disabled {
+.zoom-controls button:disabled,
+.pdf-page-nav button:disabled {
   opacity: 0.35;
   cursor: default;
 }
 
 .toolbar-controls button:disabled:hover,
-.zoom-controls button:disabled:hover {
+.zoom-controls button:disabled:hover,
+.pdf-page-nav button:disabled:hover {
   background: rgb(0, 153, 204);
 }
 

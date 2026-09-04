@@ -9,6 +9,7 @@ import { checkLocalLicense } from './services/localLicenseMananger';
 import Canvas from "./components/Canvas";
 import ToolBar from "./components/ToolBar";
 import Header from "./components/Header";
+import SideMenu from "./components/SideMenu";
 import { Spinner } from "./components/UIkit/Spinner";
 import DialoguePanelManager from "./dialoguePanels/PanelManager";
 import { loadImageDirectoryData } from "./loaders";
@@ -53,6 +54,7 @@ const App = () => {
 			{view.userIsAuth && <Canvas />}
 			<ToolBar />
 			<Header />
+			<SideMenu />
 			<DialoguePanelManager />
 			{view.showLoader && <Spinner />}
 		</div>

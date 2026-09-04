@@ -23,6 +23,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return ipcRenderer.invoke('list-projects', dirname)
   },
   getUserDataPath: () => ipcRenderer.invoke('get-user-data-path'),
+  getProjectsPath: () => ipcRenderer.invoke('get-projects-path'),
+  openProjectsFolder: () => ipcRenderer.invoke('open-projects-folder'),
 
    // Directory operations
   createDir: (dirname) => ipcRenderer.invoke('create-dir', dirname),

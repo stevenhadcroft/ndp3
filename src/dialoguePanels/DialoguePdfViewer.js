@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { cx } from '../styles';
-import { cancelMode } from '../features/viewSlice';
+import { cancelMode, setMenuOpen } from '../features/viewSlice';
 import DraggablePanel from './DraggablePanel';
 
 const isElectron = !!window.electronAPI;
@@ -18,6 +18,11 @@ const DialoguePdfViewer = ({ file, title }) => {
 
 			if (msg.type === 'ndp3-pdf-viewer-close') {
 				dispatch(cancelMode());
+				return;
+			}
+
+			if (msg.type === 'ndp3-pdf-viewer-open-menu') {
+				dispatch(setMenuOpen(true));
 				return;
 			}
 

@@ -160,35 +160,68 @@ header .title {
   background: var(--color-background-white-soft);
 }
 
+/* Override the global `button:disabled { opacity: 0.7 }` (buttons.module.css)
+   and the browser's default greyed-out disabled text colour — the
+   active/current row uses `disabled` for behaviour, not to look faded, so
+   keep it matching the normal rows' copy exactly. (.menu-row.locked below
+   overrides the colour back to grey for locked rows specifically.) */
+.menu-row:disabled {
+  opacity: 1;
+  color: inherit;
+}
+
 /* Active PDF viewer — marked as the current view, not dimmed */
 .menu-row.active {
   background: var(--color-background-white-soft);
-  border-left: 4px solid var(--color-state-selected);
-  padding-left: 2px;
+  /* border-left: 4px solid var(--color-state-selected); */
+  /* padding-left: 2px; */
   font-weight: 700;
   cursor: default;
   pointer-events: none;
+}
+
+/* Locked (no licence unlock yet) — inert; the copy is a solid grey (not
+   faded via alpha), but the row's icon and the padlock icon are alpha'd. */
+.menu-row.locked {
+  color: var(--color-gray-300);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.menu-row.locked img,
+.menu-row.locked .menu-row-lock {
+  opacity: 0.4;
+}
+
+.menu-row-lock {
+  float: right;
+  margin-top: 4px;
+}
+
+.menu-divider {
+  border: 0;
+  border-top: 1px solid var(--color-border-medium);
+  margin: 20px 10px;
 }
 
 /* Subtle footer link — opens the "File storage" dialogue */
 .menu-storage-link {
   position: absolute;
   left: 20px;
-  bottom: 112px;
+  bottom: 160px;
   padding: 6px 0;
   background: none;
   border: 0;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 500;
-  color: var(--color-text-primary);
-  opacity: 0.5;
+  color: var(--color-text-secondary);
   text-decoration: underline;
   cursor: pointer;
-  transition: opacity 0.15s;
+  transition: color 0.15s;
 }
 
 .menu-storage-link:hover {
-  opacity: 0.9;
+  color: var(--color-text-primary);
 }
 
 .menu-row-badge {

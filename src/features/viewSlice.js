@@ -15,7 +15,8 @@ const viewSlice = createSlice({
     searchLogic: eSearchLogic.BEGINS,
     searchTerm: '',
     showMenuPopup: false,
-    appUpdateStatus: {}
+    appUpdateStatus: {},
+    unlockCount: 0,
   },
 
   reducers: {
@@ -24,6 +25,9 @@ const viewSlice = createSlice({
     },
     setUserIsAuth: (state, action) => {
       state.userIsAuth = action.payload;
+    },
+    setUnlockCount: (state, action) => {
+      state.unlockCount = action.payload;
     },
     setDragIndex: (state, action) => {
       state.dragIndex = action.payload;
@@ -155,6 +159,7 @@ export const {
   setDir,
   setAppUpdateStatus,
   setUserIsAuth,
+  setUnlockCount,
   // fullScreen,
 } = viewSlice.actions;
 

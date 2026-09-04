@@ -17,12 +17,21 @@ import {
 import {
     setMode,
     setUserIsAuth,
+    setUnlockCount,
 } from "../features/viewSlice";
 
 import DraggablePanel from "./DraggablePanel";
 import { getUser, createUser } from "../services/userMananger";
-import {linkMachine, unlinkMachine} from '../services/localLicenseMananger';
+import {linkMachine, unlinkMachine, saveUnlockCount} from '../services/localLicenseMananger';
 import {validateKey, generateKey} from '../utils';
+
+// Dev bypass fully unlocks the side-menu items too (see below).
+const DEV_BYPASS_UNLOCK_COUNT = 99999;
+
+// TEMP: skip the getUser server round-trip on sign-in — a valid licence key
+// is enough to authenticate locally. Flip back to false to restore the
+// server check (see the getUser(...) call further down in onSignIn).
+const SKIP_SERVER_SIGN_IN = true;
 
 
 const DialogueUser = () => {
@@ -67,17 +76,33 @@ const DialogueUser = () => {
             dispatch(setMode(eMode.USER_ACTIVE))
             dispatch(setUserIsAuth(true))
             linkMachine();
+            saveUnlockCount(DEV_BYPASS_UNLOCK_COUNT);
+            dispatch(setUnlockCount(DEV_BYPASS_UNLOCK_COUNT));
             return;
         }
 
-        //-----check key (must match email)
-        if (!(await validateKey(key, email))){
+        //-----check key (must match email) — also decodes the unlock number
+        const keyResult = await validateKey(key, email);
+        if (!keyResult){
             Swal.fire({
                 title: 'Error!',
                 text: 'Key not valid',
                 icon: 'error',
                 confirmButtonText: 'Continue'
               })
+            return;
+        }
+
+        //-----TEMP: bypass getUser() — a valid key signs the user in directly
+        if (SKIP_SERVER_SIGN_IN){
+            dispatch(setImageData([]));
+            dispatch(setTextData([]));
+            dispatch(setTemplateData([]));
+            dispatch(setMode(eMode.USER_ACTIVE))
+            dispatch(setUserIsAuth(true))
+            linkMachine();
+            saveUnlockCount(keyResult.number);
+            dispatch(setUnlockCount(keyResult.number));
             return;
         }
 
@@ -105,7 +130,9 @@ const DialogueUser = () => {
             dispatch(setMode(eMode.USER_ACTIVE))
             dispatch(setUserIsAuth(true))
             linkMachine();
-            
+            saveUnlockCount(keyResult.number);
+            dispatch(setUnlockCount(keyResult.number));
+
         } else if (response.complete === 1 && response.approval !== "approved") {
             dispatch(setMode(eMode.USER_OPTIONS))
             Swal.fire({

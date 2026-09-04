@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Validate Key</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            background: #011a3f;
+            color: #ffffff;
+            box-sizing: border-box;
+        }
+        .panel {
+            background: #012457;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            width: 400px;
+        }
+        h1 { margin: 0 0 32px; font-size: 22px; font-weight: 600; color: #ffffff; }
+        label { display: block; margin-bottom: 12px; font-size: 14px; font-weight: 500; color: #ffffff; }
+        input {
+            font-size: 18px;
+            padding: 12px 14px;
+            border-radius: 6px;
+            border: 0;
+            background: #ffffff;
+            color: #012457;
+            box-sizing: border-box;
+            width: 100%;
+            font-family: inherit;
+            margin-bottom: 24px;
+        }
+        input::placeholder { color: #295b88aa; }
+        input:focus { outline: 2px solid #ffcc00; outline-offset: 0; }
+        button {
+            cursor: pointer;
+            background: #2c83d4;
+            border: 0;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 14px 14px;
+            border-radius: 99px;
+            box-sizing: border-box;
+            width: 100%;
+            font-family: inherit;
+            margin-top: 8px;
+            transition: background-color 120ms ease;
+        }
+        button:hover { background: #1d77c9; }
+        button:active { background: #0F6ACB; }
+        .output {
+            margin-top: 44px;
+            padding: 12px;
+            background: #295b88;
+            border: 1px solid #ffffff44;
+            border-radius: 6px;
+            font-family: "Menlo", monospace;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-align: center;
+            min-height: 26px;
+            word-break: break-all;
+            color: #ffffff;
+        }
+        .ok { color: #44be06; font-weight: 700; }
+        .bad { color: #ffcc00; font-weight: 700; }
+        .meta { margin-top: 14px; font-size: 13px; color: #ffffff; text-align: center; word-break: break-all; }
+        .meta .code { font-family: "Menlo", monospace; color: #ffcc00; letter-spacing: 1px; }
+        .link { display: block; margin-top: 32px; text-align: center; font-size: 14px; }
+        .link a { color: #ffcc00; text-decoration: none; font-weight: 500; }
+        .link a:hover { text-decoration: underline; }
+        .link + .link { margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="panel">
+        <h1>Validate Key</h1>
+        <label for="email">Email</label>
+        <input id="email" type="email" placeholder="user@example.com" autocomplete="off" />
+        <label for="key">Key</label>
+        <input id="key" placeholder="XXXX-XXXX" autocomplete="off" />
+        <button id="validate">Validate</button>
+        <div class="output" id="output">—</div>
+        <div class="meta" id="meta"></div>
+        <div class="link"><a href="generateKey.html">← Generate a key</a></div>
+        <div class="link"><a href="decodeKey.html">Decode a key →</a></div>
+    </div>
+
+    <script>
+        // Must match src/utils.js — keep these in sync.
+        const KEY_SECRET = "ndp3-key-v1-7a2c9f3e8d4b6105";
+        const BASE32 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+
+        const normalizeEmail = (email) => String(email || "").trim().toLowerCase();
+
+        const base32Encode = (bytes) => {
+            let bits = 0, value = 0, out = "";
+            for (const b of bytes) {
+                value = (value << 8) | b;
+                bits += 8;
+                while (bits >= 5) {
+                    out += BASE32[(value >> (bits - 5)) & 31];
+                    bits -= 5;
+                }
+            }
+            if (bits > 0) out += BASE32[(value << (5 - bits)) & 31];
+            return out;
+        };
+
+        const base32Decode = (str) => {
+            const bytes = [];
+            let bits = 0, value = 0;
+            for (const ch of str.toUpperCase()) {
+                const idx = BASE32.indexOf(ch);
+                if (idx < 0) continue;
+                value = (value << 5) | idx;
+                bits += 5;
+                if (bits >= 8) {
+                    bytes.push((value >> (bits - 8)) & 0xff);
+                    bits -= 8;
+                }
+            }
+            return new Uint8Array(bytes);
+        };
+
+        const hmacSha256 = async (secret, data) => {
+            const k = await crypto.subtle.importKey(
+                "raw", new TextEncoder().encode(secret),
+                { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
+            );
+            return new Uint8Array(await crypto.subtle.sign("HMAC", k, data));
+        };
+
+        const constantTimeEqual = (a, b) => {
+            if (a.length !== b.length) return false;
+            let diff = 0;
+            for (let i = 0; i < a.length; i++) diff |= a[i] ^ b[i];
+            return diff === 0;
+        };
+
+        const computeKeyMac = async (email) => {
+            const data = new TextEncoder().encode(normalizeEmail(email));
+            return (await hmacSha256(KEY_SECRET, data)).slice(0, 5);
+        };
+
+        const validateKey = async (key, email) => {
+            if (typeof key !== "string" || !normalizeEmail(email)) return false;
+            const clean = key.replace(/[^A-Za-z2-7]/g, "");
+            if (clean.length < 8) return false;
+            const bytes = base32Decode(clean).slice(0, 5);
+            if (bytes.length < 5) return false;
+            const expected = await computeKeyMac(email);
+            return constantTimeEqual(bytes, expected);
+        };
+
+        document.getElementById("validate").addEventListener("click", async () => {
+            const email = document.getElementById("email").value;
+            const key = document.getElementById("key").value.trim();
+            const out = document.getElementById("output");
+            const meta = document.getElementById("meta");
+            const ok = await validateKey(key, email);
+            out.innerHTML = ok
+                ? `<span class="ok">VALID</span> for ${normalizeEmail(email)}`
+                : `<span class="bad">INVALID</span>`;
+
+            if (normalizeEmail(email)) {
+                const encoded = base32Encode(await computeKeyMac(email));
+                const expectedKey = `${encoded.slice(0, 4)}-${encoded.slice(4, 8)}`;
+                meta.innerHTML = `Expected key for this email: <span class="code">${expectedKey}</span>`;
+            } else {
+                meta.textContent = "";
+            }
+        });
+    </script>
+</body>
+</html>

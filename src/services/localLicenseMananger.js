@@ -45,3 +45,16 @@ export const checkLocalLicense = async (userName) => {
     //     resolve(existingLicense ? existingLicense : "unlinked");
 	// });
 }
+
+// The unlock number decoded from the user's licence key (see validateKey in
+// utils.js). Used to lock/unlock the PDF viewers and Speech Builder entries
+// in the side menu: locked when 0 (or unset), unlocked when higher than 0.
+export const saveUnlockCount = (count) => {
+    const num = Number.isFinite(count) ? count : parseInt(count, 10) || 0;
+    localStorage.setItem("NDP3UnlockCount", String(num));
+}
+
+export const loadUnlockCount = () => {
+    const num = parseInt(localStorage.getItem("NDP3UnlockCount"), 10);
+    return Number.isFinite(num) ? num : 0;
+}

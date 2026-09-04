@@ -3,9 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import useNudgeKeyboardHandler from "./hooks/useNudgeKeyboardHandler";
 import useDefaultTemplate from "./hooks/useDefaultTemplate"; 
 import useCanvasResize from "./hooks/useResizeCanvas";
-import { setMode, setAppUpdateStatus, setUserIsAuth } from "./features/viewSlice";
-import { eMode } from "./constants";
-import { checkLocalLicense } from './services/localLicenseMananger';
+import { setMode, setAppUpdateStatus, setUserIsAuth, setUnlockCount } from "./features/viewSlice";
+import { eMode, PDF_VIEWERS, getUnlockDigits } from "./constants";
+import { checkLocalLicense, loadUnlockCount } from './services/localLicenseMananger';
 import Canvas from "./components/Canvas";
 import ToolBar from "./components/ToolBar";
 import Header from "./components/Header";
@@ -41,8 +41,21 @@ const App = () => {
 			await loadImageDirectoryData();
 			const licence = await checkLocalLicense();
 			dispatch(setUserIsAuth(licence))
+			const unlockCount = loadUnlockCount();
+			dispatch(setUnlockCount(unlockCount))
 			if (!licence) {
 				dispatch(setMode(eMode.USER_OPTIONS));
+			} else {
+				// Speech Builder is the default landing screen, but if it's
+				// locked, open on the first unlocked PDF viewer instead.
+				const unlockDigits = getUnlockDigits(unlockCount);
+				const speechBuilderLocked = !unlockDigits[0];
+				if (speechBuilderLocked) {
+					const firstUnlockedViewer = PDF_VIEWERS.find((_, index) => unlockDigits[index + 1]);
+					if (firstUnlockedViewer) {
+						dispatch(setMode(firstUnlockedViewer.mode));
+					}
+				}
 			}
 			loadDefaultTemplate()
 		}

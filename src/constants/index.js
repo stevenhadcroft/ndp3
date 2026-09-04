@@ -8,6 +8,7 @@ export * from "./storage";
 export * from "./api";
 export * from "./categories";
 export * from "./phonetics";
+export * from "./unlocks";
 
 // Aggregate object kept for back-compat with existing `Constants.X` callers.
 // Prefer importing named exports from sub-modules in new code.

@@ -4,7 +4,7 @@ import useNudgeKeyboardHandler from "./hooks/useNudgeKeyboardHandler";
 import useDefaultTemplate from "./hooks/useDefaultTemplate"; 
 import useCanvasResize from "./hooks/useResizeCanvas";
 import { setMode, setAppUpdateStatus, setUserIsAuth, setUnlockCount } from "./features/viewSlice";
-import { eMode, PDF_VIEWERS, getUnlockDigits } from "./constants";
+import { eMode, PDF_VIEWERS, getUnlockStates } from "./constants";
 import { checkLocalLicense, loadUnlockCount } from './services/localLicenseMananger';
 import Canvas from "./components/Canvas";
 import ToolBar from "./components/ToolBar";
@@ -48,10 +48,10 @@ const App = () => {
 			} else {
 				// Speech Builder is the default landing screen, but if it's
 				// locked, open on the first unlocked PDF viewer instead.
-				const unlockDigits = getUnlockDigits(unlockCount);
-				const speechBuilderLocked = !unlockDigits[0];
+				const unlockStates = getUnlockStates(unlockCount);
+				const speechBuilderLocked = !unlockStates[0].unlocked;
 				if (speechBuilderLocked) {
-					const firstUnlockedViewer = PDF_VIEWERS.find((_, index) => unlockDigits[index + 1]);
+					const firstUnlockedViewer = PDF_VIEWERS.find((_, index) => unlockStates[index + 1].unlocked);
 					if (firstUnlockedViewer) {
 						dispatch(setMode(firstUnlockedViewer.mode));
 					}

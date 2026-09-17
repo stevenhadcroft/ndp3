@@ -42,11 +42,28 @@ const useCanvasFileLoader = () => {
 				const url = item.url;
 				const filename = item.url.split("/")[item.url.split("/").length - 1]; // NOT NEEDED?
 				const images = canvas.images || [];
-				const zIndex = images.length>0 ? getHighestZdepth(images) : 1;
+				// Preserve the layer order from the saved project - only fall back to a
+				// freshly computed zIndex for older saves made before this field existed.
+				const zIndex = item.zIndex ?? (images.length>0 ? getHighestZdepth(images) : 1);
 				const newImage = { ...item, type:"image", zIndex, url};
 				const index = images.length; // use length as index for new image
 
 				dispatch(addImage(newImage));
+
+				// Raster "My Images" uploads have no SVG library file to fetch and
+				// recolour — their only representation is an <img> pointing at the
+				// stored file. Rebuild that markup (mirrors DialogueAddImage) and
+				// move straight on to the next queued item.
+				if (item.raster) {
+					dispatch(updateImageData({
+						index,
+						key: 'svg',
+						value: `<img src="${url}" width="100%" height="100%" draggable="false" style="pointer-events:none;user-select:none;display:block;object-fit:contain;" />`,
+					}));
+					dispatch(fileLoadUpdate(data));
+					return;
+				}
+
 				pendingImageLoadsRef.current += 1;
 
 				const callback1 = (key, svg) => {
@@ -75,7 +92,9 @@ const useCanvasFileLoader = () => {
 			} else if (data.textData && data.textData.length>0){
 				let item = data.textData.pop();
 				const texts = canvas.texts || [];
-				const zIndex = texts.length>0 ? getHighestZdepth(texts) : 1;
+				// Preserve the layer order from the saved project - only fall back to a
+				// freshly computed zIndex for older saves made before this field existed.
+				const zIndex = item.zIndex ?? (texts.length>0 ? getHighestZdepth(texts) : 1);
 				let newText = {...item, type: "text", zIndex};
 				dispatch(addText(newText));
 				// trigger next item

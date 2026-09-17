@@ -80,11 +80,17 @@ export function metaphone(word) {
   return code
 }
 
+// 6-column x 8-row IPA chart, matching the NDP3 Speech Builder app's
+// phonetic keyboard (src/constants/phonetics.js's PHONETICS_GRID, read
+// column-by-column - that file's rows render as this grid's columns due to
+// a CSS flex-wrap layout quirk there). null = blank cell.
 export const PHONETIC_SYMBOLS = [
-  'ɨ','ɐɪ','æ',null,'p','m','j','s',
-  'ɑ','ɔɪ','ɪ',null,'b','n','h','z',
-  'u','ɑʊ','ʊ',null,'t','ɳ','f','ʃ',
-  'ɔ','əʊ','ʊ',null,'d','w','v','ʒ',
-  'ɜ','ɛə','ɛ',null,'c/k','ǀ','θ','tʃ',
-  'ɑɪ','ɪə','ʌ','ə','g','r','ð','dʒ',
+  'ɨ','ɑ','u','ɔ','ɜ','ɑɪ',
+  'ɐɪ','ɔɪ','ɑʊ','əʊ','ɛə','ɪə',
+  'æ','ɪ','ʊ',null,'ɛ','ʌ',
+  null,null,null,null,null,'ə',
+  'p','b','t','d','c/k','g',
+  'm','n','ɳ','w','ǀ','r',
+  'j','h','f','v','θ','ð',
+  's','z','ʃ','ʒ','tʃ','dʒ',
 ]

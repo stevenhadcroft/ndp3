@@ -1,9 +1,12 @@
 const { app, BrowserWindow, ipcMain, dialog, screen, shell } = require('electron');
 const path = require('node:path');
+const { pathToFileURL } = require('node:url');
 const { autoUpdater } = require('electron-updater');
 const log = require('electron-log');
 const fsSync = require('fs');
 const { promises: fs } = require('fs');
+
+const MY_IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 
 //-----------------------------------------------
 // manually create 'app-update'
@@ -261,6 +264,11 @@ function setupIPC() {
   ipcMain.removeHandler('get-dirs');
   ipcMain.removeHandler('delete-dir');
   ipcMain.removeHandler('read-pdf-file');
+  ipcMain.removeHandler('add-my-images');
+  ipcMain.removeHandler('list-my-images');
+  ipcMain.removeHandler('delete-my-image');
+  ipcMain.removeHandler('get-my-images-path');
+  ipcMain.removeHandler('open-my-images-folder');
 
   ipcMain.handle('call-print', async (event, htmlContent) => {
     try {
@@ -302,9 +310,11 @@ function setupIPC() {
   // File system paths
   const projectsDir = path.join(app.getPath('userData'), 'projects');
   const dirsMetaFile = path.join(app.getPath('userData'), 'directories.json');
-  
+  const myImagesDir = path.join(app.getPath('userData'), 'my-images');
+
   // Ensure projects directory exists
   fs.mkdir(projectsDir, { recursive: true }).catch(console.error);
+  fs.mkdir(myImagesDir, { recursive: true }).catch(console.error);
   
   // Existing handlers
   ipcMain.handle('get-user-data-path', () => app.getPath('userData'));
@@ -475,6 +485,80 @@ function setupIPC() {
       log.error('Error deleting directory:', error);
       return { success: false, error: error.message };
     }
+  });
+
+  //-------------------------------------
+  // "My Images" — user-uploaded images, shown as their own category in the
+  // Add Image dialogue. Stored as plain files (not the bundled SVG library),
+  // so they're displayed as-is with no fill-colour recolouring support.
+  //-------------------------------------
+  const toMyImageEntry = (filename) => ({
+    filename,
+    url: pathToFileURL(path.join(myImagesDir, filename)).href,
+  });
+
+  ipcMain.handle('add-my-images', async () => {
+    try {
+      const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+        title: 'Add images',
+        properties: ['openFile', 'multiSelections'],
+        filters: [{ name: 'Images', extensions: MY_IMAGE_EXTENSIONS.map(ext => ext.slice(1)) }],
+      });
+
+      if (canceled || !filePaths.length) {
+        return { success: true, added: [] };
+      }
+
+      await fs.mkdir(myImagesDir, { recursive: true });
+
+      const added = [];
+      for (const srcPath of filePaths) {
+        const ext = path.extname(srcPath).toLowerCase();
+        if (!MY_IMAGE_EXTENSIONS.includes(ext)) continue;
+        const safeBase = path.basename(srcPath, path.extname(srcPath)).replace(/[^a-z0-9_-]/gi, '_');
+        const filename = `${Date.now()}-${Math.round(Math.random() * 1e6)}-${safeBase}${ext}`;
+        await fs.copyFile(srcPath, path.join(myImagesDir, filename));
+        added.push(toMyImageEntry(filename));
+      }
+
+      return { success: true, added };
+    } catch (error) {
+      log.error('Error adding my-images:', error);
+      return { success: false, error: error.message };
+    }
+  });
+
+  ipcMain.handle('list-my-images', async () => {
+    try {
+      await fs.mkdir(myImagesDir, { recursive: true });
+      const files = await fs.readdir(myImagesDir);
+      const images = files
+        .filter(filename => MY_IMAGE_EXTENSIONS.includes(path.extname(filename).toLowerCase()))
+        .map(toMyImageEntry);
+      return { success: true, images };
+    } catch (error) {
+      log.error('Error listing my-images:', error);
+      return { success: false, error: error.message, images: [] };
+    }
+  });
+
+  ipcMain.handle('delete-my-image', async (event, filename) => {
+    try {
+      const safeName = path.basename(filename);
+      await fs.unlink(path.join(myImagesDir, safeName));
+      return { success: true };
+    } catch (error) {
+      log.error('Error deleting my-image:', error);
+      return { success: false, error: error.message };
+    }
+  });
+
+  // Where "My Images" files are stored on disk
+  ipcMain.handle('get-my-images-path', () => myImagesDir);
+  ipcMain.handle('open-my-images-folder', async () => {
+    await fs.mkdir(myImagesDir, { recursive: true }).catch(() => {});
+    const error = await shell.openPath(myImagesDir);
+    return { success: !error, error: error || undefined };
   });
 
 }

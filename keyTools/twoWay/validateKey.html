@@ -23,8 +23,27 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
             width: 400px;
         }
-        h1 { margin: 0 0 8px; font-size: 22px; font-weight: 600; color: #ffffff; }
+        .header { display: flex; align-items: center; gap: 10px; margin: 0 0 8px; }
+        h1 { margin: 0; font-size: 22px; font-weight: 600; color: #ffffff; }
+        .info-toggle {
+            cursor: pointer;
+            flex: 0 0 auto;
+            width: 22px;
+            height: 22px;
+            margin: 0;
+            padding: 0;
+            border-radius: 50%;
+            border: 1px solid #cfe3f5;
+            background: transparent;
+            color: #cfe3f5;
+            font: 700 italic 14px Georgia, "Times New Roman", serif;
+            line-height: 20px;
+            text-align: center;
+        }
+        .info-toggle:hover { background: #295b88; }
+        .info-toggle[aria-expanded="true"] { background: #ffcc00; border-color: #ffcc00; color: #012457; }
         .subtitle { margin: 0 0 32px; font-size: 13px; color: #cfe3f5; }
+        .subtitle[hidden] { display: none; }
         label { display: block; margin-bottom: 12px; font-size: 14px; font-weight: 500; color: #ffffff; }
         input {
             font-size: 18px;
@@ -76,6 +95,20 @@
         .bad { color: #ffcc00; font-weight: 700; }
         .meta { margin-top: 14px; font-size: 13px; color: #ffffff; text-align: center; word-break: break-all; }
         .meta .code { font-family: "Menlo", monospace; color: #ffcc00; letter-spacing: 1px; }
+        .breakdown { margin-top: 20px; }
+        .breakdown[hidden] { display: none; }
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid #ffffff22;
+            font-size: 13px;
+        }
+        .breakdown-row:last-child { border-bottom: 0; }
+        .breakdown-row .name { color: #cfe3f5; }
+        .breakdown-row .value { font-weight: 600; }
+        .breakdown-row .value.locked { color: #ffffff77; font-weight: 500; }
         .link { display: block; margin-top: 32px; text-align: center; font-size: 14px; }
         .link a { color: #ffcc00; text-decoration: none; font-weight: 500; }
         .link a:hover { text-decoration: underline; }
@@ -84,15 +117,19 @@
 </head>
 <body>
     <div class="panel">
-        <h1>Validate Key</h1>
-        <p class="subtitle">Two-way — decodes the number and checks the email against the key's fingerprint.</p>
-        <label for="email">Email</label>
-        <input id="email" type="email" placeholder="user@example.com (optional)" autocomplete="off" />
+        <div class="header">
+            <h1>Validate Key</h1>
+            <button type="button" class="info-toggle" id="infoToggle" aria-expanded="false" aria-controls="subtitle" aria-label="About this tool" title="About this tool">i</button>
+        </div>
+        <p class="subtitle" id="subtitle" hidden>Two-way — decodes the number and checks the username/email against the key's fingerprint.</p>
+        <label for="email">Username/Email</label>
+        <input id="email" type="text" autocomplete="off" />
         <label for="key">Key</label>
         <input id="key" placeholder="XXXX-XXXX-XXXX" autocomplete="off" />
         <button id="validate">Validate</button>
         <div class="output" id="output">—</div>
         <div class="meta" id="meta"></div>
+        <div class="breakdown" id="breakdown" hidden></div>
         <div class="link"><a href="generateKey.html">← Generate a key</a></div>
         <div class="link"><a href="decodeKey.html">Decode a key →</a></div>
     </div>
@@ -168,6 +205,41 @@
 
         const fingerprintOf = (email) => toHex(packUint32(fnv1a32(new TextEncoder().encode(normalizeEmail(email)))));
 
+        // Each digit of the 5-digit code gates one product, left to right (see
+        // src/constants/unlocks.js). Keep this in sync with generateKey.html.
+        const PRODUCTS = [
+            "Speech Builder",
+            "Therapy Manual",
+            "Speech Assessment",
+            "Therapy Worksheets",
+            "Articulograms",
+        ];
+        const DURATIONS = [
+            { digit: 0, label: "Locked" },
+            { digit: 1, label: "1 month" },
+            { digit: 2, label: "3 month" },
+            { digit: 3, label: "6 month" },
+            { digit: 4, label: "12 month" },
+            { digit: 5, label: "unlimited" },
+        ];
+
+        const breakdownEl = document.getElementById("breakdown");
+
+        const renderBreakdown = (numberStr) => {
+            if (!numberStr) {
+                breakdownEl.hidden = true;
+                breakdownEl.innerHTML = "";
+                return;
+            }
+            const digits = numberStr.split("").map((d) => parseInt(d, 10));
+            breakdownEl.innerHTML = PRODUCTS.map((name, i) => {
+                const duration = DURATIONS[digits[i]] || DURATIONS[0];
+                const locked = duration.digit === 0;
+                return `<div class="breakdown-row"><span class="name">${name}</span><span class="value${locked ? " locked" : ""}">${duration.label}</span></div>`;
+            }).join("");
+            breakdownEl.hidden = false;
+        };
+
         document.getElementById("validate").addEventListener("click", () => {
             const email = document.getElementById("email").value;
             const key = document.getElementById("key").value.trim();
@@ -186,12 +258,22 @@
             if (decoded === null) {
                 meta.textContent = key ? "Key could not be decoded — malformed or corrupted." : "";
             } else if (enteredEmail && !emailOk) {
-                meta.textContent = "Number decoded fine, but this email doesn't match the key's fingerprint.";
+                meta.textContent = "Number decoded fine, but this username/email doesn't match the key's fingerprint.";
             } else if (enteredEmail) {
-                meta.textContent = "Number and email fingerprint both match.";
+                meta.textContent = "Number and username/email fingerprint both match.";
             } else {
-                meta.innerHTML = `Number decoded: <span class="code">${decoded.number}</span> (no email entered to check)`;
+                meta.innerHTML = `Number decoded: <span class="code">${decoded.number}</span> (no username/email entered to check)`;
             }
+
+            renderBreakdown(decoded ? decoded.number : null);
+        });
+
+        const infoToggle = document.getElementById("infoToggle");
+        const subtitle = document.getElementById("subtitle");
+        infoToggle.addEventListener("click", () => {
+            const show = subtitle.hasAttribute("hidden");
+            subtitle.toggleAttribute("hidden", !show);
+            infoToggle.setAttribute("aria-expanded", String(show));
         });
     </script>
 </body>

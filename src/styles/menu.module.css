@@ -54,6 +54,20 @@ header .title {
   font-style: italic;
 }
 
+.trial-info {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 8px 14px;
+  border-radius: 99px;
+  background: rgba(15, 37, 71, 0.5);
+  font-size: 14px;
+  color: #7fc9ff;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
 .menutab {
   position: absolute;
   left: 10px;
@@ -145,6 +159,7 @@ header .title {
 }
   
 .menu-row {
+  position: relative;
   cursor: pointer;
   display: block;
   font-size: 16px;
@@ -154,10 +169,18 @@ header .title {
   text-align: left;
   padding: 14px 6px;
   line-height: 35px;
+  /* Locked rows render as <a> (see SideMenu.js) - reset the browser's
+     default link styling so they match the plain button rows. */
+  text-decoration: none;
+  color: inherit;
 }
 
 .menu-row:hover {
   background: var(--color-background-white-soft);
+}
+
+.menu-row:hover .menu-row-label {
+  color: var(--color-interactive-primary-hover);
 }
 
 /* Override the global `button:disabled { opacity: 0.7 }` (buttons.module.css)
@@ -180,12 +203,14 @@ header .title {
   pointer-events: none;
 }
 
-/* Locked (no licence unlock yet) — inert; the copy is a solid grey (not
-   faded via alpha), but the row's icon and the padlock icon are alpha'd. */
+/* Locked (no licence unlock yet) — rendered as a link to the unlock/buy
+   page (see SideMenu.js), styled inert until rolled over: solid grey copy
+   (not faded via alpha) and a not-allowed cursor, with the row's icon and
+   padlock icon alpha'd. */
 .menu-row.locked {
   color: var(--color-gray-300);
   cursor: not-allowed;
-  pointer-events: none;
+  transition: color 0.15s ease;
 }
 
 .menu-row.locked img,
@@ -193,9 +218,59 @@ header .title {
   opacity: 0.4;
 }
 
+.menu-row.locked img {
+  transition: opacity 0.15s ease;
+}
+
+/* The external-link icon (swapped in on rollover, see below) stays full
+   opacity - only the default padlock is dimmed. */
+.menu-row.locked .menu-row-lock-hover {
+  opacity: 1;
+}
+
+/* On rollover the row reveals itself as a real link: the product name is
+   swapped for "Unlock {name}" (see .menu-row-label-default/-hover below),
+   the padlock swaps for an external-link icon in the same slot (see
+   .menu-row-lock-default/-hover below), and the copy/cursor switch to the
+   normal interactive-link treatment. */
+.menu-row.locked:hover {
+  color: var(--color-interactive-primary);
+  cursor: pointer;
+}
+
+.menu-row.locked:hover img {
+  opacity: 1;
+}
+
+.menu-row-label-hover {
+  display: none;
+  text-decoration: underline;
+}
+
+.menu-row.locked:hover .menu-row-label-default {
+  display: none;
+}
+
+.menu-row.locked:hover .menu-row-label-hover {
+  display: inline;
+}
+
 .menu-row-lock {
-  float: right;
-  margin-top: 4px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+.menu-row-lock-hover {
+  display: none;
+}
+
+.menu-row.locked:hover .menu-row-lock-default {
+  display: none;
+}
+
+.menu-row.locked:hover .menu-row-lock-hover {
+  display: inline-block;
 }
 
 .menu-divider {
@@ -225,9 +300,13 @@ header .title {
 }
 
 .menu-row-badge {
-  float: right;
-  padding: 0px 10px;
-  border-radius: 99px;
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  padding: 4px 10px;
+  line-height: normal;
+  border-radius: 4px;
   background: var(--color-state-selected);
   color: var(--color-white);
   font-size: 12px;

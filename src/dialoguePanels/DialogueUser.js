@@ -268,7 +268,7 @@ const DialogueUser = () => {
         <DraggablePanel central={true} id='sign-in' title="Sign In">   {/* buttons={Buttons} */}
             <div style={{ padding: '0 50px' }}>
 
-                <div style={{ fontWeight: "normal" }}>Email</div>
+                <div style={{ fontWeight: "normal" }}>Email / Username</div>
                 <br /><input style={{ width: "100%" }} name="email" type="text" className="rounded" ref={inputRefSignInEmail} />
 
                 <div style={{ height: "20px" }} />

@@ -23,8 +23,27 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
             width: 400px;
         }
-        h1 { margin: 0 0 8px; font-size: 22px; font-weight: 600; color: #ffffff; }
+        .header { display: flex; align-items: center; gap: 10px; margin: 0 0 8px; }
+        h1 { margin: 0; font-size: 22px; font-weight: 600; color: #ffffff; }
+        .info-toggle {
+            cursor: pointer;
+            flex: 0 0 auto;
+            width: 22px;
+            height: 22px;
+            margin: 0;
+            padding: 0;
+            border-radius: 50%;
+            border: 1px solid #cfe3f5;
+            background: transparent;
+            color: #cfe3f5;
+            font: 700 italic 14px Georgia, "Times New Roman", serif;
+            line-height: 20px;
+            text-align: center;
+        }
+        .info-toggle:hover { background: #295b88; }
+        .info-toggle[aria-expanded="true"] { background: #ffcc00; border-color: #ffcc00; color: #012457; }
         .subtitle { margin: 0 0 32px; font-size: 13px; color: #cfe3f5; }
+        .subtitle[hidden] { display: none; }
         label { display: block; margin-bottom: 12px; font-size: 14px; font-weight: 500; color: #ffffff; }
         input {
             font-size: 18px;
@@ -67,8 +86,11 @@
 </head>
 <body>
     <div class="panel">
-        <h1>Decode Key</h1>
-        <p class="subtitle">Two-way — paste a key to read back its 5-digit number. (The email is only fingerprinted in the key, not stored — check a candidate email against it on the Validate page.)</p>
+        <div class="header">
+            <h1>Decode Key</h1>
+            <button type="button" class="info-toggle" id="infoToggle" aria-expanded="false" aria-controls="subtitle" aria-label="About this tool" title="About this tool">i</button>
+        </div>
+        <p class="subtitle" id="subtitle" hidden>Two-way — paste a key to read back its 5-digit number. (The username/email is only fingerprinted in the key, not stored — check a candidate username/email against it on the Validate page.)</p>
         <label for="key">Key</label>
         <input id="key" placeholder="XXXX-XXXX-XXXX" autocomplete="off" autofocus />
         <div class="output" id="output">—</div>
@@ -155,12 +177,20 @@
             } else {
                 out.className = "output ok";
                 out.textContent = decoded.number;
-                meta.innerHTML = `Email fingerprint: <span class="fingerprint">${decoded.emailFingerprint}</span>`;
+                meta.innerHTML = `Username/Email fingerprint: <span class="fingerprint">${decoded.emailFingerprint}</span>`;
             }
         };
 
         keyInput.addEventListener("input", render);
         render();
+
+        const infoToggle = document.getElementById("infoToggle");
+        const subtitle = document.getElementById("subtitle");
+        infoToggle.addEventListener("click", () => {
+            const show = subtitle.hasAttribute("hidden");
+            subtitle.toggleAttribute("hidden", !show);
+            infoToggle.setAttribute("aria-expanded", String(show));
+        });
     </script>
 </body>
 </html>

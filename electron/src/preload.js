@@ -29,5 +29,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
    // Directory operations
   createDir: (dirname) => ipcRenderer.invoke('create-dir', dirname),
   getDirs: () => ipcRenderer.invoke('get-dirs'),
-  deleteDir: (dirname) => ipcRenderer.invoke('delete-dir', dirname)
+  deleteDir: (dirname) => ipcRenderer.invoke('delete-dir', dirname),
+
+  // "My Images" - user-uploaded images
+  addMyImages: () => ipcRenderer.invoke('add-my-images'),
+  listMyImages: () => ipcRenderer.invoke('list-my-images'),
+  deleteMyImage: (filename) => ipcRenderer.invoke('delete-my-image', filename),
+  getMyImagesPath: () => ipcRenderer.invoke('get-my-images-path'),
+  openMyImagesFolder: () => ipcRenderer.invoke('open-my-images-folder')
 });

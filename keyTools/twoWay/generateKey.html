@@ -23,9 +23,29 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
             width: 400px;
         }
-        h1 { margin: 0 0 8px; font-size: 22px; font-weight: 600; color: #ffffff; }
+        .header { display: flex; align-items: center; gap: 10px; margin: 0 0 8px; }
+        h1 { margin: 0; font-size: 22px; font-weight: 600; color: #ffffff; }
+        .info-toggle {
+            cursor: pointer;
+            flex: 0 0 auto;
+            width: 22px;
+            height: 22px;
+            margin: 0;
+            padding: 0;
+            border-radius: 50%;
+            border: 1px solid #cfe3f5;
+            background: transparent;
+            color: #cfe3f5;
+            font: 700 italic 14px Georgia, "Times New Roman", serif;
+            line-height: 20px;
+            text-align: center;
+        }
+        .info-toggle:hover { background: #295b88; }
+        .info-toggle[aria-expanded="true"] { background: #ffcc00; border-color: #ffcc00; color: #012457; }
         .subtitle { margin: 0 0 32px; font-size: 13px; color: #cfe3f5; }
+        .subtitle[hidden] { display: none; }
         label { display: block; margin-bottom: 12px; font-size: 14px; font-weight: 500; color: #ffffff; }
+        label.section { font-size: 17px; font-weight: 600; margin-top: 24px; margin-bottom: 14px; }
         input {
             font-size: 18px;
             padding: 12px 14px;
@@ -40,6 +60,31 @@
         }
         input::placeholder { color: #295b88aa; }
         input:focus { outline: 2px solid #ffcc00; outline-offset: 0; }
+        select {
+            font-size: 16px;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 0;
+            background: #ffffff;
+            color: #012457;
+            box-sizing: border-box;
+            width: 100%;
+            font-family: inherit;
+        }
+        select:focus { outline: 2px solid #ffcc00; outline-offset: 0; }
+        .activations { margin-bottom: 32px; }
+        .activation-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        .activation-row .name {
+            flex: 0 0 150px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .activation-row select { flex: 1; }
         button {
             cursor: pointer;
             background: #2c83d4;
@@ -83,12 +128,16 @@
 </head>
 <body>
     <div class="panel">
-        <h1>Generate Key</h1>
-        <p class="subtitle">Two-way — encodes a 5-digit number + an email into a fixed-size key (e.g. IFKU-CAQ4-LJFA). The number always decodes back exactly; the email is only checkable, not recoverable.</p>
-        <label for="number">Number (5 digits)</label>
-        <input id="number" inputmode="numeric" maxlength="5" placeholder="12345" autocomplete="off" />
-        <label for="email">Email</label>
-        <input id="email" type="email" placeholder="user@example.com" autocomplete="off" />
+        <div class="header">
+            <h1>Generate Key</h1>
+            <button type="button" class="info-toggle" id="infoToggle" aria-expanded="false" aria-controls="subtitle" aria-label="About this tool" title="About this tool">i</button>
+        </div>
+        <p class="subtitle" id="subtitle" hidden>Two-way — encodes a 5-digit number + a username/email into a fixed-size key (e.g. IFKU-CAQ4-LJFA). The number always decodes back exactly; the username/email is only checkable, not recoverable.</p>
+        <label class="section">Product activations</label>
+        <div class="activations" id="activations"></div>
+        <input id="number" type="hidden" />
+        <label for="email">Username/Email</label>
+        <input id="email" type="text" placeholder="Enter Username/Email" autocomplete="off" />
         <button id="generate">Generate Key</button>
         <div class="output" id="output">—</div>
         <div class="meta" id="meta"></div>
@@ -158,26 +207,78 @@
             return formatKey(base32Encode(xor(payload)));
         };
 
+        // Each digit of the 5-digit code gates one product, left to right (see
+        // src/constants/unlocks.js). Here each product gets a dropdown whose
+        // selection is that digit: 0 locks the product, 1-5 unlock it for the
+        // chosen duration.
+        const PRODUCTS = [
+            "Speech Builder",
+            "Therapy Manual",
+            "Speech Assessment",
+            "Therapy Worksheets",
+            "Articulograms",
+        ];
+        const DURATIONS = [
+            { digit: 0, label: "Locked" },
+            { digit: 1, label: "1 month" },
+            { digit: 2, label: "3 month" },
+            { digit: 3, label: "6 month" },
+            { digit: 4, label: "12 month" },
+            { digit: 5, label: "unlimited" },
+        ];
+
+        const infoToggle = document.getElementById("infoToggle");
+        const subtitle = document.getElementById("subtitle");
+        infoToggle.addEventListener("click", () => {
+            const show = subtitle.hasAttribute("hidden");
+            subtitle.toggleAttribute("hidden", !show);
+            infoToggle.setAttribute("aria-expanded", String(show));
+        });
+
+        const activationsEl = document.getElementById("activations");
+        const selects = PRODUCTS.map((name, i) => {
+            const row = document.createElement("div");
+            row.className = "activation-row";
+
+            const label = document.createElement("span");
+            label.className = "name";
+            label.textContent = name;
+
+            const select = document.createElement("select");
+            for (const { digit, label: text } of DURATIONS) {
+                const opt = document.createElement("option");
+                opt.value = String(digit);
+                opt.textContent = text;
+                select.appendChild(opt);
+            }
+            row.append(label, select);
+            activationsEl.appendChild(row);
+            return select;
+        });
+
+        const currentCode = () => selects.map((s) => s.value).join("");
+
         document.getElementById("generate").addEventListener("click", () => {
-            const numberVal = document.getElementById("number").value;
+            const numberVal = currentCode();
             const email = document.getElementById("email").value;
             const out = document.getElementById("output");
             const meta = document.getElementById("meta");
 
-            if (!/^\d{1,5}$/.test(numberVal.trim())) {
-                out.textContent = "—";
-                meta.innerHTML = `<span class="bad">Enter a number from 0-99999</span>`;
-                return;
-            }
+            document.getElementById("number").value = numberVal;
+
             if (!normalizeEmail(email)) {
                 out.textContent = "—";
-                meta.innerHTML = `<span class="bad">Enter an email</span>`;
+                meta.innerHTML = `<span class="bad">Enter a username or email</span>`;
+                return;
+            }
+            if (numberVal === "00000") {
+                out.textContent = "—";
+                meta.innerHTML = `<span class="bad">Activate at least one product</span>`;
                 return;
             }
 
             out.textContent = encodePayload(numberVal, email);
-            const num = parseInt(numberVal.trim(), 10);
-            meta.textContent = `for ${String(num).padStart(5, "0")} + ${normalizeEmail(email)}`;
+            meta.textContent = "";
         });
     </script>
 </body>

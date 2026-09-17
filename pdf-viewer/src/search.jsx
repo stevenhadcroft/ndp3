@@ -263,16 +263,16 @@ export function SearchPanel({ search }) {
             }
           }}
         />
-        <span className="pdf-search-count">
-          {totalMatches > 0 ? `${activeMatch + 1} / ${totalMatches}` : searchTerm.length >= 2 ? 'No results' : ''}
-        </span>
         <button
           title="Phonetic keyboard"
           className={`phonetic-toggle ${phoneticMode ? 'phonetic-active' : ''}`}
           onClick={() => setPhoneticMode(m => !m)}
         >
-          ʊ
+          ð
         </button>
+        <span className="pdf-search-count">
+          {totalMatches > 0 ? `${activeMatch + 1} / ${totalMatches}` : searchTerm.length >= 2 ? 'No results' : ''}
+        </span>
         <button title="Previous match" onClick={goPrevMatch} disabled={totalMatches === 0}>
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="18 15 12 9 6 15"/>

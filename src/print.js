@@ -1,5 +1,15 @@
 
-import { isElectron, isElectronRenderer } from "./utils";
+import { isElectronRenderer } from "./utils";
+
+// CSS defines 1in = 96px and 1in = 25.4mm, so this ratio is exact
+// and consistent across browsers/Electron for @page sizing.
+const PX_PER_MM = 96 / 25.4;
+
+// Physical target sheet: A4.
+const PAGE_MM = {
+    portrait: { w: 210, h: 297 },
+    landscape: { w: 297, h: 210 },
+};
 
 export const print = (orientation) => {
     try {
@@ -10,74 +20,60 @@ export const print = (orientation) => {
             return false;
         }
 
+        const pageMm = PAGE_MM[orientation] || PAGE_MM.portrait;
+        const pageSizeCss = `${pageMm.w}mm ${pageMm.h}mm`;
+        const { w: contentW, h: contentH } = getDimensions(orientation);
+
+        // Scale the existing fixed-px canvas content up to exactly fill the
+        // physical page, so print output goes edge-to-edge instead of sitting
+        // inside the browser's default @page margins.
+        const scaleX = (pageMm.w * PX_PER_MM) / contentW;
+        const scaleY = (pageMm.h * PX_PER_MM) / contentH;
+
         // Build HTML content safely
         const htmlContent = `
             <html>
                 <head>
                     <title>NDP3 Speech Builder</title>
                     <style type="text/css">
-                        @page { size: ${orientation}; }
+                        @page { size: ${pageSizeCss}; margin: 0; }
+                        html, body { margin: 0; padding: 0; }
                         @media print {
-                            @page { size: ${orientation}; }
+                            @page { size: ${pageSizeCss}; margin: 0; }
                             * { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }
+                        }
+                        .page-frame {
+                            position: relative;
+                            width: ${pageMm.w}mm;
+                            height: ${pageMm.h}mm;
+                            overflow: hidden;
                         }
                         .print {
                             position: absolute;
-                            width:${getDimensions(orientation).w}px; 
-                            height:${getDimensions(orientation).h}px;
-                            overflow:hidden;
+                            top: 0;
+                            left: 0;
+                            width: ${contentW}px;
+                            height: ${contentH}px;
+                            transform: scale(${scaleX}, ${scaleY});
+                            transform-origin: top left;
                         }
                     </style>
                 </head>
                 <body>
-                    <div class="print">
-                        ${canvasElement.innerHTML}
+                    <div class="page-frame">
+                        <div class="print">
+                            ${canvasElement.innerHTML}
+                        </div>
                     </div>
                 </body>
             </html>
         `;
 
-        // size: ${orientation === 'landscape' ? '11in 8.5in' : '8.5in 11in'};
-        const htmlContentElectron = `
-            <html>
-            <head>
-                <title>NDP3 Speech Builder</title>
-                <style>
-                .landscape {
-                    position: absolute;
-                    top: -80px;
-                    left: -40px;
-                    width: 100vh; 
-                    height: 100vw; 
-                    transform: rotate(-90deg) scale(1.41);
-                }
-                .portrait {
-                    position: absolute;
-                    width:${getDimensions(orientation).w}px; 
-                    height:${getDimensions(orientation).h}px;
-                }
-                </style>
-            </head>
-            <body>
-                <div class=${orientation}>
-                    ${canvasElement.innerHTML}
-                </div>
-            </body>
-            </html>
-        `;
-        
-        printElectron(htmlContentElectron);
-        
-        // if (isElectronRenderer()) {
-        //     // Use Electron's native print API
-        //     // printElectron(htmlContent);
-        //     alert("Printing in Electron Renderer");
-        //     printElectron(htmlContentElectron);
-        // } else {        
-        //     alert("Printing in Web Browser");
-        //     // Fallback to browser printing
-        //     printWeb(htmlContent);
-        // }
+        if (isElectronRenderer() && window.electronAPI) {
+            printElectron(htmlContent);
+        } else {
+            printWeb(htmlContent);
+        }
 
         return true;
 
@@ -117,4 +113,3 @@ const getDimensions = (orientation) => {
         ? { w: 1100, h: 768 }
         : { w: 768, h: 1100 };
 };
-

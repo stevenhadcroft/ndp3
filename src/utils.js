@@ -177,6 +177,17 @@ export const validateKey = (key, email) => {
     return { number: num };
 };
 
+// Per-product licence digit -> trial length in days. Mirrors DURATIONS in
+// keyTools/twoWay/generateKey.html (digit 0 = locked, handled separately;
+// digit 5 = unlimited, not time-limited, so it has no entry here). Keep in
+// sync with that file if the durations ever change.
+export const TRIAL_DAYS_BY_DIGIT = {
+    1: 30,   // 1 month
+    2: 90,   // 3 month
+    3: 180,  // 6 month
+    4: 365,  // 12 month
+};
+
 
 
 export const getHighestZdepth = (arr) => {

@@ -54,7 +54,7 @@ const SIDEBAR_MIN    = 60
 const SIDEBAR_MAX    = 580
 const SIDEBAR_DEFAULT = 166
 
-export default function PdfViewer({ url, title, onMenu, docOptions, onSelectDoc, isElectron }) {
+export default function PdfViewer({ url, title, onMenu, docOptions, onSelectDoc, isElectron, trialInfo }) {
   const [pdfDoc, setPdfDoc]           = useState(null)
   const [, setNumPages]               = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
@@ -499,6 +499,7 @@ export default function PdfViewer({ url, title, onMenu, docOptions, onSelectDoc,
             ))}
           </select>
         )}
+        {trialInfo && <span className="pdf-trial-info">{trialInfo}</span>}
       </div>
       <div className="pdf-body">
         {sidebarOpen && (
@@ -578,33 +579,35 @@ export default function PdfViewer({ url, title, onMenu, docOptions, onSelectDoc,
       {searchOpen && (
         <div className="pdf-search-panel">
           <div className="pdf-search-bar">
-            <input
-              ref={searchInputRef}
-              type="text"
-              placeholder={phoneticMode ? "Phonetic search…" : "Search in PDF…"}
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              onKeyDown={e => {
-                if (e.key === 'Enter') {
-                  e.shiftKey ? goPrevMatch() : goNextMatch()
-                }
-                if (e.key === 'Escape') {
-                  setSearchOpen(false)
-                  setSearchTerm('')
-                  setSearchResults([])
-                }
-              }}
-            />
+            <div className="pdf-search-input-group">
+              <input
+                ref={searchInputRef}
+                type="text"
+                placeholder={phoneticMode ? "Phonetic search…" : "Search in PDF…"}
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    e.shiftKey ? goPrevMatch() : goNextMatch()
+                  }
+                  if (e.key === 'Escape') {
+                    setSearchOpen(false)
+                    setSearchTerm('')
+                    setSearchResults([])
+                  }
+                }}
+              />
+              <button
+                title="Phonetic keyboard"
+                className={`phonetic-toggle ${phoneticMode ? 'phonetic-active' : ''}`}
+                onClick={() => setPhoneticMode(m => !m)}
+              >
+                ð
+              </button>
+            </div>
             <span className="pdf-search-count">
               {totalMatches > 0 ? `${activeMatch + 1} / ${totalMatches}` : searchTerm.length >= minSearchLen ? 'No results' : ''}
             </span>
-            <button
-              title="Phonetic keyboard"
-              className={`phonetic-toggle ${phoneticMode ? 'phonetic-active' : ''}`}
-              onClick={() => setPhoneticMode(m => !m)}
-            >
-              ʊ
-            </button>
             <button title="Previous match" onClick={goPrevMatch} disabled={totalMatches === 0}>
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="18 15 12 9 6 15"/>

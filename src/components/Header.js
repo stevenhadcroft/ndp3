@@ -3,6 +3,7 @@ import { makeCx } from "../styles";
 import buttonStyles from "../styles/buttons.module.css";
 import menuStyles from "../styles/menu.module.css";
 import uiStyles from "../styles/ui.module.css";
+import { PDF_VIEWERS, getUnlockStates } from "../constants";
 
 import { setMenuOpen } from "../features/viewSlice";
 
@@ -17,6 +18,16 @@ const Header = (props) => {
   const projectLabel = canvas.projectName
     ? `${canvas.projectName}${canvas.modified ? ' *' : ''}`
     : '(Project unsaved)';
+
+  // Trial banner for whichever product the current mode belongs to (Speech
+  // Builder by default, or a PDF viewer while one is open) - only shown while
+  // that product is unlocked via a time-limited trial digit (1-4).
+  const activeViewerIndex = PDF_VIEWERS.findIndex(({ mode }) => mode === view.mode);
+  const currentProductIndex = activeViewerIndex !== -1 ? activeViewerIndex + 1 : 0;
+  const currentProduct = getUnlockStates(view.unlockCount)[currentProductIndex];
+  const trialInfo = currentProduct.unlocked && currentProduct.trialDaysLeft !== null
+    ? `${currentProduct.trialDaysLeft} day${currentProduct.trialDaysLeft === 1 ? "" : "s"} left`
+    : null;
 
   const onMenuOpen = () => {
     dispatch(setMenuOpen(!view.showMenuPopup));
@@ -37,6 +48,9 @@ const Header = (props) => {
         </button>
         {view.userIsAuth &&
           <span className={cx(`project-name ${canvas.modified ? "modified" : ""}`)}>{projectLabel}</span>
+        }
+        {view.userIsAuth && trialInfo &&
+          <span className={cx("trial-info")}>{trialInfo}</span>
         }
       </div>
       }

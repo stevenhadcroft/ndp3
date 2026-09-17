@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback, memo } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import { cx } from '../styles';
 import { getHighestZdepth } from "../utils";
@@ -6,7 +6,8 @@ import { getHighestZdepth } from "../utils";
 import {
 	Constants,
 	eSearchLogic,
-	eSearchFilter
+	eSearchFilter,
+	MY_IMAGES_CATEGORY_ID
 } from "../constants";
 
 import {
@@ -25,6 +26,15 @@ import {
 
 import { loadImage } from "../loaders";
 import DraggablePanel from "./DraggablePanel";
+
+const isElectron = !!window.electronAPI;
+
+// Dev-only preview of the "My Images" upload flow, for when the app isn't
+// running inside Electron (e.g. `npm start`) — files are picked with a real
+// <input type="file"> and held in memory only, nothing touches disk.
+// `npm run build` always sets NODE_ENV=production (that's what Electron
+// ships), so this never reaches a real build regardless of how it's run.
+const DEBUG_MY_IMAGES = process.env.NODE_ENV !== "production" && !isElectron;
 
 export const Spinner = () => {
 	return (
@@ -92,25 +102,24 @@ let Search = () => {
 //--------------------------------------------------------------
 // Category Chooser Component
 //--------------------------------------------------------------
-let CategoryChooser = () => {
+let CategoryChooser = ({ children }) => {
 	const dispatch = useDispatch();
 	const view = useSelector(state => state.view);
 
 	// HANDLERS ---------------------------------------------------
 	const onChooseCategory = evt => {
-		const category = Constants.IMAGE_CATEGORIES[evt.target.selectedIndex].id;
-		dispatch(setSearch({ category }));
+		dispatch(setSearch({ category: evt.target.value }));
 	};
 
 	return (
 		<div className={cx("margin-b margin-ll")}>
 			<span className={cx("margin-r")}>Show</span>
-			<select onChange={onChooseCategory}>
-				{Constants.IMAGE_CATEGORIES.map((category, index) => {
-					const selected = view.searchCategory === Constants.IMAGE_CATEGORIES[index].title;
-					return <option key={index} selected={selected ? "selected" : null}>{category.title}</option>
-				})}
+			<select value={view.searchCategory || Constants.IMAGE_CATEGORIES[0].id} onChange={onChooseCategory}>
+				{Constants.IMAGE_CATEGORIES.map((category) => (
+					<option key={category.id} value={category.id}>{category.title}</option>
+				))}
 			</select>
+			{children}
 		</div>
 	)
 }
@@ -121,37 +130,82 @@ let CategoryChooser = () => {
 //--------------------------------------------------------------
 let localSelectedIndex;
 
+// Memoized so selecting one image (a state change in the parent) doesn't
+// re-render and re-diff every other cell — there can be ~700+ of these.
+const ImageCell = memo(function ImageCell({ item, index, isSelected, onClick }) {
+	return (
+		<div>
+			<img
+				className={cx(`cell ${isSelected ? 'selected' : ''}`)}
+				src={item.url}
+				data-index={index}
+				data-imagelibraryindex={item.imageLibraryIndex}
+				onClick={onClick}
+				/>
+			<div className={cx("cell-label")}>{item.viewTitle}</div>
+		</div>
+	);
+});
+
 let ImageList = () => {
 	const view = useSelector(state => state.view);
 	const [selectedIndex, setSelectedIndex] = useState();
-	const [loaded, setLoaded] = useState([]);
-	
-	const onImageClicked = (evt) => {
+
+	const onImageClicked = useCallback((evt) => {
 		setSelectedIndex(Math.floor(evt.target.dataset.index));
 		localSelectedIndex = Math.floor(evt.target.dataset.imagelibraryindex);
-	}
+	}, []);
 
 	return (
 		view.imageLibrary || []).map((item, index) => (
-			<div>
-				<img key={index}
-					className={cx(`cell ${index === selectedIndex ? 'selected' : ''}`)}
-					src={item.url}
-					data-index={index}
-					data-imagelibraryindex={item.imageLibraryIndex}
-					onClick={onImageClicked}
-					onLoad={() => {
-						let v = [...loaded];
-						v[index] = true;
-						setLoaded(v);
-					}}
+			<ImageCell
+				key={index}
+				item={item}
+				index={index}
+				isSelected={index === selectedIndex}
+				onClick={onImageClicked}
+			/>
+		)
+		)
+}
+
+
+//--------------------------------------------------------------
+// My Images (user-uploaded, raster) List
+//--------------------------------------------------------------
+// Debug-only in-memory store, so uploads survive re-opening the dialogue
+// within the same session (mirrors what the real filesystem store would do).
+let debugImages = [];
+
+let MyImagesList = ({ images, selectedFilename, onPick, onRemove }) => {
+	return (
+		<>
+			{images.map((item) => (
+				<div key={item.filename} style={{ position: "relative", display: "inline-block" }}>
+					<img
+						className={cx(`cell ${item.filename === selectedFilename ? 'selected' : ''}`)}
+						style={{ objectFit: "contain" }}
+						src={item.url}
+						onClick={() => onPick(item)}
 					/>
-				{/* {!loaded[index] && <Spinner />} */}
-				<div className={cx("cell-label")}>{item.viewTitle}</div>
-			</div>
-			// </LazyLoad>
-		)
-		)
+					<button
+						type="button"
+						onClick={(evt) => onRemove(evt, item.filename)}
+						title="Remove image"
+						style={{
+							position: "absolute", top: "0px", right: "0px",
+							width: "30px", height: "30px", borderRadius: "50%",
+							border: "none", background: "var(--color-overlay-dark)", color: "#fff",
+							cursor: "pointer", lineHeight: "28px", fontSize: "20px", padding: 0,
+						}}
+					>×</button>
+				</div>
+			))}
+			{images.length === 0 &&
+				<div style={{ padding: "20px" }}>No images added yet.</div>
+			}
+		</>
+	);
 }
 
 
@@ -161,11 +215,108 @@ let ImageList = () => {
 const DialogueAddImage = () => {
 	// HOOKS ---------------------------------------------------
 	const dispatch = useDispatch();
+	const view = useSelector(state => state.view);
 	const canvas = useSelector(state => state.canvas);
 	const [error, setError] = useState("");
 
+	const [myImages, setMyImages] = useState(DEBUG_MY_IMAGES ? debugImages : []);
+	const [selectedMyImage, setSelectedMyImage] = useState(null);
+	const [addingMyImage, setAddingMyImage] = useState(false);
+	const fileInputRef = useRef(null);
+
+	const inMyImages = view.searchCategory === MY_IMAGES_CATEGORY_ID;
+
 	// HANDLERS ---------------------------------------------------
+	const refreshMyImages = () => {
+		if (DEBUG_MY_IMAGES) {
+			setMyImages([...debugImages]);
+			return;
+		}
+		if (!isElectron) return;
+		window.electronAPI.listMyImages().then(res => {
+			if (res?.success) setMyImages(res.images);
+		});
+	};
+
+	useEffect(() => {
+		if (inMyImages) refreshMyImages();
+	}, [inMyImages]);
+
+	const onAddMyImage = () => {
+		if (DEBUG_MY_IMAGES) {
+			fileInputRef.current?.click();
+			return;
+		}
+		setAddingMyImage(true);
+		window.electronAPI.addMyImages()
+			.then(refreshMyImages)
+			.finally(() => setAddingMyImage(false));
+	};
+
+	// Debug-only: stand in for the native file dialogue with a real <input
+	// type="file">, so the preview works with actual picked files.
+	const onDebugFilesChosen = (evt) => {
+		const files = Array.from(evt.target.files || []);
+		files.forEach((file, i) => {
+			debugImages = debugImages.concat([{
+				filename: `${Date.now()}-${i}-${file.name}`,
+				url: URL.createObjectURL(file),
+			}]);
+		});
+		evt.target.value = ""; // allow re-picking the same file
+		refreshMyImages();
+	};
+
+	const onPickMyImage = (item) => setSelectedMyImage(item);
+
+	const onRemoveMyImage = (evt, filename) => {
+		evt.stopPropagation();
+		if (DEBUG_MY_IMAGES) {
+			const removed = debugImages.find(i => i.filename === filename);
+			if (removed) URL.revokeObjectURL(removed.url);
+			debugImages = debugImages.filter(i => i.filename !== filename);
+			refreshMyImages();
+		} else {
+			window.electronAPI.deleteMyImage(filename).then(refreshMyImages);
+		}
+		if (selectedMyImage?.filename === filename) setSelectedMyImage(null);
+	};
+
+	const getNewImagePosition = () => {
+		const images = canvas.images || [];
+		const zIndex = images.length > 0 ? getHighestZdepth(images) : 1;
+
+		// Calculate center position based on canvas orientation
+		const orientation = canvas.orientation || "portrait";
+		const centerX = orientation === "portrait" ? 384 : 550;
+		const centerY = orientation === "portrait" ? 550 : 384;
+
+		return { zIndex, centerX, centerY };
+	};
+
+	const onLoadMyImage = () => {
+		if (!selectedMyImage) {
+			setError("Please select an image first.");
+			return;
+		}
+		setError("");
+		const { zIndex, centerX, centerY } = getNewImagePosition();
+		const { url } = selectedMyImage;
+		const newImage = {
+			type: "image",
+			raster: true,
+			x: centerX, y: centerY, angle: 0, size: 300, url, zIndex,
+			svg: `<img src="${url}" width="100%" height="100%" draggable="false" style="pointer-events:none;user-select:none;display:block;object-fit:contain;" />`,
+		};
+		dispatch(addImage(newImage));
+		dispatch(cancelMode());
+	};
+
 	const onLoadClicked = (ind) => {
+		if (inMyImages) {
+			onLoadMyImage();
+			return;
+		}
 		if (ind === undefined || ind === null || !window.IMAGE_FILES[ind]) {
 			setError("Please select an image first.");
 			return;
@@ -175,12 +326,7 @@ const DialogueAddImage = () => {
 		const url = window.IMAGE_FILES[ind].url;
 		const filename = window.IMAGE_FILES[ind].filename;
 		const images = canvas.images || [];
-		const zIndex = images.length > 0 ? getHighestZdepth(images) : 1;
-
-		// Calculate center position based on canvas orientation
-		const orientation = canvas.orientation || "portrait";
-		const centerX = orientation === "portrait" ? 384 : 550;
-		const centerY = orientation === "portrait" ? 550 : 384;
+		const { zIndex, centerX, centerY } = getNewImagePosition();
 
 		const newImage = { type: "image", x: centerX, y: centerY, angle: 0, size: 300, url, zIndex };
 		const index = images.length; // index of new image
@@ -209,13 +355,41 @@ const DialogueAddImage = () => {
 	//--------------------------------------------------------------
 	return (
 		<DraggablePanel id="add-image" title="Add Image" type="fullscreen" buttons={Buttons}>
-			<CategoryChooser />
-			<Search />
+			<CategoryChooser>
+				{inMyImages && (
+					(isElectron || DEBUG_MY_IMAGES) ? (
+						<button className={cx("primary narrow")} style={{ marginLeft: "30px", width: "auto", padding: "0 20px", whiteSpace: "nowrap" }} onClick={onAddMyImage} disabled={addingMyImage}>
+							{addingMyImage ? "Adding…" : "Add image from computer"}
+						</button>
+					) : (
+						<span style={{ marginLeft: "10px" }}>Adding your own images is only available in the desktop app.</span>
+					)
+				)}
+				{inMyImages && DEBUG_MY_IMAGES &&
+					<input
+						ref={fileInputRef}
+						type="file"
+						accept="image/*"
+						multiple
+						style={{ display: "none" }}
+						onChange={onDebugFilesChosen}
+					/>
+				}
+			</CategoryChooser>
+			{!inMyImages && <Search />}
 			{error &&
 				<div style={{ color: "#ff5252", fontWeight: 600, padding: "0 20px 10px" }}>{error}</div>
 			}
 			<div className={cx("dialogue-inner")}>
-				<ImageList />
+				{inMyImages
+					? <MyImagesList
+						images={myImages}
+						selectedFilename={selectedMyImage?.filename}
+						onPick={onPickMyImage}
+						onRemove={onRemoveMyImage}
+					/>
+					: <ImageList />
+				}
 			</div>
 		</DraggablePanel>
 	);

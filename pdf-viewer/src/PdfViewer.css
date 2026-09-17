@@ -56,6 +56,25 @@
   border-left: 1px solid #33ffff33;
 }
 
+.pdf-trial-info {
+  margin-left: auto;
+  /* .pdf-toolbar already has 20px right padding; add 10px more so this sits
+     30px from the window's right edge, matching .trial-info's `right: 30px`
+     in the main app's header (menu.module.css). */
+  margin-right: 10px;
+  padding: 8px 14px;
+  border-radius: 99px;
+  background: rgba(15, 37, 71, 0.5);
+  font-size: 14px;
+  color: #7fc9ff;
+  white-space: nowrap;
+  /* .pdf-toolbar's border-bottom (3px, no matching top border) shifts its
+     border-box content area up relative to the bar's true visual centre -
+     unnoticeable for baseline text, but this pill's flat padded edges make
+     the offset obvious, so nudge it down by half the border width. */
+  transform: translateY(1.5px);
+}
+
 .pdf-page-info {
   margin-left: auto;
   font-size: 13px;
@@ -343,8 +362,10 @@
 /* Search panel */
 .pdf-search-panel {
   position: absolute;
-  top: 22px;
-  right: 30px;
+  /* .pdf-toolbar (the header) is 50px tall, flush with the top of
+     .pdf-viewer - this leaves a visible gap below it. */
+  top: 61px;
+  right: 10px;
   z-index: 10;
 }
 
@@ -352,19 +373,31 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #1a1a2e;
-  border: 3px solid #4a9eff;
+  background: #015698;
   border-radius: 12px;
   padding: 12px 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
 
+/* Wraps the input + phonetic toggle so they sit flush against each other,
+   like a single control - matches .add-phonetic's pairing with its adjacent
+   <select> elsewhere in the app (src/styles/buttons.module.css). */
+.pdf-search-input-group {
+  display: flex;
+  align-items: stretch;
+}
+
 .pdf-search-bar input {
-  background: transparent;
+  background: #fff;
   border: none;
   outline: none;
-  color: #fff;
-  font-size: 24px;
+  /* Rounded on the left only - the phonetic toggle sits flush against the
+     right edge, square-to-square, with no gap. */
+  border-radius: 6px 0 0 6px;
+  box-sizing: border-box;
+  height: 44px;
+  color: #333;
+  font-size: 17px;
   width: 220px;
   padding: 8px 6px;
 }
@@ -408,51 +441,72 @@
   background: transparent;
 }
 
+/* Matches the "ð" phonetic button used elsewhere in the app (e.g. the Add
+   Text dialogue's .add-phonetic, src/styles/buttons.module.css): an orange
+   square (--color-ui-phonetic, #ff9900) with the glyph in dark text. */
 .pdf-search-bar .phonetic-toggle {
+  background: #ff9900;
+  color: #1a1a1a;
   font-size: 24px;
+  font-weight: normal;
   width: 44px;
   height: 44px;
-  font-weight: normal;
-  text-decoration: underline;
+  box-sizing: border-box;
+  /* Square on the left, flush against the input - rounded only on the
+     right, matching .add-phonetic's pairing with its adjacent <select>. */
+  border-radius: 0 6px 6px 0;
+  text-decoration: none;
+}
+
+.pdf-search-bar .phonetic-toggle:hover {
+  background: #ff9900;
 }
 
 .pdf-search-bar button.phonetic-active {
-  background: rgba(74, 158, 255, 0.3);
-  color: #4a9eff;
-  outline: 2px solid #4a9eff;
-  border-radius: 4px;
+  outline: 2px solid #fff;
 }
 
+/* Matches the NDP3 app's "Add Phonetic" keyboard exactly (see .phonetic-pot
+   in src/styles/buttons.module.css and its --color-background-dialogue /
+   --color-ui-phonetic-pot(-text) tokens): white cells on a dark-blue panel,
+   square corners, and no cell borders - the "grid lines" are just the panel
+   background showing through each cell's margin. */
 .phonetic-grid {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 4px;
+  grid-template-columns: repeat(6, 55px);
+  /* Shrink to fit the button grid exactly - without this, this block-level
+     grid stretches to match its wider sibling (.pdf-search-bar) rather than
+     its own content, leaving empty space to the right. */
+  width: fit-content;
+  gap: 5px;
   margin-top: 6px;
-  background: #1a1a2e;
-  border: 3px solid #4a9eff;
+  background: #015698;
   border-radius: 12px;
-  padding: 10px;
+  padding: 20px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
 
 .phonetic-btn {
-  background: #2a2a4e;
-  border: 1px solid #4a9eff44;
-  border-radius: 6px;
-  color: #fff;
-  font-size: 18px;
-  padding: 8px 4px;
+  background: #fff;
+  border: none;
+  border-radius: 0;
+  color: #333;
+  font-size: 24px;
+  font-weight: normal;
+  width: 55px;
+  height: 45px;
+  line-height: 45px;
+  padding: 0;
   cursor: pointer;
   text-align: center;
   font-family: inherit;
-  min-width: 42px;
 }
 
 .phonetic-btn:hover {
-  background: #4a9eff44;
-  border-color: #4a9eff;
+  background: #eee;
 }
 
 .phonetic-spacer {
-  min-width: 42px;
+  width: 55px;
+  height: 45px;
 }

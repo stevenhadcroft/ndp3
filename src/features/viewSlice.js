@@ -4,7 +4,8 @@ import { cloneDeep } from "../utils";
 
 import {
   eSearchLogic,
-  eSearchFilter
+  eSearchFilter,
+  MY_IMAGES_CATEGORY_ID
 } from "../constants";
 
 const viewSlice = createSlice({
@@ -82,19 +83,30 @@ const viewSlice = createSlice({
       if (action.payload.term || action.payload.term === "") state.searchTerm = action.payload.term;
       if (action.payload.category) state.searchCategory = action.payload.category;
 
+      // "My Images" is a separate, disk-backed list (see MyImagesList) —
+      // it's not part of the bundled XML library, so there's nothing here
+      // to filter and imageLibrary is unused for it.
+      if (state.searchCategory === MY_IMAGES_CATEGORY_ID) {
+        state.imageLibrary = [];
+        return;
+      }
+
       state.imageLibrary = [];
       {
         window.IMAGE_FILES.map((_item, index) => {
+          // NOTE - itemRoot (a live XML DOM node) is deliberately not kept on
+          // the stored item: putting DOM nodes in Redux state makes every
+          // dispatch's dev-mode invariant checks (and Redux DevTools) walk
+          // the whole, circularly-referenced DOM tree, which is very slow.
           let item = {
             url: _item.url,
             filename: _item.filename,
-            itemRoot: _item.itemRoot,
             viewTitle: "",
             imageLibraryIndex: index
           };
           // filter - search term
           let searchshow = false;
-          const node = item.itemRoot.getAttribute(state.searchFilter || "Stitle");
+          const node = _item.itemRoot.getAttribute(state.searchFilter || "Stitle");
           if (node) {
             let title = node.toLowerCase();
             let term = (state.searchTerm || "").toLowerCase();
@@ -106,7 +118,7 @@ const viewSlice = createSlice({
             item.viewTitle = title; // for display
           }
 
-          let catnode = item.itemRoot.getAttribute(state.searchCategory);
+          let catnode = _item.itemRoot.getAttribute(state.searchCategory);
           let catshow;
           if (state.searchCategory && catnode) {
             catshow = catnode.toLowerCase() === "true" ? true : false;

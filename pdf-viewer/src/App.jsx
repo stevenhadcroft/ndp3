@@ -60,6 +60,7 @@ function resolveDoc() {
 
 const title = params.get('title') ?? ''
 const isElectron = params.get('electron') === '1'
+const trialInfo = params.get('trial') ?? ''
 
 function openMenu() {
   window.parent.postMessage({ type: 'ndp3-pdf-viewer-open-menu' }, window.location.origin)
@@ -77,6 +78,7 @@ export default function App() {
       docOptions={group}
       onSelectDoc={setUrl}
       isElectron={isElectron}
+      trialInfo={trialInfo}
     />
   )
 }

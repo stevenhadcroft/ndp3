@@ -89,8 +89,11 @@ const Canvas = () => {
 
 		const el = document.elementsFromPoint(downX, downY);
 		let elementSelectDone = false; // we only want to select one (topmost if stacked) element
-		
+		let stopScan = false; // once true, everything remaining in `el` is a lower, visually-obscured layer
+
 		for (var i in el) {
+			if (stopScan) break;
+
 			if (el[i] && el[i].nodeName === "use" && !elementSelectDone) {
 				let fillId = el[i].getAttribute("xlink:href");
 				fillId = fillId.substr(1, fillId.length - 1);
@@ -160,9 +163,40 @@ const Canvas = () => {
 
 				elementSelectDone = true;
 			}
+
+			// A raster image (e.g. a "My Images" upload) has no <use> fill regions,
+			// so reaching its container without a match means this pixel is genuinely
+			// its topmost content - stop before the scan falls through to whatever's
+			// underneath (e.g. a template) and wrongly selects that instead.
+			// SVG clipart images are deliberately NOT stopped here: their unpainted
+			// "alpha" areas have no hit-testable geometry at this pixel, so letting
+			// the scan continue is what allows selecting a lower SVG through them.
+			if (el[i] && el[i].id && el[i].id.indexOf("image-") === 0) {
+				const hitIndex = Math.floor(el[i].id.slice("image-".length));
+				if (images[hitIndex]?.raster) {
+					stopScan = true;
+				}
+			}
+		}
+
+		// Raster images (e.g. "My Images" uploads) have no <use> fill regions for
+		// the loop above to key off, so select/drag them directly by index instead.
+		if (!elementSelectDone && !brushColour && images[index]?.raster) {
+			dispatch(setDragIndex(index));
+			dispatch(setSelectedIndex(index));
+			updateData(index, "zIndex", getHighestZdepth(images));
+
+			const canvasRect = document.getElementById("canvas").getBoundingClientRect();
+			const imageEl = document.getElementById("image-" + index);
+			if (imageEl) {
+				const imageRect = imageEl.getBoundingClientRect();
+				const x = downX - imageRect.left - imageRect.width / 2 + canvasRect.left;
+				const y = downY - imageRect.top - imageRect.height / 2 + canvasRect.top;
+				clickOffset = { x, y };
+			}
 		}
 	};
-	
+
 	//---------------------
 	// TEXT - ON DOWN
 	//---------------------

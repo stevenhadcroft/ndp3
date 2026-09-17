@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { cx } from '../styles';
 import { cancelMode, setMenuOpen } from '../features/viewSlice';
+import { PDF_VIEWERS, getUnlockStates } from '../constants';
 import DraggablePanel from './DraggablePanel';
 
 const isElectron = !!window.electronAPI;
@@ -9,6 +10,17 @@ const isElectron = !!window.electronAPI;
 const DialoguePdfViewer = ({ file, title }) => {
 	const dispatch = useDispatch();
 	const iframeRef = useRef(null);
+	const view = useSelector(state => state.view);
+
+	// Same trial progress shown in the main app's header (see Header.js) -
+	// passed through to the standalone pdf-viewer bundle as a query param
+	// since it runs in its own iframe/origin with no access to this app's
+	// Redux store. PdfViewer.jsx renders the bold "Trial" prefix itself.
+	const viewerIndex = PDF_VIEWERS.findIndex(v => v.mode === view.mode);
+	const product = getUnlockStates(view.unlockCount)[viewerIndex + 1];
+	const trialInfo = product?.unlocked && product.trialDaysLeft !== null
+		? `${product.trialDaysLeft} day${product.trialDaysLeft === 1 ? "" : "s"} left`
+		: '';
 
 	useEffect(() => {
 		const onMessage = async (event) => {
@@ -52,7 +64,7 @@ const DialoguePdfViewer = ({ file, title }) => {
 			<div className={cx("dialogue-inner")}>
 				<iframe
 					ref={iframeRef}
-					src={`${process.env.PUBLIC_URL}/pdf-viewer/index.html?file=${encodeURIComponent(file)}&title=${encodeURIComponent(title)}&electron=${isElectron ? '1' : '0'}`}
+					src={`${process.env.PUBLIC_URL}/pdf-viewer/index.html?file=${encodeURIComponent(file)}&title=${encodeURIComponent(title)}&electron=${isElectron ? '1' : '0'}&trial=${encodeURIComponent(trialInfo)}`}
 					title={title}
 					style={{ width: "100%", height: "100%", border: "none" }}
 				/>

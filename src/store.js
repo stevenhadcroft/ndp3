@@ -8,11 +8,4 @@ export const store = configureStore({
     canvas: canvasReducer,
     view: viewReducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        // Ignore these paths in the state
-        ignoredPaths: ['view.imageLibrary.0.itemRoot'],
-      },
-    }),
 });

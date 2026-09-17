@@ -1,3 +1,7 @@
+// Special category: user-uploaded images, sourced from local disk rather than
+// the bundled XML image library — handled separately from the other categories.
+export const MY_IMAGES_CATEGORY_ID = "myImages";
+
 export const IMAGE_CATEGORIES = [
     { title: "All word categories", id: "All" },
     { title: "Single Consonant", id: "cons" },
@@ -22,6 +26,7 @@ export const IMAGE_CATEGORIES = [
     { title: "Articulograms", id: "artic" },
     { title: "Jolly", id: "jolly" },
     { title: "Assessment", id: "asses" },
+    { title: "My Images", id: MY_IMAGES_CATEGORY_ID },
 ];
 
 export const WORKSHEET_CATEGORIES = [

@@ -52,9 +52,9 @@ const DialogueChooseTemplate = () => {
 	//--------------------------------------------------------------
 	const Search = () => (
         <div className={cx("margin-bb")}>
-            <span className={cx("margin-r")}>Show</span>
+            <span className={cx("margin-r")}>Filter</span>
             {Constants.WORKSHEET_CATEGORIES.map(category => {
-                const _stylename = `filter ${(!view.templateFilters && category.title === "All") || (view.templateFilters && view.templateFilters[category.title]) ? "active" : ""}`;
+                const _stylename = `filter ${(!view.templateFilters && category.title === "All") || (view.templateFilters && view.templateFilters[category.title]) ? "filter-active" : ""}`;
                 return <button className={cx(_stylename)} onClick={()=>onFilterClicked(category.title)}>{category.title}</button>
             })}
         </div>

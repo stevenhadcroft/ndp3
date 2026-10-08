@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "./static/css/main.1367e3cf.css",
-    "main.js": "./static/js/main.71affada.js",
+    "main.css": "./static/css/main.082ea972.css",
+    "main.js": "./static/js/main.f0bc5742.js",
     "static/media/phonetic-alphabet.ttf": "./static/media/phonetic-alphabet.ad110c860e8a3fd39002.ttf",
     "index.html": "./index.html",
-    "main.1367e3cf.css.map": "./static/css/main.1367e3cf.css.map",
-    "main.71affada.js.map": "./static/js/main.71affada.js.map"
+    "main.082ea972.css.map": "./static/css/main.082ea972.css.map",
+    "main.f0bc5742.js.map": "./static/js/main.f0bc5742.js.map"
   },
   "entrypoints": [
-    "static/css/main.1367e3cf.css",
-    "static/js/main.71affada.js"
+    "static/css/main.082ea972.css",
+    "static/js/main.f0bc5742.js"
   ]
 }

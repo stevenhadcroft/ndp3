@@ -183,12 +183,24 @@ function createSplashWindow() {
 function createMainWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 
+  const isWindows = process.platform === 'win32';
+  
   mainWindow = new BrowserWindow({
     // fullscreen: true,
     width: Math.floor(width * 1),
     height: Math.floor(height * 1),
     center: true,
     show: false,
+    // Windows: hide the default title bar and draw the native min/max/close
+    // controls over the top-right of the app's own header instead
+    ...(isWindows && {
+      titleBarStyle: 'hidden',
+      titleBarOverlay: {
+        color: '#015698',     // matches --color-ui-menu-header
+        symbolColor: '#ffffff',
+        height: 50,           // matches .menu-header height
+      },
+    }),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
@@ -244,6 +256,69 @@ async function handlePrint(htmlContent) {
       });
     });
   });
+}
+
+// Per-user file storage
+//
+// Projects, folders and "my images" are scoped under a subfolder per signed-in
+// user (identified by the email recorded via localLicenseMananger.linkMachine
+// on the renderer side), so different people signing in on the same machine
+// don't see each other's saved work.
+//
+// Kept at module scope (not inside setupIPC, which runs more than once per
+// launch) so the one-time legacy-data migration below only ever runs once.
+const usersRoot = path.join(app.getPath('userData'), 'users');
+let migrationPromise = null;
+
+function sanitizeUserId(userId) {
+  const id = (userId || '').toString().trim().toLowerCase();
+  const safe = id.replace(/[^a-z0-9._-]/g, '_');
+  return safe || 'default';
+}
+
+// Existing (pre-multi-user) installs kept everything directly under
+// userData/. The first time any user directory is requested after upgrading,
+// move that flat data into place for whichever user is signing in first —
+// almost always the sole existing user of the install.
+async function migrateLegacyDataOnce(userRoot) {
+  if (!migrationPromise) {
+    migrationPromise = (async () => {
+      const usersRootExisted = await fs.access(usersRoot).then(() => true).catch(() => false);
+      if (usersRootExisted) return;
+
+      const legacyProjectsDir = path.join(app.getPath('userData'), 'projects');
+      const legacyDirsMetaFile = path.join(app.getPath('userData'), 'directories.json');
+      const legacyMyImagesDir = path.join(app.getPath('userData'), 'my-images');
+
+      await fs.mkdir(userRoot, { recursive: true });
+
+      for (const [src, dest] of [
+        [legacyProjectsDir, path.join(userRoot, 'projects')],
+        [legacyDirsMetaFile, path.join(userRoot, 'directories.json')],
+        [legacyMyImagesDir, path.join(userRoot, 'my-images')],
+      ]) {
+        const exists = await fs.access(src).then(() => true).catch(() => false);
+        if (exists) {
+          await fs.rename(src, dest).catch((error) => log.error('Error migrating legacy data', src, error));
+        }
+      }
+    })();
+  }
+  return migrationPromise;
+}
+
+async function getUserPaths(userId) {
+  const userRoot = path.join(usersRoot, sanitizeUserId(userId));
+  await migrateLegacyDataOnce(userRoot);
+
+  const projectsDir = path.join(userRoot, 'projects');
+  const dirsMetaFile = path.join(userRoot, 'directories.json');
+  const myImagesDir = path.join(userRoot, 'my-images');
+
+  await fs.mkdir(projectsDir, { recursive: true });
+  await fs.mkdir(myImagesDir, { recursive: true });
+
+  return { projectsDir, dirsMetaFile, myImagesDir };
 }
 
 // IPC handlers
@@ -307,29 +382,25 @@ function setupIPC() {
   //-------------------------------------
   // File system operations
   //-------------------------------------
-  // File system paths
-  const projectsDir = path.join(app.getPath('userData'), 'projects');
-  const dirsMetaFile = path.join(app.getPath('userData'), 'directories.json');
-  const myImagesDir = path.join(app.getPath('userData'), 'my-images');
 
-  // Ensure projects directory exists
-  fs.mkdir(projectsDir, { recursive: true }).catch(console.error);
-  fs.mkdir(myImagesDir, { recursive: true }).catch(console.error);
-  
   // Existing handlers
   ipcMain.handle('get-user-data-path', () => app.getPath('userData'));
 
   // Where project .json files (and their folders) are stored on disk
-  ipcMain.handle('get-projects-path', () => projectsDir);
-  ipcMain.handle('open-projects-folder', async () => {
-    await fs.mkdir(projectsDir, { recursive: true }).catch(() => {});
+  ipcMain.handle('get-projects-path', async (event, userId) => {
+    const { projectsDir } = await getUserPaths(userId);
+    return projectsDir;
+  });
+  ipcMain.handle('open-projects-folder', async (event, userId) => {
+    const { projectsDir } = await getUserPaths(userId);
     const error = await shell.openPath(projectsDir);
     return { success: !error, error: error || undefined };
   });
-  
+
   // Project handlers
-  ipcMain.handle('save-project', async (event, data) => {
+  ipcMain.handle('save-project', async (event, userId, data) => {
     try {
+      const { projectsDir } = await getUserPaths(userId);
       const { name, projectid, description, thumbnail, data: projectData, dirname, orientation } = data;
       const filename = `${name}.json`;
       
@@ -360,8 +431,9 @@ function setupIPC() {
     }
   });
   
-  ipcMain.handle('load-project', async (event, filename) => {
+  ipcMain.handle('load-project', async (event, userId, filename) => {
     try {
+      const { projectsDir } = await getUserPaths(userId);
       const filepath = path.join(projectsDir, filename);
       const data = await fs.readFile(filepath, 'utf8');
       return { success: true, data: JSON.parse(data) };
@@ -370,9 +442,10 @@ function setupIPC() {
       return { success: false, error: error.message };
     }
   });
-  
-  ipcMain.handle('delete-project', async (event, filename) => {
+
+  ipcMain.handle('delete-project', async (event, userId, filename) => {
     try {
+      const { projectsDir } = await getUserPaths(userId);
       const filepath = path.join(projectsDir, filename);
       await fs.unlink(filepath);
       return { success: true };
@@ -381,9 +454,10 @@ function setupIPC() {
       return { success: false, error: error.message };
     }
   });
-  
-  ipcMain.handle('list-projects', async (event, dirname) => {
+
+  ipcMain.handle('list-projects', async (event, userId, dirname) => {
     try {
+      const { projectsDir } = await getUserPaths(userId);
       let searchDir = projectsDir;
       if (dirname) {
         searchDir = path.join(projectsDir, dirname);
@@ -414,8 +488,9 @@ function setupIPC() {
   });
 
   // Directory handlers
-  ipcMain.handle('create-dir', async (event, dirname) => {
+  ipcMain.handle('create-dir', async (event, userId, dirname) => {
     try {
+      const { projectsDir, dirsMetaFile } = await getUserPaths(userId);
       let dirs = [];
       try {
         const data = await fs.readFile(dirsMetaFile, 'utf8');
@@ -443,8 +518,9 @@ function setupIPC() {
     }
   });
   
-  ipcMain.handle('get-dirs', async () => {
+  ipcMain.handle('get-dirs', async (event, userId) => {
     try {
+      const { dirsMetaFile } = await getUserPaths(userId);
       let dirs = [];
       try {
         const data = await fs.readFile(dirsMetaFile, 'utf8');
@@ -460,8 +536,9 @@ function setupIPC() {
     }
   });
   
-  ipcMain.handle('delete-dir', async (event, dirname) => {
+  ipcMain.handle('delete-dir', async (event, userId, dirname) => {
     try {
+      const { projectsDir, dirsMetaFile } = await getUserPaths(userId);
       let dirs = [];
       try {
         const data = await fs.readFile(dirsMetaFile, 'utf8');

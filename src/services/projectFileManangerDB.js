@@ -5,7 +5,7 @@ window.LOCAL = 1;
 
 let credentials = {userid:null, token:null};
 window.REFRESH_CREDS = () => {
-  credentials = JSON.parse(localStorage.getItem("NDP3Credentials"));
+  credentials = JSON.parse(localStorage.getItem(`${Constants.LOCAL_DATA_CONFIG}NDP3Credentials`));
   console.log('credentials from localStorage ', credentials);  
 }
 window.REFRESH_CREDS();

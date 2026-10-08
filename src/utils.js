@@ -95,7 +95,7 @@ const BASE32 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 const MAX_UNLOCK_NUMBER = 99999;
 const KEY_CHARS = 12; // 7 bytes of base32, always this many characters
 
-const normalizeEmail = (email) => String(email || "").trim().toLowerCase();
+export const normalizeEmail = (email) => String(email || "").trim().toLowerCase();
 
 const base32Encode = (bytes) => {
     let bits = 0, value = 0, out = "";

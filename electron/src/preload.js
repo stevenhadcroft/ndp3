@@ -15,26 +15,29 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // downloadUpdate: () => ipcRenderer.invoke('download-update')
 
   // File system operations
-  saveProject: (data) => ipcRenderer.invoke('save-project', data),
-  loadProject: (filename) => ipcRenderer.invoke('load-project', filename),
-  deleteProject: (filename) => ipcRenderer.invoke('delete-project', filename),
-  listProjects: (dirname) => {
+  // `userId` scopes storage to the currently signed-in user (see
+  // src/services/localLicenseMananger.js getCurrentUser()) so different
+  // people signing in on the same machine don't share saved projects/images.
+  saveProject: (userId, data) => ipcRenderer.invoke('save-project', userId, data),
+  loadProject: (userId, filename) => ipcRenderer.invoke('load-project', userId, filename),
+  deleteProject: (userId, filename) => ipcRenderer.invoke('delete-project', userId, filename),
+  listProjects: (userId, dirname) => {
     console.log('Invoking list-projects');
-    return ipcRenderer.invoke('list-projects', dirname)
+    return ipcRenderer.invoke('list-projects', userId, dirname)
   },
   getUserDataPath: () => ipcRenderer.invoke('get-user-data-path'),
-  getProjectsPath: () => ipcRenderer.invoke('get-projects-path'),
-  openProjectsFolder: () => ipcRenderer.invoke('open-projects-folder'),
+  getProjectsPath: (userId) => ipcRenderer.invoke('get-projects-path', userId),
+  openProjectsFolder: (userId) => ipcRenderer.invoke('open-projects-folder', userId),
 
    // Directory operations
-  createDir: (dirname) => ipcRenderer.invoke('create-dir', dirname),
-  getDirs: () => ipcRenderer.invoke('get-dirs'),
-  deleteDir: (dirname) => ipcRenderer.invoke('delete-dir', dirname),
+  createDir: (userId, dirname) => ipcRenderer.invoke('create-dir', userId, dirname),
+  getDirs: (userId) => ipcRenderer.invoke('get-dirs', userId),
+  deleteDir: (userId, dirname) => ipcRenderer.invoke('delete-dir', userId, dirname),
 
   // "My Images" - user-uploaded images
-  addMyImages: () => ipcRenderer.invoke('add-my-images'),
-  listMyImages: () => ipcRenderer.invoke('list-my-images'),
-  deleteMyImage: (filename) => ipcRenderer.invoke('delete-my-image', filename),
-  getMyImagesPath: () => ipcRenderer.invoke('get-my-images-path'),
-  openMyImagesFolder: () => ipcRenderer.invoke('open-my-images-folder')
+  addMyImages: (userId) => ipcRenderer.invoke('add-my-images', userId),
+  listMyImages: (userId) => ipcRenderer.invoke('list-my-images', userId),
+  deleteMyImage: (userId, filename) => ipcRenderer.invoke('delete-my-image', userId, filename),
+  getMyImagesPath: (userId) => ipcRenderer.invoke('get-my-images-path', userId),
+  openMyImagesFolder: (userId) => ipcRenderer.invoke('open-my-images-folder', userId)
 });

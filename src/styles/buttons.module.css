@@ -112,14 +112,13 @@ button.secondary {
 
 .filter {
   background: var(--color-background-white-semi);
-  padding: 5px 10px;
+  padding: 10px 20px;
   margin: 2px 5px;
   font-size: 16px;
-  border-radius: 21px;
-  line-height: 18px;
+  border-radius: 99px;
 }
 
-.filter.active {
+.filter.filter-active {
   background: var(--color-state-active);
   color: var(--color-white);
 }
@@ -163,8 +162,8 @@ button.secondary {
 .search {
   background: var(--color-background-white-semi);
   padding: 10px 20px;
-  margin: 2px 5px;
+  margin: 2px 5px 2px 15px;
   font-size: 16px;
-  border-radius: 6px;
+  border-radius: 99px;
 }
 

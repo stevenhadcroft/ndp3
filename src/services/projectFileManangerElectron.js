@@ -1,7 +1,9 @@
+import { getCurrentUser } from './localLicenseMananger';
+
 window.LOCAL = 1;
 
-// ~/Library/Application Support/<app-name>/projects/
- 
+// ~/Library/Application Support/<app-name>/users/<user>/projects/
+
 //------------------------------------------------
 // PROJECT FUNCTIONS
 //------------------------------------------------
@@ -10,11 +12,11 @@ export const storeProject = (params) => {
     const {name, projectid, description, thumbnail, data, dirname, orientation} = params;
     const file = {name, projectid, description, thumbnail, data, dirname, orientation};
     console.log('storeProject() file ', file);
-    
+
     return new Promise(async (resolve, reject) => {
         if (window.electronAPI) {
             try {
-                const result = await window.electronAPI.saveProject(file);
+                const result = await window.electronAPI.saveProject(getCurrentUser(), file);
                 resolve(result);
             } catch (error) {
                 reject(error);
@@ -35,7 +37,7 @@ export const getProject = async (file) => {
                 filename = `${file.name}.json`;
             }
             
-            const result = await window.electronAPI.loadProject(filename);
+            const result = await window.electronAPI.loadProject(getCurrentUser(), filename);
             if (result.success) {
                 return result.data;
             }
@@ -59,7 +61,7 @@ export const deleteProject = async (file) => {
                     filename = `${file.name}.json`;
                 }
                 
-                const result = await window.electronAPI.deleteProject(filename);
+                const result = await window.electronAPI.deleteProject(getCurrentUser(), filename);
                 resolve(result);
             } catch (error) {
                 reject(error);
@@ -73,9 +75,10 @@ export const deleteProject = async (file) => {
 export const getProjectList = async (dirname) => {
     if (window.electronAPI) {
         try {
+            const userId = getCurrentUser();
             const [projectsResult, dirsResult] = await Promise.all([
-                window.electronAPI.listProjects(dirname),
-                window.electronAPI.getDirs()
+                window.electronAPI.listProjects(userId, dirname),
+                window.electronAPI.getDirs(userId)
             ]);
 
             let projects = projectsResult.success ? projectsResult.projects : [];
@@ -104,7 +107,7 @@ export const createDir = (dirname) => {
     return new Promise(async (resolve, reject) => {
         if (window.electronAPI) {
             try {
-                const result = await window.electronAPI.createDir(dirname);
+                const result = await window.electronAPI.createDir(getCurrentUser(), dirname);
                 resolve(result);
             } catch (error) {
                 reject(error);
@@ -119,7 +122,7 @@ export const getDirs = () => {
     return new Promise(async (resolve, reject) => {
         if (window.electronAPI) {
             try {
-                const result = await window.electronAPI.getDirs();
+                const result = await window.electronAPI.getDirs(getCurrentUser());
                 if (result.success) {
                     const directories = result.directories.map(d => ({
                         dirname: d.dirname,
@@ -143,7 +146,7 @@ export const deleteDir = async (file) => {
     return new Promise(async (resolve, reject) => {
         if (window.electronAPI) {
             try {
-                const result = await window.electronAPI.deleteDir(file.dirname);
+                const result = await window.electronAPI.deleteDir(getCurrentUser(), file.dirname);
                 resolve(result);
             } catch (error) {
                 reject(error);

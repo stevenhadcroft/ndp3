@@ -269,7 +269,6 @@ dialogue - image/search
 
 .search-bar {
   background: var(--color-overlay-medium);
-  margin-top: 24px;
   border-radius: 20px;
   padding: 12px 20px 8px;
   font-weight: normal;

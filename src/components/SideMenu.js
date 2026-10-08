@@ -22,7 +22,7 @@ const cx = makeCx(styleModules);
 
 const isElectron = !!window.electronAPI;
 
-const BUY_URL = "https://www.ndp3.org/ndp3-speech-builder/";
+const BUY_URL = "https://www.ndp3.org/buy-ndp3-online/";
 
 // Locked rows render as a link to BUY_URL rather than a plain div: rolling
 // over swaps the product name for "{name} - Unlock" (see .menu-row.locked
@@ -90,6 +90,9 @@ const SideMenu = () => {
   // Per-item lock state — see getUnlockStates above for the digit mapping.
   const unlockStates = getUnlockStates(view.unlockCount);
   const speechBuilderLocked = !unlockStates[0].unlocked;
+  // trialDaysLeft is only 0 (rather than null) once a trial has actually run
+  // out - distinguishes "expired" from "never unlocked" (digit 0).
+  const speechBuilderExpired = speechBuilderLocked && unlockStates[0].trialDaysLeft === 0;
 
   const onCloseApp = () => {
     if (window.electron && window.electron.ipcRenderer) {
@@ -128,6 +131,7 @@ const SideMenu = () => {
                 <LockedRowLabel cx={cx} name="NDP3® Speech Builder" />
                 <LockIcon cx={cx} />
                 <ExternalLinkIcon cx={cx} />
+                {speechBuilderExpired && <span className={cx("menu-row-badge expired")}>Expired</span>}
               </a>
             ) : (
               <button
@@ -145,6 +149,7 @@ const SideMenu = () => {
             {PDF_VIEWERS.map(({ mode, label }, index) => {
               const active = view.mode === mode;
               const locked = !unlockStates[index + 1].unlocked;
+              const expired = locked && unlockStates[index + 1].trialDaysLeft === 0;
               if (locked) {
                 return (
                   <a key={mode} className={cx("menu-row locked")} href={BUY_URL} target="_blank" rel="noopener noreferrer">
@@ -152,6 +157,7 @@ const SideMenu = () => {
                     <LockedRowLabel cx={cx} name={label} />
                     <LockIcon cx={cx} />
                     <ExternalLinkIcon cx={cx} />
+                    {expired && <span className={cx("menu-row-badge expired")}>Expired</span>}
                   </a>
                 );
               }

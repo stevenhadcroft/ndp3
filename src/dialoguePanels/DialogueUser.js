@@ -4,14 +4,12 @@ import { cx } from '../styles';
 import { eMode } from "../constants";
 import Swal from 'sweetalert2';
 
-// import { 
+// import {
 //     setUserName,
 // } from '../actions'
 
-import { 
-    setTemplateData,
-    setImageData, 
-    setTextData, 
+import {
+    resetCanvas,
 } from "../features/canvasSlice";
 
 import {
@@ -24,6 +22,7 @@ import DraggablePanel from "./DraggablePanel";
 import { getUser, createUser } from "../services/userMananger";
 import {linkMachine, unlinkMachine, saveUnlockCount} from '../services/localLicenseMananger';
 import {validateKey, generateKey} from '../utils';
+import useDefaultTemplate from "../hooks/useDefaultTemplate";
 
 // Dev bypass fully unlocks the side-menu items too (see below).
 const DEV_BYPASS_UNLOCK_COUNT = 99999;
@@ -38,6 +37,7 @@ const DialogueUser = () => {
 
     const dispatch = useDispatch();
     const view = useSelector(state => state.view);
+    const loadDefaultTemplate = useDefaultTemplate();
     // const inputRef = useRef();
     const inputRefSignInEmail = useRef();
     const inputRefSignInPassword = useRef();
@@ -70,13 +70,12 @@ const DialogueUser = () => {
 
         //-----dev bypass: skip key validation and the login API entirely
         if (key === 'Cliff-Richard-Rocks'){
-            dispatch(setImageData([]));
-            dispatch(setTextData([]));
-            dispatch(setTemplateData([]));
+            dispatch(resetCanvas());
+            loadDefaultTemplate(false);
             dispatch(setMode(eMode.USER_ACTIVE))
             dispatch(setUserIsAuth(true))
-            linkMachine();
-            saveUnlockCount(DEV_BYPASS_UNLOCK_COUNT);
+            linkMachine(email);
+            saveUnlockCount(DEV_BYPASS_UNLOCK_COUNT, email);
             dispatch(setUnlockCount(DEV_BYPASS_UNLOCK_COUNT));
             return;
         }
@@ -95,13 +94,12 @@ const DialogueUser = () => {
 
         //-----TEMP: bypass getUser() — a valid key signs the user in directly
         if (SKIP_SERVER_SIGN_IN){
-            dispatch(setImageData([]));
-            dispatch(setTextData([]));
-            dispatch(setTemplateData([]));
+            dispatch(resetCanvas());
+            loadDefaultTemplate(false);
             dispatch(setMode(eMode.USER_ACTIVE))
             dispatch(setUserIsAuth(true))
-            linkMachine();
-            saveUnlockCount(keyResult.number);
+            linkMachine(email);
+            saveUnlockCount(keyResult.number, email);
             dispatch(setUnlockCount(keyResult.number));
             return;
         }
@@ -124,13 +122,12 @@ const DialogueUser = () => {
         if (response.complete === 1 && response.approval === "approved") {
 
             //clear out old data
-            dispatch(setImageData([]));
-            dispatch(setTextData([]));
-            dispatch(setTemplateData([]));
+            dispatch(resetCanvas());
+            loadDefaultTemplate(false);
             dispatch(setMode(eMode.USER_ACTIVE))
             dispatch(setUserIsAuth(true))
-            linkMachine();
-            saveUnlockCount(keyResult.number);
+            linkMachine(email);
+            saveUnlockCount(keyResult.number, email);
             dispatch(setUnlockCount(keyResult.number));
 
         } else if (response.complete === 1 && response.approval !== "approved") {
@@ -150,7 +147,7 @@ const DialogueUser = () => {
                 icon: 'error',
                 confirmButtonText: 'Continue'
             })
-            unlinkMachine();
+            unlinkMachine(email);
             return false;
         }
     }

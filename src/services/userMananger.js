@@ -34,7 +34,7 @@ export const getUser = (payload) => {
                 console.log(response.data);
                 const credentials = {userid:response.data.id, token:response.data.token}
                 // console.log("getUser() credentials ", credentials);
-                localStorage.setItem("NDP3Credentials", JSON.stringify(credentials));
+                localStorage.setItem(`${Constants.LOCAL_DATA_CONFIG}NDP3Credentials`, JSON.stringify(credentials));
                 if (window.REFRESH_CREDS) window.REFRESH_CREDS();
                 resolve(response.data);
             } catch (error) {

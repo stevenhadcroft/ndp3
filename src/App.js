@@ -14,6 +14,10 @@ import { Spinner } from "./components/UIkit/Spinner";
 import DialoguePanelManager from "./dialoguePanels/PanelManager";
 import { loadImageDirectoryData } from "./loaders";
 
+// test accounts logins
+// N2WH-A76G-I3OA aaaa
+// N26J-4T4O-UYQA bbbb
+
 const App = () => {
 
 	const dispatch = useDispatch();

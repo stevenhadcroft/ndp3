@@ -81,6 +81,8 @@
 		<worksheet Wtitle="Volume - crocodiles" Wfile="Voice-volume-crocs.swf" Wseq="false" trans="false" voice="TRUE" grids="false" card="false" games="false" new="false"/>
 		<worksheet Wtitle="Volume - mouse" Wfile="Voice-volume-mice.swf" Wseq="false" trans="false" voice="TRUE" grids="false" card="false" games="false" new="false"/>
 		<worksheet Wtitle="Volume - teddies" Wfile="Voice-volumes-teddies.swf" Wseq="false" trans="false" voice="TRUE" grids="false" card="false" games="false" new="false"/>
+		
+		<!-- <worksheet Wtitle="Volume - teddies" Wfile="Voice-volumes-teddies.swf" Wseq="false" trans="false" voice="TRUE" grids="false" card="false" games="false" new="false"/> -->
 	</worksheets>
 	<soundImages>
 		<soundImage Stitle="Consonant - p " Ssound="p" Sphon="-p-" Sfile="Popper.swf" cons="true" vow="false" CVword="false" VCword="false" CVCword="false" CVCVend="false" CVCVchar="false" CVCVCverb="false" CVCVword="false" CVCVCword="false" msyl="false" Sclus="false" Iclus="false" Rclus="false" medial="false" final="false" words2="false" every="false" complex="false" artic="false" jolly="false" asses="false"/>

@@ -4,6 +4,7 @@ import { cx } from '../styles';
 import DraggablePanel from "./DraggablePanel";
 
 import { cancelMode } from "../features/viewSlice";
+import { getCurrentUser } from "../services/localLicenseMananger";
 
 const isElectron = !!window.electronAPI;
 
@@ -29,11 +30,13 @@ const DialogueFileStorage = () => {
     useEffect(() => {
         if (!isElectron) return;
 
-        window.electronAPI.getProjectsPath?.()
+        const userId = getCurrentUser();
+
+        window.electronAPI.getProjectsPath?.(userId)
             .then((p) => setPath(p || ''))
             .catch(() => setPath(''));
 
-        window.electronAPI.getMyImagesPath?.()
+        window.electronAPI.getMyImagesPath?.(userId)
             .then((p) => setMyImagesPath(p || ''))
             .catch(() => setMyImagesPath(''));
     }, []);
@@ -42,11 +45,11 @@ const DialogueFileStorage = () => {
     const onClose = () => dispatch(cancelMode());
 
     const onOpenFolder = () => {
-        window.electronAPI?.openProjectsFolder?.();
+        window.electronAPI?.openProjectsFolder?.(getCurrentUser());
     };
 
     const onOpenMyImagesFolder = () => {
-        window.electronAPI?.openMyImagesFolder?.();
+        window.electronAPI?.openMyImagesFolder?.(getCurrentUser());
     };
 
     const Buttons = (

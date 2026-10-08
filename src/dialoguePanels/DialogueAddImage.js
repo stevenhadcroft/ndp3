@@ -25,6 +25,7 @@ import {
 } from "../features/canvasSlice";
 
 import { loadImage } from "../loaders";
+import { getCurrentUser } from "../services/localLicenseMananger";
 import DraggablePanel from "./DraggablePanel";
 
 const isElectron = !!window.electronAPI;
@@ -77,11 +78,11 @@ let Search = () => {
 
 	return (
 		<div className={cx("search-bar margin-bb")}>
-			<span style={{ display: "inline-block", marginBottom: '10px', marginRight: '50px' }}>
-				<span className={cx("margin-r")}>Search</span>
-				<button className={cx(`filter ${view.searchFilter === eSearchFilter.PICTURE ? "active" : ""}`)} onClick={() => onFilter(eSearchFilter.PICTURE)}>Pictures</button>
-				<button className={cx(`filter ${view.searchFilter === eSearchFilter.SOUND ? "active" : ""}`)} onClick={() => onFilter(eSearchFilter.SOUND)}>Letter sounds</button>
-				<button className={cx(`filter ${view.searchFilter === eSearchFilter.PHONETIC ? "active" : ""}`)} onClick={() => onFilter(eSearchFilter.PHONETIC)}>Phonetics</button>
+			<span style={{ display: "inline-block", marginBottom: '5px', marginRight: '50px' }}>
+				<span className={cx("margin-r")}>Filter</span>
+				<button className={cx(`filter ${view.searchFilter === eSearchFilter.PICTURE ? "filter-active" : ""}`)} onClick={() => onFilter(eSearchFilter.PICTURE)}>Pictures</button>
+				<button className={cx(`filter ${view.searchFilter === eSearchFilter.SOUND ? "filter-active" : ""}`)} onClick={() => onFilter(eSearchFilter.SOUND)}>Letter sounds</button>
+				<button className={cx(`filter ${view.searchFilter === eSearchFilter.PHONETIC ? "filter-active" : ""}`)} onClick={() => onFilter(eSearchFilter.PHONETIC)}>Phonetics</button>
 			</span>
 
 			<span style={{ display: "inline-block" }}>
@@ -106,10 +107,15 @@ let CategoryChooser = ({ children }) => {
 	const dispatch = useDispatch();
 	const view = useSelector(state => state.view);
 
+	const isMyImages = view.searchCategory === MY_IMAGES_CATEGORY_ID;
+
 	// HANDLERS ---------------------------------------------------
 	const onChooseCategory = evt => {
 		dispatch(setSearch({ category: evt.target.value }));
 	};
+
+	const onGoToMyImages = () => dispatch(setSearch({ category: MY_IMAGES_CATEGORY_ID }));
+	const onGoToAllImages = () => dispatch(setSearch({ category: Constants.IMAGE_CATEGORIES[0].id }));
 
 	return (
 		<div className={cx("margin-b margin-ll")}>
@@ -119,7 +125,19 @@ let CategoryChooser = ({ children }) => {
 					<option key={category.id} value={category.id}>{category.title}</option>
 				))}
 			</select>
-			{children}
+			{!isMyImages && (
+				<button className={cx("secondary narrow")} style={{ marginLeft: "20px", width: "auto", padding: "0 20px", whiteSpace: "nowrap" }} onClick={onGoToMyImages}>
+					View My Images
+				</button>
+			)}
+			{isMyImages && (
+				<button className={cx("secondary narrow")} style={{ marginLeft: "20px", width: "auto", padding: "0 20px", whiteSpace: "nowrap" }} onClick={onGoToAllImages}>
+					View all images
+				</button>
+			)}
+			<div style={{ marginTop: "10px", marginBottom: "10px" }}>
+				{children}
+			</div>
 		</div>
 	)
 }
@@ -233,7 +251,7 @@ const DialogueAddImage = () => {
 			return;
 		}
 		if (!isElectron) return;
-		window.electronAPI.listMyImages().then(res => {
+		window.electronAPI.listMyImages(getCurrentUser()).then(res => {
 			if (res?.success) setMyImages(res.images);
 		});
 	};
@@ -248,7 +266,7 @@ const DialogueAddImage = () => {
 			return;
 		}
 		setAddingMyImage(true);
-		window.electronAPI.addMyImages()
+		window.electronAPI.addMyImages(getCurrentUser())
 			.then(refreshMyImages)
 			.finally(() => setAddingMyImage(false));
 	};
@@ -277,7 +295,7 @@ const DialogueAddImage = () => {
 			debugImages = debugImages.filter(i => i.filename !== filename);
 			refreshMyImages();
 		} else {
-			window.electronAPI.deleteMyImage(filename).then(refreshMyImages);
+			window.electronAPI.deleteMyImage(getCurrentUser(), filename).then(refreshMyImages);
 		}
 		if (selectedMyImage?.filename === filename) setSelectedMyImage(null);
 	};
@@ -358,11 +376,11 @@ const DialogueAddImage = () => {
 			<CategoryChooser>
 				{inMyImages && (
 					(isElectron || DEBUG_MY_IMAGES) ? (
-						<button className={cx("primary narrow")} style={{ marginLeft: "30px", width: "auto", padding: "0 20px", whiteSpace: "nowrap" }} onClick={onAddMyImage} disabled={addingMyImage}>
-							{addingMyImage ? "Adding…" : "Add image from computer"}
+						<button className={cx("primary narrow")} style={{ width: "auto", padding: "0 20px", whiteSpace: "nowrap", backgroundColor: "var(--color-orange-primary)", color: "var(--color-text-primary)" }} onClick={onAddMyImage} disabled={addingMyImage}>
+							{addingMyImage ? "Adding…" : "Add my own image"}
 						</button>
 					) : (
-						<span style={{ marginLeft: "10px" }}>Adding your own images is only available in the desktop app.</span>
+						<span>Adding your own images is only available in the desktop app.</span>
 					)
 				)}
 				{inMyImages && DEBUG_MY_IMAGES &&

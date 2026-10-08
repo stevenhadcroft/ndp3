@@ -15,9 +15,13 @@ async function generateYml() {
       ymlName: 'latest-mac.yml'
     },
     windows: {
-      fileIn: `NDP3-Speech-Builder-${version}.Setup.exe`,
-      fileOut: `NDP3-Speech-Builder-${version}.Setup.exe`,
-      path: path.join(__dirname, '../out/make/squirrel.windows/x64'),
+      // maker-wix (electron-wix-msi) names the output file "<exe>.msi" - exe is set to
+      // 'NDP3 Speech Builder.exe' in forge.config.js, so the installer ends up as
+      // "NDP3 Speech Builder.exe.msi". Keep fileIn/fileOut identical since this is the
+      // exact filename electron-forge publishes to the GitHub release as-is.
+      fileIn: 'NDP3 Speech Builder.exe.msi',
+      fileOut: 'NDP3 Speech Builder.exe.msi',
+      path: path.join(__dirname, '../out/make/wix/x64'),
       ymlName: 'latest.yml'
     }
   };

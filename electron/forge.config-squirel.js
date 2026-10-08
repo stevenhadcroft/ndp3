@@ -62,19 +62,13 @@ module.exports = {
       }
     },
      {
-      name: '@electron-forge/maker-wix',
+      name: '@electron-forge/maker-squirrel',
       platforms: ['win32'],
       config: {
         name: 'NDP3SpeechBuilder',  // no spaces
-        exe: 'NDP3 Speech Builder.exe', // must match packagerConfig.executableName
-        manufacturer: 'Steven Hadcroft',
-        description: 'NDP3 Speech Builder',
-        icon: './icons/NDP3_icon_256.ico', // Windows needs .ico
-        ui: {
-          chooseDirectory: true
-        },
-        defaultInstallMode: 'perUser', // no admin/UAC prompt, matches prior Squirrel UX and allows silent background updates
-        upgradeCode: '9f3b2e8a-6b2d-4a3e-9c0a-6c1d2f5e4a7b', // fixed GUID so MSI upgrades replace prior installs instead of side-by-side installing
+        iconUrl: 'http://berthasworkers.com/dev/ndp3v2/NDP3_icon_256.ico', // Windows needs .ico
+        setupIcon: './icons/NDP3_icon_256.ico',
+        setupExe: `NDP3-Speech-Builder-${version}.Setup.exe`, // Add this line to control setup filename
         certificateFile: process.env.WINDOWS_CERT_PATH,
         certificatePassword: process.env.WINDOWS_CERT_PASSWORD
       }

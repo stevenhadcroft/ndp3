@@ -39,96 +39,142 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
-// Configure auto-updates
-autoUpdater.autoDownload = false;
-
-autoUpdater.setFeedURL({
-  provider: 'github',
-  owner: 'stevenhadcroft',
-  repo: 'ndp3',
-});
-
-// Check for updates every hour
-setInterval(() => {
-  autoUpdater.checkForUpdates();
-}, 60 * 60 * 1000);
-
-let updateInfo = {}; // Store update info
-let downloadInProgress = false;
-
 const sendToRenderer = (channel, payload) => {
   if (mainWindow && !mainWindow.isDestroyed()) {
     mainWindow.webContents.send(channel, payload);
   }
 };
 
-// Update event handlers
-autoUpdater.on('update-available', (info) => {
-  log.info('Update available:', info);
-  updateInfo = info; // Store the update info
-
-  const dialogOpts = {
-    type: 'info',
-    buttons: ['Download', 'Later'],
-    title: 'Application Update',
-    message: `Version ${info.version} is available`,
-    detail: 'Would you like to download the update?'
-  };
-
-  dialog.showMessageBox(dialogOpts).then(({ response }) => {
-    if (response === 0) {
-      // User clicked Download
-      downloadInProgress = true;
-      autoUpdater.downloadUpdate();
+// Reads GITHUB_OWNER/GITHUB_REPO from .env without the 'dotenv' package - dotenv is a
+// devDependency so electron-forge prunes it from packaged builds, require('dotenv') would
+// crash at runtime. Falls back to the known-correct values if .env isn't present.
+function readEnvFile(filePath) {
+  const result = {};
+  try {
+    const content = fsSync.readFileSync(filePath, 'utf8');
+    for (const line of content.split('\n')) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+      const eq = trimmed.indexOf('=');
+      if (eq === -1) continue;
+      result[trimmed.slice(0, eq).trim()] = trimmed.slice(eq + 1).trim();
     }
-  });
-});
-
-// Add progress handler
-autoUpdater.on('download-progress', (progressObj) => {
-  sendToRenderer('download-progress', {
-    percent: progressObj.percent,
-    transferred: progressObj.transferred,
-    total: progressObj.total,
-    bytesPerSecond: progressObj.bytesPerSecond,
-    version: updateInfo ? updateInfo.version : null
-  });
-});
-
-autoUpdater.on('error', (err) => {
-  log.error('Update error:', err);
-
-  // Tell renderer to clear the progress UI if a download was running
-  if (downloadInProgress) {
-    sendToRenderer('update-error', { message: err.message || 'Unknown error' });
-    dialog.showMessageBox({
-      type: 'error',
-      buttons: ['OK'],
-      title: 'Update Failed',
-      message: 'An error occurred during the update',
-      detail: err.message || 'Unknown error'
-    });
+  } catch (err) {
+    // .env not present/readable - caller falls back to defaults
   }
-  downloadInProgress = false;
-});
+  return result;
+}
 
-// IMPORTANT - kick starts install if already downloaded
-autoUpdater.on('update-downloaded', (info) => {
-  log.info('Update downloaded:', info);
-  downloadInProgress = false;
-  const dialogOpts = {
-    type: 'info',
-    buttons: ['Install Now'], // , 'Later'
-    title: 'Update Ready',
-    message: `Version ${info.version} is ready to install`,
-    detail: 'The application will restart to apply the update.'
-  };
-  dialog.showMessageBox(dialogOpts).then(({ response }) => {
-    if (response === 0) {
-      autoUpdater.quitAndInstall();
-    }
+// Must match where electron-forge/publisher-github actually publishes releases
+// (GITHUB_OWNER/GITHUB_REPO in .env at build time) - NOT the repo the app was originally named after.
+const envConfig = readEnvFile(path.join(__dirname, '..', '.env'));
+const UPDATE_FEED_OWNER = envConfig.GITHUB_OWNER || 'ndp3speechbuilder';
+const UPDATE_FEED_REPO = envConfig.GITHUB_REPO || 'ndp3digital';
+
+const isWindows = process.platform === 'win32';
+let checkForUpdates;
+
+if (isWindows) {
+  // electron-updater's Windows autoUpdater (NsisUpdater) only supports NSIS-built installers.
+  // Windows ships a WiX MSI instead, so updates are checked/downloaded/installed via a custom
+  // GitHub-releases-based flow. See windowsMsiUpdater.js.
+  const { initWindowsMsiUpdater } = require('./windowsMsiUpdater');
+  checkForUpdates = initWindowsMsiUpdater({
+    app,
+    dialog,
+    log,
+    sendToRenderer,
+    owner: UPDATE_FEED_OWNER,
+    repo: UPDATE_FEED_REPO,
   });
-});
+} else {
+  // Configure auto-updates (macOS/Linux via electron-updater)
+  autoUpdater.autoDownload = false;
+
+  autoUpdater.setFeedURL({
+    provider: 'github',
+    owner: UPDATE_FEED_OWNER,
+    repo: UPDATE_FEED_REPO,
+  });
+
+  let updateInfo = {}; // Store update info
+  let downloadInProgress = false;
+
+  // Update event handlers
+  autoUpdater.on('update-available', (info) => {
+    log.info('Update available:', info);
+    updateInfo = info; // Store the update info
+
+    const dialogOpts = {
+      type: 'info',
+      buttons: ['Download', 'Later'],
+      title: 'Application Update',
+      message: `Version ${info.version} is available`,
+      detail: 'Would you like to download the update?'
+    };
+
+    dialog.showMessageBox(dialogOpts).then(({ response }) => {
+      if (response === 0) {
+        // User clicked Download
+        downloadInProgress = true;
+        autoUpdater.downloadUpdate();
+      }
+    });
+  });
+
+  // Add progress handler
+  autoUpdater.on('download-progress', (progressObj) => {
+    sendToRenderer('download-progress', {
+      percent: progressObj.percent,
+      transferred: progressObj.transferred,
+      total: progressObj.total,
+      bytesPerSecond: progressObj.bytesPerSecond,
+      version: updateInfo ? updateInfo.version : null
+    });
+  });
+
+  autoUpdater.on('error', (err) => {
+    log.error('Update error:', err);
+
+    // Tell renderer to clear the progress UI if a download was running
+    if (downloadInProgress) {
+      sendToRenderer('update-error', { message: err.message || 'Unknown error' });
+      dialog.showMessageBox({
+        type: 'error',
+        buttons: ['OK'],
+        title: 'Update Failed',
+        message: 'An error occurred during the update',
+        detail: err.message || 'Unknown error'
+      });
+    }
+    downloadInProgress = false;
+  });
+
+  // IMPORTANT - kick starts install if already downloaded
+  autoUpdater.on('update-downloaded', (info) => {
+    log.info('Update downloaded:', info);
+    downloadInProgress = false;
+    const dialogOpts = {
+      type: 'info',
+      buttons: ['Install Now'], // , 'Later'
+      title: 'Update Ready',
+      message: `Version ${info.version} is ready to install`,
+      detail: 'The application will restart to apply the update.'
+    };
+    dialog.showMessageBox(dialogOpts).then(({ response }) => {
+      if (response === 0) {
+        autoUpdater.quitAndInstall();
+      }
+    });
+  });
+
+  checkForUpdates = () => autoUpdater.checkForUpdates();
+}
+
+// Check for updates every hour
+setInterval(() => {
+  checkForUpdates();
+}, 60 * 60 * 1000);
 
 //--------------------------------------------
 // Main App 
@@ -166,7 +212,7 @@ function createSplashWindow() {
 
       // Check for updates shorly after launch
       setTimeout(() => {
-        autoUpdater.checkForUpdates();
+        checkForUpdates();
       }, 2000);
 
     }

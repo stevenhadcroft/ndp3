@@ -1,0 +1,331 @@
+.panel {
+  position: absolute;
+  background: var(--color-background-dialogue);
+  color: var(--color-text-inverse);
+  font-weight: bold;
+  padding: 5px 20px 20px;
+  border-radius: 30px;
+  min-width: 350px;
+  box-shadow: 0px 1px 7px 4px var(--color-shadow-medium);
+  z-index: 9999;
+}
+
+.background-tint {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-overlay-dark);
+  z-index: 9999;
+}
+
+.fullscreen {
+  top: 30px !important;
+  left: 30px !important;
+  width: calc(100% - 110px);
+  height: calc(100% - 85px);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal {
+  left: calc(50% - 300px) !important;
+  top: calc(50% - 150px) !important;
+  width: 600px;
+}
+
+.full-page {
+  top: 0 !important;
+  left: 0 !important;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.full-page .dialogue-header {
+  height: 50px;
+  margin-bottom: 0;
+  padding: 0 20px;
+}
+
+.full-page .dialogue-inner {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  padding: 0;
+  border-radius: 0;
+}
+
+.modal-update {
+  height: 110px;
+
+  .dialogue-header {
+    height: 15px;
+    margin-bottom: 10px;
+    border-bottom: none;
+  }
+}
+
+.dialogue-header {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  text-align: left;
+  height: 80px;
+  margin-bottom: 20px;
+  padding: 0 5px 0 10px;
+  border-bottom: #33ffff19 3px solid;
+}
+
+.dialogue-inner .title,
+.dialogue-header .title {
+  position: absolute;
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--color-text-inverse);
+  width: 100%;
+  left: 30px;
+  pointer-events: none;
+}
+
+.dialogue-inner {
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  overflow-y: auto;
+}
+
+.dialogue-inner.no-scroll {
+  overflow-y: initial;
+}
+
+.dialogue-inner.center {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal .dialogue-inner.center {
+  height: calc(100% - 90px);
+}
+
+.align-center {
+  text-align: center;
+}
+
+.fullscreen .dialogue-inner {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  background: var(--color-overlay-medium);
+  padding: 14px;
+  box-sizing: border-box;
+  border-radius: 20px;
+}
+
+.dark-background {
+  font-weight: normal;
+  background: var(--color-overlay-medium);
+  margin-bottom: 20px;
+  padding: 15px 25px;
+  border-radius: 15px;
+}
+
+/* add text */
+.panel textarea {
+  display: inline-block;
+  width: calc(100% - 20px);
+  height: 80px;
+  margin: 10px 0;
+}
+
+
+.cell {
+  display: inline-block;
+  width: 135px;
+  height: 135px;
+  box-sizing: border-box;
+  margin: 5px;
+  border: solid 1px var(--color-border-default);
+  background: var(--color-white);
+  box-shadow: 3px 3px 3px 1px var(--color-shadow-medium);
+  border-radius: 15px;
+  transition: 0.1s;
+}
+
+.cell.transparent {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.cell.selected {
+  border: solid 5px var(--color-border-selected);
+}
+
+.cell.tall {
+  width: 140px;
+  height: 170px;
+}
+
+.cell.wide {
+  width: 170px;
+  height: 140px;
+}
+
+.cell-title {
+  width: 100%;
+  text-align: center;
+}
+
+.cell-label {
+  text-align: center;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  width: 135px;
+  margin-bottom: 5px;
+}
+
+.panel h3 {
+  font-size: 1.1em;
+  margin-bottom: 15px;
+}
+
+.panel textarea,
+.panel input[type="text"],
+.panel input[type="password"],
+.panel select {
+  padding: 8px 10px;
+  font-size: 18px;
+  border-radius: 6px;
+  border: 0;
+}
+
+/* --------------------------
+dialogue - text editor
+-------------------------- */
+
+.text-row {
+  display: flex;
+}
+
+.text-row.spaced {
+  margin: 20px 0 10px 0;
+}
+
+.text-justify-group {
+  margin-left: 12px;
+}
+
+.text-justify-icon {
+  margin-top: 5px;
+  transform: scale(1, 1.5);
+  filter: brightness(0.5) invert(0.7);
+}
+
+.text-justify-icon.selected {
+  filter: brightness(0.5) invert(1);
+}
+
+.text-range-wrapper {
+  flex: 2;
+  margin-right: 5px;
+}
+
+.text-style-glyph {
+  font-size: 30px;
+  font-weight: bold;
+  color: #999;
+}
+
+.text-style-glyph.italic {
+  font-style: italic;
+}
+
+.text-style-glyph.active {
+  color: var(--color-text-inverse);
+}
+
+/* --------------------------
+dialogue - image/search
+-------------------------- */
+
+.search-setting,
+.search-setting button {
+  color: var(--color-white);
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.search-setting .selected {
+  color: var(--color-state-selected);
+}
+
+.search-bar {
+  background: var(--color-overlay-medium);
+  border-radius: 20px;
+  padding: 12px 20px 8px;
+  font-weight: normal;
+}
+
+/* --------------------------
+dialogue - labelled input field (label sits above input, both left-aligned
+within a fixed-width column that's centred in the dialogue)
+-------------------------- */
+
+.field-stack {
+  max-width: 300px;
+  text-align: left;
+}
+
+.field-label {
+  margin-bottom: 20px;
+}
+
+.field-stack input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* --------------------------
+dialogue - create-folder form container (centred, max-width column that
+holds the label+input and the action buttons)
+-------------------------- */
+
+.create-folder-form {
+  max-width: 400px;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* --------------------------
+dialogue - orientation picker (Portrait / Landscape)
+-------------------------- */
+
+.orientation-row {
+  display: flex;
+  gap: 40px;
+}
+
+.orientation-button {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--color-white);
+}
+
+.orientation-image {
+  width: 120px;
+  height: auto;
+  /* filter: invert(1); */
+  /* mix-blend-mode: lighten; */
+}

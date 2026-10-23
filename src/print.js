@@ -34,7 +34,7 @@ export const print = (orientation) => {
         const htmlContent = `
             <html>
                 <head>
-                    <title>NDP3 Speech Builder</title>
+                    <title>NDP3 Digital</title>
                     <style type="text/css">
                         @page { size: ${pageSizeCss}; margin: 0; }
                         html, body { margin: 0; padding: 0; }

@@ -6,6 +6,12 @@ const log = require('electron-log');
 const fsSync = require('fs');
 const { promises: fs } = require('fs');
 
+// The app was renamed from "NDP3 Speech Builder" to "NDP3 Digital". Electron derives the
+// userData folder from the app name, so pin it to the original folder - otherwise existing
+// users' projects, "my images", licence and local storage would appear to vanish.
+// Must run before anything (electron-log, usersRoot below) reads userData.
+app.setPath('userData', path.join(app.getPath('appData'), 'NDP3 Speech Builder'));
+
 const MY_IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 
 //-----------------------------------------------
@@ -615,13 +621,14 @@ function setupIPC() {
   // Add Image dialogue. Stored as plain files (not the bundled SVG library),
   // so they're displayed as-is with no fill-colour recolouring support.
   //-------------------------------------
-  const toMyImageEntry = (filename) => ({
+  const toMyImageEntry = (myImagesDir, filename) => ({
     filename,
     url: pathToFileURL(path.join(myImagesDir, filename)).href,
   });
 
-  ipcMain.handle('add-my-images', async () => {
+  ipcMain.handle('add-my-images', async (event, userId) => {
     try {
+      const { myImagesDir } = await getUserPaths(userId);
       const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
         title: 'Add images',
         properties: ['openFile', 'multiSelections'],
@@ -641,7 +648,7 @@ function setupIPC() {
         const safeBase = path.basename(srcPath, path.extname(srcPath)).replace(/[^a-z0-9_-]/gi, '_');
         const filename = `${Date.now()}-${Math.round(Math.random() * 1e6)}-${safeBase}${ext}`;
         await fs.copyFile(srcPath, path.join(myImagesDir, filename));
-        added.push(toMyImageEntry(filename));
+        added.push(toMyImageEntry(myImagesDir, filename));
       }
 
       return { success: true, added };
@@ -651,13 +658,13 @@ function setupIPC() {
     }
   });
 
-  ipcMain.handle('list-my-images', async () => {
+  ipcMain.handle('list-my-images', async (event, userId) => {
     try {
-      await fs.mkdir(myImagesDir, { recursive: true });
+      const { myImagesDir } = await getUserPaths(userId);
       const files = await fs.readdir(myImagesDir);
       const images = files
         .filter(filename => MY_IMAGE_EXTENSIONS.includes(path.extname(filename).toLowerCase()))
-        .map(toMyImageEntry);
+        .map(filename => toMyImageEntry(myImagesDir, filename));
       return { success: true, images };
     } catch (error) {
       log.error('Error listing my-images:', error);
@@ -665,8 +672,9 @@ function setupIPC() {
     }
   });
 
-  ipcMain.handle('delete-my-image', async (event, filename) => {
+  ipcMain.handle('delete-my-image', async (event, userId, filename) => {
     try {
+      const { myImagesDir } = await getUserPaths(userId);
       const safeName = path.basename(filename);
       await fs.unlink(path.join(myImagesDir, safeName));
       return { success: true };
@@ -677,9 +685,12 @@ function setupIPC() {
   });
 
   // Where "My Images" files are stored on disk
-  ipcMain.handle('get-my-images-path', () => myImagesDir);
-  ipcMain.handle('open-my-images-folder', async () => {
-    await fs.mkdir(myImagesDir, { recursive: true }).catch(() => {});
+  ipcMain.handle('get-my-images-path', async (event, userId) => {
+    const { myImagesDir } = await getUserPaths(userId);
+    return myImagesDir;
+  });
+  ipcMain.handle('open-my-images-folder', async (event, userId) => {
+    const { myImagesDir } = await getUserPaths(userId);
     const error = await shell.openPath(myImagesDir);
     return { success: !error, error: error || undefined };
   });

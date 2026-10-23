@@ -27,4 +27,10 @@ yarn-error.log*
 
 pdf-viewer/public/docs.zip
 
-
+# accidental macOS compress artifacts / large local archives
+Archive.zip
+Archive *.zip
+electron/Archive.zip
+electron/Archive *.zip
+electron/src.zip
+pdf-viewer/Archive.zip

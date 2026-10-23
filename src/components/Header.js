@@ -34,7 +34,10 @@ const Header = (props) => {
   };
 
   const imgsrc = view.showMenuPopup ? "./imgs/gui/close.png" : "./imgs/gui/menu.png";
-  const headstr = view.showMenuPopup ? <span style={{marginLeft:"-16px"}}>Close menu</span> : <><strong>NDP3</strong><sup>&reg;</sup> Speech Builder</>;
+  // Before sign-in (login/register/options screens) and while a PDF viewer is
+  // open, brand as "Digital"; the Speech Builder editor itself keeps its own name.
+  const productName = (!view.userIsAuth || activeViewerIndex !== -1) ? "Digital" : "Speech Builder";
+  const headstr = view.showMenuPopup ? <span style={{marginLeft:"-16px"}}>Close menu</span> : <><strong>NDP3</strong><sup>&reg;</sup> {productName}</>;
 
   return (
     <header>

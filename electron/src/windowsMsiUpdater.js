@@ -10,7 +10,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { spawn } = require('node:child_process');
 
-const USER_AGENT = 'NDP3-Speech-Builder-Updater';
+const USER_AGENT = 'NDP3-Digital-Updater';
 const MAX_REDIRECTS = 5;
 
 function httpGetJson(url, redirectsLeft = MAX_REDIRECTS) {
@@ -112,31 +112,66 @@ function psQuote(value) {
 // Waits for this process to exit, then runs the MSI silently (per-user install mode needs
 // no elevation) and relaunches the app - mirroring what an NSIS/Squirrel updater does internally.
 function installMsiAndRelaunch({ msiPath, log, app }) {
-  const exePath = process.execPath;
+  // The WiX MSI installs to <root>\app-<version>\ with a launcher exe in <root>. The upgrade
+  // removes the current app-<version> folder, so relaunch via the root launcher instead of
+  // process.execPath, and pass the root back in so a custom install folder is kept.
+  const installRoot = path.resolve(path.dirname(process.execPath), '..');
+  const launcherPath = path.join(installRoot, path.basename(process.execPath));
+  const relaunchPath = fs.existsSync(launcherPath) ? launcherPath : process.execPath;
   const logPath = path.join(app.getPath('temp'), 'ndp3-msi-update.log');
+
+  // Single argument string so paths containing spaces stay quoted for msiexec
+  const msiArgs = [
+    '/i', `"${msiPath}"`,
+    '/quiet', '/norestart',
+    '/l*v', `"${logPath}"`,
+    ...(relaunchPath === launcherPath ? [`APPLICATIONROOTDIRECTORY="${installRoot}"`] : []),
+  ].join(' ');
+
+  // The new version's launcher may have a different name (e.g. after the app was renamed),
+  // so after installing, relaunch whichever launcher exe is now in the root, falling back to
+  // the path we started from.
+  const relaunchCommand = relaunchPath === launcherPath
+    ? `$exe = Get-ChildItem -LiteralPath ${psQuote(installRoot)} -Filter *.exe | Sort-Object LastWriteTime -Descending | Select-Object -First 1; `
+      + `if ($exe) { Start-Process -FilePath $exe.FullName } else { Start-Process -FilePath ${psQuote(relaunchPath)} }`
+    : `Start-Process -FilePath ${psQuote(relaunchPath)}`;
 
   const psCommand = [
     `Wait-Process -Id ${process.pid} -ErrorAction SilentlyContinue`,
-    `Start-Process -FilePath 'msiexec.exe' -ArgumentList '/i', ${psQuote(msiPath)}, '/quiet', '/norestart', '/l*v', ${psQuote(logPath)} -Wait`,
-    `Start-Process -FilePath ${psQuote(exePath)}`,
+    `Start-Process -FilePath 'msiexec.exe' -ArgumentList ${psQuote(msiArgs)} -Wait`,
+    relaunchCommand,
   ].join('; ');
 
   log.info('Launching silent MSI update:', psCommand);
 
-  spawn('powershell.exe', ['-NoProfile', '-NonInteractive', '-WindowStyle', 'Hidden', '-Command', psCommand], {
-    detached: true,
+  // powershell.exe spawned with `detached: true` (DETACHED_PROCESS, no console) exits
+  // immediately without running its command, so the update silently never happened.
+  // Instead, spawn a normal (hidden-console) PowerShell whose only job is to Start-Process
+  // the real updater script. libuv's job object for non-detached children allows silent
+  // breakaway, so that grandchild survives this app quitting, while the short-lived
+  // launcher is awaited before quitting so it isn't killed mid-launch.
+  const encoded = Buffer.from(psCommand, 'utf16le').toString('base64');
+  const launcherCommand = `Start-Process -FilePath 'powershell.exe' -WindowStyle Hidden -ArgumentList '-NoProfile','-NonInteractive','-EncodedCommand','${encoded}'`;
+
+  const launcher = spawn('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', launcherCommand], {
     stdio: 'ignore',
     windowsHide: true,
-  }).unref();
-
-  app.quit();
+  });
+  launcher.on('error', (err) => {
+    log.error('Failed to launch MSI updater:', err);
+    app.quit();
+  });
+  launcher.on('exit', (code) => {
+    log.info('MSI updater launcher exited with code', code);
+    app.quit();
+  });
 }
 
 function initWindowsMsiUpdater({ app, dialog, log, sendToRenderer, owner, repo }) {
   let downloadInProgress = false;
 
   async function downloadAndInstall(msiAsset, ymlInfo) {
-    const destPath = path.join(app.getPath('temp'), `NDP3-Speech-Builder-Update-${ymlInfo.version}.msi`);
+    const destPath = path.join(app.getPath('temp'), `NDP3-Digital-Update-${ymlInfo.version}.msi`);
 
     try {
       await httpDownloadFile(msiAsset.browser_download_url, destPath, (progress) => {
@@ -195,7 +230,16 @@ function initWindowsMsiUpdater({ app, dialog, log, sendToRenderer, owner, repo }
       }
 
       const ymlInfo = await httpGetJson(ymlAsset.browser_download_url);
-      const msiAsset = (release.assets || []).find((a) => a.name === ymlInfo.path);
+      if (String(ymlInfo.version) !== remoteVersion) {
+        log.warn(`MSI update check: latest.yml is for ${ymlInfo.version}, release is ${release.tag_name}`);
+        return;
+      }
+
+      // GitHub replaces spaces with periods in uploaded asset names
+      const assets = release.assets || [];
+      const msiAsset = assets.find((a) => a.name === ymlInfo.path)
+        || assets.find((a) => a.name === String(ymlInfo.path).replace(/ /g, '.'))
+        || assets.find((a) => /\.msi$/i.test(a.name));
       if (!msiAsset) {
         log.warn('MSI update check: no matching MSI asset found for', ymlInfo.path);
         return;

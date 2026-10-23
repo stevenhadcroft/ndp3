@@ -2,25 +2,39 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 
+// Mirrors @electron-forge/publisher-github's GitHub.sanitizeName() - GitHub replaces any
+// character outside \w_.@+- with a dot when a release asset is uploaded, so the filename on
+// the release (fileOut) never matches the locally-built filename (fileIn) exactly.
+function sanitizeName(name) {
+  return path.basename(name)
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .replace(/[^\w_.@+-]+/g, '.')
+    .replace(/\.+/g, '.')
+    .replace(/^\./, '')
+    .replace(/\.$/, '');
+}
+
 async function generateYml() {
   const version = require('../package.json').version;
-  
+
+  // Must match packagerConfig.name (mac) / the wix `exe` option (windows) in forge.config.js -
+  // electron-forge derives the packaged filenames from those.
+  const macAppName = 'NDP3 Digital';
+  const windowsExeName = 'NDP3 Digital.exe';
+
   // Configure platforms
   const platforms = {
     mac: {
-      // config defined as 'NDP3 Speech Builder' but upload to github adds periods
-      fileIn: `NDP3 Speech Builder-darwin-arm64-${version}.zip`,
-      fileOut: `NDP3.Speech.Builder-darwin-arm64-${version}.zip`,
+      fileIn: `${macAppName}-darwin-arm64-${version}.zip`,
+      fileOut: sanitizeName(`${macAppName}-darwin-arm64-${version}.zip`),
       path: path.join(__dirname, '../out/make/zip/darwin/arm64'),
       ymlName: 'latest-mac.yml'
     },
     windows: {
-      // maker-wix (electron-wix-msi) names the output file "<exe>.msi" - exe is set to
-      // 'NDP3 Speech Builder.exe' in forge.config.js, so the installer ends up as
-      // "NDP3 Speech Builder.exe.msi". Keep fileIn/fileOut identical since this is the
-      // exact filename electron-forge publishes to the GitHub release as-is.
-      fileIn: 'NDP3 Speech Builder.exe.msi',
-      fileOut: 'NDP3 Speech Builder.exe.msi',
+      // maker-wix (electron-wix-msi) names the output file "<exe>.msi"
+      fileIn: `${windowsExeName}.msi`,
+      fileOut: sanitizeName(`${windowsExeName}.msi`),
       path: path.join(__dirname, '../out/make/wix/x64'),
       ymlName: 'latest.yml'
     }

@@ -45,6 +45,10 @@
   padding: 0;
   display: flex;
   flex-direction: column;
+  /* Electron (Windows): this covers .menu-header, whose drag region would
+     otherwise swallow clicks on the PDF viewer's toolbar (e.g. the document
+     dropdown). */
+  -webkit-app-region: no-drag;
 }
 
 .full-page .dialogue-header {
